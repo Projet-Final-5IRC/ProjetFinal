@@ -25,7 +25,7 @@ namespace data.Models.EntityFramework
 
             modelBuilder.Entity<Events>(entity =>
             {
-                entity.HasOne(d => d.EventGenre).WithMany(p => p.GenreEvent)
+                entity.HasOne(d => d.GenreEvent).WithMany(p => p.EventsGenre)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("fk_genre_events");
             });

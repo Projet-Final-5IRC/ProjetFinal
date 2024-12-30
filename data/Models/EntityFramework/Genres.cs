@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace data.Models.EntityFramework
@@ -14,7 +15,6 @@ namespace data.Models.EntityFramework
         [Column("gen_name")]
         public required string GenreName { get; set; }
 
-        [InverseProperty(nameof(Events.EventGenre))]
-        public virtual ICollection<Events> GenreEvent {  get; set; } = new List<Events>();
+        public virtual ICollection<Events> EventsGenre { get; set; } = new List<Events>();
     }
 }

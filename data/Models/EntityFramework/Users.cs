@@ -37,7 +37,6 @@ namespace data.Models.EntityFramework
         [NotNull]
         public DateTime DateCreation { get; set; } = DateTime.Now;
 
-        [InverseProperty(nameof(EventsInvite.UserReference))]
         public virtual ICollection<EventsInvite> UserInvitation { get; set; } = new List<EventsInvite>();
     }
 }

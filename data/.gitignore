@@ -1,3 +1,4 @@
 ﻿.vs
 appsettings.*
 obj/
+bin/
