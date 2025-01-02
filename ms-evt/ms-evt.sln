@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ms-evt", "ms-evt.csproj", "{CA64E25A-2B22-4EF4-B01F-586F8261BEA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ms-evtTests", "..\ms-evtTests\ms-evtTests.csproj", "{C727C505-BE57-4222-B290-9CBE5F326097}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA64E25A-2B22-4EF4-B01F-586F8261BEA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA64E25A-2B22-4EF4-B01F-586F8261BEA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA64E25A-2B22-4EF4-B01F-586F8261BEA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA64E25A-2B22-4EF4-B01F-586F8261BEA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C727C505-BE57-4222-B290-9CBE5F326097}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C727C505-BE57-4222-B290-9CBE5F326097}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C727C505-BE57-4222-B290-9CBE5F326097}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C727C505-BE57-4222-B290-9CBE5F326097}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {38C78D06-81BB-4888-BB3B-B8C067C83521}
+	EndGlobalSection
+EndGlobal
