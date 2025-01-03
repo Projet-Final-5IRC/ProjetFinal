@@ -75,7 +75,7 @@ namespace ms_evt.Controllers
             }
             await dataRepository.AddAsync(events);
 
-            return CreatedAtAction("GetEvents", new { id = events.IdEvent }, events);
+            return CreatedAtAction("GetEvent", new { id = events.IdEvent }, events);
         }
 
         // DELETE: api/Events/5

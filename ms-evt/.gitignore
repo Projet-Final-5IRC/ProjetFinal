@@ -1,4 +1,5 @@
+ms-evt/obj
+ms-evt/bin
 .vs/
-obj/
-bin/
-appsettings.json
+ms-evtTests/obj
+ms-evtTests/bin

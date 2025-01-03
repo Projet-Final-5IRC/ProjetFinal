@@ -1,4 +1,4 @@
-@ms_evt_HostAddress = http://localhost:5114
+@ms_evt_HostAddress = http://localhost:5071
 
 GET {{ms_evt_HostAddress}}/weatherforecast/
 Accept: application/json
