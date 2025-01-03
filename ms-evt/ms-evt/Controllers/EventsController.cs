@@ -34,7 +34,7 @@ namespace ms_evt.Controllers
         {
             var events = await dataRepository.GetByIdAsync(id);
 
-            if (events == null)
+            if (events.Value == null)
             {
                 return NotFound();
             }
@@ -52,14 +52,14 @@ namespace ms_evt.Controllers
                 return BadRequest();
             }
 
-            var eventToUpdate = dataRepository.GetByIdAsync(id);
-            if (eventToUpdate == null)
+            var eventToUpdate = await dataRepository.GetByIdAsync(id);
+            if (eventToUpdate.Value == null)
             {
                 return NotFound();
             }
             else
             {
-                await dataRepository.UpdateAsync(eventToUpdate.Result.Value, events);
+                await dataRepository.UpdateAsync(eventToUpdate.Value, events);
                 return NoContent();
             }
         }
@@ -83,7 +83,7 @@ namespace ms_evt.Controllers
         public async Task<IActionResult> DeleteEvents(int id)
         {
             var events = await dataRepository.GetByIdAsync(id);
-            if (events == null)
+            if (events.Value == null)
             {
                 return NotFound("Event not found!");
             }

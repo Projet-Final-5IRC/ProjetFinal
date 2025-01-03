@@ -1,4 +1,5 @@
 ﻿using data.Models.EntityFramework;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -45,6 +46,22 @@ namespace ms_evt.Controllers.Tests
             Assert.AreEqual(userInDB.Count, result.Value.Count());
         }
 
+        [TestMethod]
+        public async Task GetEventByID_SuccessGetEventByID()
+        {
+            var result = await _controller.GetEventById(2);
+            var userInDB = _context.Event.Where(c => c.IdEvent == 2).FirstOrDefault();
+
+            Assert.AreEqual(userInDB.EventName, result.Value.EventName);
+        }
+
+        [TestMethod]
+        public async Task GetEventByID_EventNotFound()
+        {
+            var result = await _controller.GetEventById(9999);
+            Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
+        }
+
         //Tests With MOQ
 
         [TestInitialize]
@@ -75,6 +92,149 @@ namespace ms_evt.Controllers.Tests
             Assert.IsInstanceOfType(result.Value, typeof(List<Events>));
             Assert.AreEqual(2, okResult.Count());
             Assert.AreEqual("Soirée Horreur", okResult.First().EventName);
+        }
+
+        [TestMethod]
+        public async Task PostEvents_Success()
+        {
+            // Arrange
+            var newEvent = new Events
+            {
+                EventName = "Concert",
+                EventLocation = "Stadium",
+                EventDate = "19:06:2002",
+                EventHour = "20:00",
+                EventDescription = "Music concert"
+            };
+
+            _mockRepo.Setup(repo => repo.AddAsync(newEvent)).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller_Moq.PostEvents(newEvent);
+            var createdResult = result.Result as CreatedAtActionResult;
+
+            // Assert
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(201, createdResult.StatusCode); // HTTP 201 Created
+            Assert.AreEqual("GetEvent", createdResult.ActionName);
+            Assert.AreEqual(newEvent.IdEvent, ((Events)createdResult.Value).IdEvent);
+        }
+
+        [TestMethod]
+        public async Task PostEvents_ModelStateInvalid()
+        {
+            // Arrange
+            var invalidEvent = new Events(); // Missing required fields
+            _controller_Moq.ModelState.AddModelError("EventName", "The EventName field is required.");
+
+            // Act
+            var result = await _controller_Moq.PostEvents(invalidEvent);
+            var badRequestResult = result.Result as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+            Assert.AreEqual(400, badRequestResult.StatusCode); // HTTP 400 Bad Request
+            Assert.IsTrue(badRequestResult.Value is SerializableError);
+        }
+
+        [TestMethod]
+        public async Task PutEvents_Success()
+        {
+            // Arrange
+            var existingEvent = new Events { IdEvent = 1, EventName = "Concert" };
+            var updatedEvent = new Events { IdEvent = 1, EventName = "Updated Concert" };
+
+            _mockRepo.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(existingEvent);
+            _mockRepo.Setup(repo => repo.UpdateAsync(It.IsAny<Events>(), It.IsAny<Events>()))
+                .Callback<Events, Events>((original, updated) =>
+                {
+                    original.EventName = updated.EventName;
+                    original.EventDescription = updated.EventDescription;
+                    original.EventDate = updated.EventDate;
+                    original.EventHour = updated.EventHour;
+                    original.EventLocation = updated.EventLocation;
+                    original.EventInvitation = updated.EventInvitation;
+                    original.IdGenre = updated.IdGenre;
+                    original.GenreEvent = updated.GenreEvent;
+                })
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller_Moq.PutEvents(1, updatedEvent);
+            var verif = await _controller_Moq.GetEventById(1);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NoContentResult));
+            Assert.AreEqual(updatedEvent.EventName, verif.Value.EventName);
+        }
+
+        [TestMethod]
+        public async Task PutEvents_IdMismatch()
+        {
+            // Arrange
+            var updatedEvent = new Events { IdEvent = 2, EventName = "Updated Concert" };
+
+            // Act
+            var result = await _controller_Moq.PutEvents(1, updatedEvent);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestResult));
+        }
+
+        [TestMethod]
+        public async Task PutEvents_EventNotFound()
+        {
+            // Arrange
+            _mockRepo.Setup(repo => repo.GetByIdAsync(9999)).ReturnsAsync((Events)null);
+
+            var updatedEvent = new Events { IdEvent = 9999, EventName = "Updated Concert" };
+
+            // Act
+            var result = await _controller_Moq.PutEvents(9999, updatedEvent);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public async Task DeleteEvents_Success()
+        {
+            // Arrange
+            var mockEvents = new List<Events>
+            {
+                new Events { IdEvent = 1, EventName = "Concert" },
+                new Events { IdEvent = 2, EventName = "Festival" }
+            };
+
+            _mockRepo.Setup(repo => repo.GetByIdAsync(1))
+                .ReturnsAsync(mockEvents.FirstOrDefault(e => e.IdEvent == 1));
+
+            _mockRepo.Setup(repo => repo.DeleteAsync(It.IsAny<Events>()))
+                .Callback<Events>(e => mockEvents.Remove(e))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller_Moq.DeleteEvents(1);
+            var verif = mockEvents.FirstOrDefault(e => e.IdEvent == 1);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NoContentResult));
+            Assert.IsNull(verif); // Ensure the event is deleted
+        }
+
+        [TestMethod]
+        public async Task DeleteEvents_EventNotFound()
+        {
+            // Arrange
+            _mockRepo.Setup(repo => repo.GetByIdAsync(9999)).ReturnsAsync((Events)null);
+
+            // Act
+            var result = await _controller_Moq.DeleteEvents(9999);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            var notFoundResult = result as NotFoundObjectResult;
+            Assert.AreEqual("Event not found!", notFoundResult.Value);
         }
     }
 }
