@@ -20,8 +20,7 @@ namespace data.Models.EntityFramework
         public required string EventName { get; set; }
 
         [Column("gen_id")]
-        public int IdGenre { get; set; }
-
+        public int? IdGenre { get; set; }
 
         [Column("evt_description")]
         [MaxLength(500)]
