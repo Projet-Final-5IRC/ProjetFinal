@@ -35,8 +35,12 @@ namespace ms_evt.Models.DataManager
             eventDBContext.Entry(events).State = EntityState.Modified;
             events.EventName = entity.EventName;
             events.EventDescription = entity.EventDescription;
+            events.EventDate = entity.EventDate;
+            events.EventHour = entity.EventHour;
+            events.EventLocation = entity.EventLocation;
             events.EventInvitation = entity.EventInvitation;
             events.IdGenre = entity.IdGenre;
+            events.GenreEvent = entity.GenreEvent;
 
             eventDBContext.SaveChanges();
         }

@@ -32,10 +32,22 @@ namespace data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdEvent"));
 
+                    b.Property<string>("EventDate")
+                        .HasColumnType("text")
+                        .HasColumnName("evt_date");
+
                     b.Property<string>("EventDescription")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
                         .HasColumnName("evt_description");
+
+                    b.Property<string>("EventHour")
+                        .HasColumnType("text")
+                        .HasColumnName("evt_hour");
+
+                    b.Property<string>("EventLocation")
+                        .HasColumnType("text")
+                        .HasColumnName("evt_location");
 
                     b.Property<string>("EventName")
                         .IsRequired()
@@ -43,7 +55,7 @@ namespace data.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("evt_name");
 
-                    b.Property<int>("IdGenre")
+                    b.Property<int?>("IdGenre")
                         .HasColumnType("integer")
                         .HasColumnName("gen_id");
 
@@ -155,7 +167,6 @@ namespace data.Migrations
                         .WithMany("EventsGenre")
                         .HasForeignKey("IdGenre")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_genre_events");
 
                     b.Navigation("GenreEvent");

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace data.Migrations
 {
     /// <inheritdoc />
-    public partial class CreationBDSeries : Migration
+    public partial class CreationBDEvents : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,7 +56,10 @@ namespace data.Migrations
                     evt_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     evt_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    gen_id = table.Column<int>(type: "integer", nullable: false),
+                    evt_hour = table.Column<string>(type: "text", nullable: true),
+                    evt_date = table.Column<string>(type: "text", nullable: true),
+                    evt_location = table.Column<string>(type: "text", nullable: true),
+                    gen_id = table.Column<int>(type: "integer", nullable: true),
                     evt_description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
