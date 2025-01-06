@@ -1,4 +1,5 @@
-﻿using data.Models.EntityFramework;
+﻿using data.Models.DTO;
+using data.Models.EntityFramework;
 using data.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,18 @@ namespace data.Controllers
 
         // GET: api/Invites
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EventsInvite>>> GetInvites()
+        public async Task<ActionResult<IEnumerable<EventInviteDTO>>> GetInvites()
         {
-            return await dataRepository.GetAllAsync();
+            var result = await dataRepository.GetAllAsync();
+
+            List<EventInviteDTO> listInvite = new List<EventInviteDTO>();
+
+            foreach (EventsInvite invite in result.Value)
+            {
+                listInvite.Add(new EventInviteDTO(invite));
+            }
+
+            return listInvite;
         }
 
         // GET: api/Invites/5

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using data.Models.EntityFramework.Complexity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace data.Models.EntityFramework
 {
@@ -42,6 +43,7 @@ namespace data.Models.EntityFramework
         [InverseProperty(nameof(Genres.EventsGenre))]
         public virtual Genres? GenreEvent { get; set; } = null!;
 
+        [JsonIgnore]
         public virtual ICollection<EventsInvite> EventInvitation { get; set; } = new List<EventsInvite>();
 
         public void UpdateEventValues(Events updatedEvent)

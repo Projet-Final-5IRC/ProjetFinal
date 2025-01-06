@@ -1,4 +1,5 @@
-﻿using data.Models.EntityFramework;
+﻿using data.Models.DTO;
+using data.Models.EntityFramework;
 using data.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,18 @@ namespace data.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Users>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
-            return await dataRepository.GetAllAsync();
+            var result = await dataRepository.GetAllAsync();
+
+            List<UserDTO> listUsers = new List<UserDTO>();
+
+            foreach (Users user in result.Value) 
+            {
+                listUsers.Add(new UserDTO(user));   
+            }
+
+            return listUsers;
         }
 
         // GET: api/Users/5

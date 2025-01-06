@@ -6,19 +6,17 @@ namespace data.Models.EntityFramework
 {
     [Table("t_e_eventsinvite_utl")]
     [Index(nameof(idEventsInvite))]
-    [PrimaryKey(nameof(idEventsInvite),nameof(IdEvent),nameof(IdUser))]
+    [PrimaryKey(nameof(idEventsInvite))]
     public class EventsInvite
     {
         [Key]
         [Column("ein_id")]
         public int idEventsInvite {  get; set; }
 
-        [Key]
         [Required]
         [Column("evt_id")]
         public int IdEvent { get; set; }
 
-        [Key]
         [Required]
         [Column("usr_id")]
         public int IdUser { get; set; }
