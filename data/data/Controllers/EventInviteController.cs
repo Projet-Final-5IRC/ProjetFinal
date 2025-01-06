@@ -35,11 +35,11 @@ namespace data.Controllers
 
         // GET: api/Invites/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<EventsInvite>> GetInviteById(int id)
+        public async Task<ActionResult<EventInviteDTO>> GetInviteById(int id)
         {
-            var invite = await dataRepository.GetByIdAsync(id);
+            var result = await dataRepository.GetByIdAsync(id);
 
-            return invite;
+            return new EventInviteDTO(result.Value);
         }
 
         // PUT: api/Invites/5
