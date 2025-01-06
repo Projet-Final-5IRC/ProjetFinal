@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'view.g.dart';
@@ -36,20 +37,21 @@ class BottomNavigationView extends ConsumerWidget {
           ),
           body: ProviderScope(child: child),
           bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Colors.blue,
-            fixedColor: Colors.orange,
+            backgroundColor: Color(0xFF2A6A86),
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white,
             currentIndex: tabsRouter.activeIndex,
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.favorite),
+                icon: _buildCustomIcon('assets/icons/calendar_icon.svg', tabsRouter.activeIndex == 0),
                 label: "Event",
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.favorite),
+                BottomNavigationBarItem(
+                icon: _buildCustomIcon('assets/icons/home_icon.svg', tabsRouter.activeIndex == 1),
                 label: "Home",
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.favorite),
+                icon: _buildCustomIcon('assets/icons/profil_icon.svg', tabsRouter.activeIndex == 2),
                 label: "Profil",
               ),
             ],
@@ -62,6 +64,26 @@ class BottomNavigationView extends ConsumerWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildCustomIcon(String svgPath, bool isSelected) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        if (isSelected)
+          Container(
+            width: 64,
+            padding: EdgeInsets.symmetric(vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.lightBlue,
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+        SvgPicture.asset(
+          svgPath,
+        ),
+      ],
     );
   }
 }
