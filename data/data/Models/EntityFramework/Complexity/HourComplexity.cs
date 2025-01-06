@@ -18,7 +18,7 @@ namespace data.Models.EntityFramework.Complexity
             // Regex pour valider le format HH:mm
             var regex = new Regex(@"^(?:[01]\d|2[0-3]):[0-5]\d$");
 
-            if (!regex.IsMatch(time))
+            if (!regex.IsMatch(time) && !string.IsNullOrWhiteSpace(time))
             {
                 ErrorMessage = "L'heure doit être au format HH:mm (par exemple, 14:30).";
                 return false;

@@ -12,8 +12,8 @@ using data.Models.EntityFramework;
 namespace data.Migrations
 {
     [DbContext(typeof(EventDBContext))]
-    [Migration("20250106130511_CreationBDSeries")]
-    partial class CreationBDSeries
+    [Migration("20250106180715_CreationDBEvent")]
+    partial class CreationDBEvent
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,6 +22,9 @@ namespace data.Migrations
             modelBuilder
                 .HasDefaultSchema("public")
                 .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -74,8 +77,11 @@ namespace data.Migrations
             modelBuilder.Entity("data.Models.EntityFramework.EventsInvite", b =>
                 {
                     b.Property<int>("idEventsInvite")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("ein_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("idEventsInvite"));
 
                     b.Property<int>("IdEvent")
                         .HasColumnType("integer")
@@ -89,7 +95,7 @@ namespace data.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("ein_state");
 
-                    b.HasKey("idEventsInvite", "IdEvent", "IdUser");
+                    b.HasKey("idEventsInvite");
 
                     b.HasIndex("IdEvent");
 

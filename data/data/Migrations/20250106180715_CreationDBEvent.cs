@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace data.Migrations
 {
     /// <inheritdoc />
-    public partial class CreationBDSeries : Migration
+    public partial class CreationDBEvent : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -78,14 +78,15 @@ namespace data.Migrations
                 schema: "public",
                 columns: table => new
                 {
-                    ein_id = table.Column<int>(type: "integer", nullable: false),
+                    ein_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     evt_id = table.Column<int>(type: "integer", nullable: false),
                     usr_id = table.Column<int>(type: "integer", nullable: false),
                     ein_state = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_t_e_eventsinvite_utl", x => new { x.ein_id, x.evt_id, x.usr_id });
+                    table.PrimaryKey("PK_t_e_eventsinvite_utl", x => x.ein_id);
                     table.ForeignKey(
                         name: "fk_event_invitation",
                         column: x => x.evt_id,

@@ -45,7 +45,7 @@ namespace data.Controllers
         // PUT: api/Invites/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<ActionResult<EventsInvite>> PutInvite(int id, EventsInvite inviteUpdated)
+        public async Task<ActionResult<EventInviteDTO>> PutInvite(int id, EventsInvite inviteUpdated)
         {
             if (id != inviteUpdated.idEventsInvite)
             {
@@ -60,14 +60,14 @@ namespace data.Controllers
             else
             {
                 var result = await dataRepository.UpdateAsync(inviteToUpdate.Value, inviteUpdated);
-                return result;
+                return new EventInviteDTO(result.Value);
             }
         }
 
         // POST: api/Invites
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<EventsInvite>> PostInvite(EventsInvite invite)
+        public async Task<ActionResult<EventInviteDTO>> PostInvite(EventsInvite invite)
         {
             if (!ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace data.Controllers
             }
             await dataRepository.AddAsync(invite);
 
-            return CreatedAtAction("GetInvites", new { id = invite.idEventsInvite }, invite);
+            return CreatedAtAction("GetInviteById", new { id = invite.idEventsInvite }, new EventInviteDTO(invite));
         }
 
         // DELETE: api/Invites/5

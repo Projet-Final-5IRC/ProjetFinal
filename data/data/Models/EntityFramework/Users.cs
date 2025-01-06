@@ -1,4 +1,5 @@
-﻿using data.Models.EntityFramework.Complexity;
+﻿using data.Models.DTO;
+using data.Models.EntityFramework.Complexity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;

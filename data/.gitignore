@@ -1,5 +1,6 @@
-/data/obj/*
+data/obj/*
 data/bin/*
+data/appsettings.json
 dataTests/obj/*
 dataTests/bin/*
 .vs/

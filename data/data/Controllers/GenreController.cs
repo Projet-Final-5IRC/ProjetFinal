@@ -1,4 +1,5 @@
-﻿using data.Models.EntityFramework;
+﻿using data.Models.DTO;
+using data.Models.EntityFramework;
 using data.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,24 +19,33 @@ namespace data.Controllers
 
         // GET: api/Genres
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Genres>>> GetGenres()
+        public async Task<ActionResult<IEnumerable<GenreDTO>>> GetGenres()
         {
-            return await dataRepository.GetAllAsync();
+            var result = await dataRepository.GetAllAsync();
+
+            List<GenreDTO> listGenre = new List<GenreDTO>();
+
+            foreach (Genres genre in result.Value)
+            {
+                listGenre.Add(new GenreDTO(genre));
+            }
+
+            return listGenre;
         }
 
         // GET: api/Genres/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Genres>> GetGenreById(int id)
+        public async Task<ActionResult<GenreDTO>> GetGenreById(int id)
         {
             var genre = await dataRepository.GetByIdAsync(id);
 
-            return genre;
+            return new GenreDTO(genre.Value);
         }
 
         // PUT: api/Genres/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<ActionResult<Genres>> PutGenres(int id, Genres genreUpdated)
+        public async Task<ActionResult<GenreDTO>> PutGenres(int id, Genres genreUpdated)
         {
             if (id != genreUpdated.IdGenre)
             {
@@ -50,14 +60,14 @@ namespace data.Controllers
             else
             {
                 var result = await dataRepository.UpdateAsync(genreToUpdate.Value, genreUpdated);
-                return result;
+                return new GenreDTO(result.Value);
             }
         }
 
         // POST: api/Genres
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Genres>> PostGenre(Genres genre)
+        public async Task<ActionResult<GenreDTO>> PostGenre(Genres genre)
         {
             if (!ModelState.IsValid)
             {
@@ -65,7 +75,7 @@ namespace data.Controllers
             }
             await dataRepository.AddAsync(genre);
 
-            return CreatedAtAction("GetGenres", new { id = genre.IdGenre }, genre);
+            return CreatedAtAction("GetGenreById", new { id = genre.IdGenre }, new GenreDTO(genre));
         }
 
         // DELETE: api/Genre/5
