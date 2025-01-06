@@ -84,7 +84,7 @@ namespace data.Models.DataManager
             try
             {
                 await eventDBContext.SaveChangesAsync();
-                return updatedEvent;
+                return eventToUpdate;
             }
             catch (Exception ex)
             {

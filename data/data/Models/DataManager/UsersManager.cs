@@ -1,4 +1,5 @@
-﻿using data.Models.EntityFramework;
+﻿using data.Models.DTO;
+using data.Models.EntityFramework;
 using data.Models.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

@@ -45,7 +45,7 @@ namespace data.Controllers
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<ActionResult<Users>> PutUsers(int id, Users userUpdated)
+        public async Task<ActionResult<UserDTO>> PutUsers(int id, Users userUpdated)
         {
             if (id != userUpdated.IdUser)
             {
@@ -60,7 +60,7 @@ namespace data.Controllers
             else
             {
                 var result = await dataRepository.UpdateAsync(userToUpdate.Value, userUpdated);
-                return result;
+                return new UserDTO(result.Value);
             }
         }
 
@@ -83,7 +83,7 @@ namespace data.Controllers
             
             await dataRepository.AddAsync(user);
 
-            return CreatedAtAction("GetUsers", new { id = user.IdUser }, user);
+            return CreatedAtAction("GetUserById", new { id = user.IdUser }, new UserDTO(user));
         }
 
         // DELETE: api/Users/5
