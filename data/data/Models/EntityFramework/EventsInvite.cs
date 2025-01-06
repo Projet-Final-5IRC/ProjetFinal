@@ -29,10 +29,16 @@ namespace data.Models.EntityFramework
 
         [ForeignKey(nameof(IdEvent))]
         [InverseProperty(nameof(Events.EventInvitation))]
-        public virtual Events EventReference { get; set; } = null!;
+        public virtual Events? EventReference { get; set; } = null!;
 
         [ForeignKey(nameof(IdUser))]
         [InverseProperty(nameof(Users.UserInvitation))]
-        public virtual Users UserReference { get; set; } = null!;
+        public virtual Users? UserReference { get; set; } = null!;
+
+        public void UpdateInviteValues(EventsInvite invite)
+        {
+            if (this.IsPending != invite.IsPending)
+                this.IsPending = invite.IsPending;
+        }
     }
 }

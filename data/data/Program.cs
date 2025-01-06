@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IDataRepository<Events>, EventsManager>();
 builder.Services.AddScoped<IDataRepository<Genres>, GenresManager>();
 builder.Services.AddScoped<IDataRepositoryWithEmail<Users>, UsersManager>();
+builder.Services.AddScoped<IDataRepository<EventsInvite>, EventsInviteManager>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
