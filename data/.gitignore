@@ -1,5 +1,5 @@
-data/obj/
-data/bin/
-dataTests/obj/
-dataTests/bin/
+/data/obj/*
+data/bin/*
+dataTests/obj/*
+dataTests/bin/*
 .vs/
