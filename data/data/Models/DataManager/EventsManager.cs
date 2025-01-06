@@ -79,14 +79,7 @@ namespace data.Models.DataManager
             }
 
             eventDBContext.Entry(eventToUpdate).State = EntityState.Modified;
-            eventToUpdate.EventName = updatedEvent.EventName;
-            eventToUpdate.EventDescription = updatedEvent.EventDescription;
-            eventToUpdate.EventDate = updatedEvent.EventDate;
-            eventToUpdate.EventHour = updatedEvent.EventHour;
-            eventToUpdate.EventLocation = updatedEvent.EventLocation;
-            eventToUpdate.EventInvitation = updatedEvent.EventInvitation;
-            eventToUpdate.IdGenre = updatedEvent.IdGenre;
-            eventToUpdate.GenreEvent = updatedEvent.GenreEvent;
+            eventToUpdate.UpdateEventValues(updatedEvent);
 
             try
             {

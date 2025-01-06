@@ -43,5 +43,27 @@ namespace data.Models.EntityFramework
         public virtual Genres? GenreEvent { get; set; } = null!;
 
         public virtual ICollection<EventsInvite> EventInvitation { get; set; } = new List<EventsInvite>();
+
+        public void UpdateEventValues(Events updatedEvent)
+        {
+            if (!string.IsNullOrEmpty(updatedEvent.EventName))
+                this.EventName = updatedEvent.EventName;
+
+            if (!string.IsNullOrEmpty(updatedEvent.EventHour))
+                this.EventHour = updatedEvent.EventHour;
+
+            if (!string.IsNullOrEmpty(updatedEvent.EventDate))
+                this.EventDate = updatedEvent.EventDate;
+
+            if (!string.IsNullOrEmpty(updatedEvent.EventLocation))
+                this.EventLocation = updatedEvent.EventLocation;
+
+            if (updatedEvent.IdGenre != null)
+                this.IdGenre = updatedEvent.IdGenre;
+
+            if (!string.IsNullOrEmpty(updatedEvent.EventDescription))
+                this.EventDescription = updatedEvent.EventDescription;
+
+        }
     }
 }

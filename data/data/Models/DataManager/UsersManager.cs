@@ -5,116 +5,128 @@ using Microsoft.EntityFrameworkCore;
 
 namespace data.Models.DataManager
 {
-    public class GenresManager : IDataRepository<Genres>
+    public class UsersManager : IDataRepositoryWithEmail<Users>
     {
         readonly EventDBContext? eventDBContext;
 
-        public GenresManager() { }
-        public GenresManager(EventDBContext eventDBContext)
+        public UsersManager() { }
+        public UsersManager(EventDBContext eventDBContext)
         {
             this.eventDBContext = eventDBContext;
         }
 
-        public async Task<ActionResult<IEnumerable<Genres>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<Users>>> GetAllAsync()
         {
             if (eventDBContext == null)
             {
                 throw new ArgumentNullException(nameof(eventDBContext));
             }
-            return await eventDBContext.Genre.ToListAsync();
+            return await eventDBContext.User.ToListAsync();
         }
 
-        public async Task<ActionResult<Genres>> GetByIdAsync(int id)
+        public async Task<ActionResult<Users>> GetByIdAsync(int id)
         {
             if (eventDBContext == null)
             {
                 throw new ArgumentNullException(nameof(eventDBContext));
             }
 
-            var genreEntity = await eventDBContext.Genre.FirstOrDefaultAsync(e => e.IdGenre == id);
+            var userEntity = await eventDBContext.User.FirstOrDefaultAsync(e => e.IdUser == id);
 
-            return genreEntity != null ? genreEntity : new NotFoundResult();
+            return userEntity != null ? userEntity : new NotFoundResult();
         }
 
-        public async Task<ActionResult<Genres>> AddAsync(Genres newGenre)
+        public async Task<ActionResult<Users>> GetByEmailAsync(string email)
         {
             if (eventDBContext == null)
             {
                 throw new ArgumentNullException(nameof(eventDBContext));
             }
 
-            if (newGenre == null)
+            var userEntity = await eventDBContext.User.FirstOrDefaultAsync(e => e.Email == email);
+
+            return userEntity != null ? userEntity : new NotFoundResult();
+        }
+
+        public async Task<ActionResult<Users>> AddAsync(Users newUser)
+        {
+            if (eventDBContext == null)
+            {
+                throw new ArgumentNullException(nameof(eventDBContext));
+            }
+
+            if (newUser == null)
             {
                 return new BadRequestResult();
             }
 
             try
             {
-                await eventDBContext.Genre.AddAsync(newGenre);
+                await eventDBContext.User.AddAsync(newUser);
                 await eventDBContext.SaveChangesAsync();
-                return newGenre;
+                return newUser;
             }
             catch (Exception ex)
             {
-                return new ObjectResult($"An error occurred while adding the genre: {ex.Message}")
+                return new ObjectResult($"An error occurred while adding the user: {ex.Message}")
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }
 
-        public async Task<ActionResult<Genres>> UpdateAsync(Genres genreToUpdate, Genres updatedGenre)
-        {
+        public async Task<ActionResult<Users>> UpdateAsync(Users userToUpdate, Users updatedUser) 
+        { 
             if (eventDBContext == null)
             {
                 throw new ArgumentNullException(nameof(eventDBContext));
             }
 
-            if (updatedGenre == null && genreToUpdate == null)
+            if (updatedUser == null && userToUpdate == null)
             {
                 return new BadRequestResult();
             }
 
-            eventDBContext.Entry(genreToUpdate).State = EntityState.Modified;
-            genreToUpdate.UpdateGenreValues(updatedGenre);
+            eventDBContext.Entry(userToUpdate).State = EntityState.Modified;
+            userToUpdate.UpdateUserValues(updatedUser);
 
             try
             {
                 await eventDBContext.SaveChangesAsync();
-                return updatedGenre;
+                return userToUpdate;
             }
             catch (Exception ex)
             {
-                return new ObjectResult($"An error occurred while updating the genre: {ex.Message}")
+                return new ObjectResult($"An error occurred while updating the user: {ex.Message}")
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }
 
-        public async Task<ActionResult> DeleteAsync(Genres genreToDelete)
+        public async Task<ActionResult> DeleteAsync(Users userToDelete)
         {
             if (eventDBContext == null)
             {
                 throw new ArgumentNullException(nameof(eventDBContext));
             }
 
-            if (genreToDelete == null)
+            if (userToDelete == null)
             {
                 return new BadRequestResult();
             }
 
             try
             {
-                eventDBContext.Genre.Remove(genreToDelete);
+                eventDBContext.User.Remove(userToDelete);
                 await eventDBContext.SaveChangesAsync();
                 return new NoContentResult();
             }
             catch (Exception ex)
             {
-                return new ObjectResult($"An error occurred while deleting the genre: {ex.Message}")
+                return new ObjectResult($"An error occurred while deleting the user: {ex.Message}")
                 {
-                    StatusCode = StatusCodes.Status500InternalServerError // Retourne un 500 Internal Server Error en cas d'exception
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }
