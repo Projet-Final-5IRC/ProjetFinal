@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "data", "data.csproj", "{9BD793E7-D605-45F7-BEFA-F8324ACC5BD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "data", "data\data.csproj", "{393B90C3-776B-47BC-BBEA-CB3A47F7D861}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dataTests", "dataTests\dataTests.csproj", "{57B7153E-E6FA-4A20-8132-0549673AE75F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +13,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9BD793E7-D605-45F7-BEFA-F8324ACC5BD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BD793E7-D605-45F7-BEFA-F8324ACC5BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BD793E7-D605-45F7-BEFA-F8324ACC5BD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BD793E7-D605-45F7-BEFA-F8324ACC5BD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{393B90C3-776B-47BC-BBEA-CB3A47F7D861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{393B90C3-776B-47BC-BBEA-CB3A47F7D861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{393B90C3-776B-47BC-BBEA-CB3A47F7D861}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{393B90C3-776B-47BC-BBEA-CB3A47F7D861}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57B7153E-E6FA-4A20-8132-0549673AE75F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57B7153E-E6FA-4A20-8132-0549673AE75F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57B7153E-E6FA-4A20-8132-0549673AE75F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57B7153E-E6FA-4A20-8132-0549673AE75F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A18E424D-B71B-43E1-AA8E-2D8288CA9EF9}
+		SolutionGuid = {692227EA-653E-4D6A-9AD9-8F27C3D5C418}
 	EndGlobalSection
 EndGlobal
