@@ -7,8 +7,8 @@ namespace data.Models.Repository
     {
         Task<ActionResult<IEnumerable<TEntity>>> GetAllAsync();
         Task<ActionResult<TEntity>> GetByIdAsync(int id);
-        Task<ActionResult<Events>> AddAsync(TEntity entity);
-        Task<ActionResult<Events>> UpdateAsync(TEntity entityToUpdate, TEntity entityUpdated);
+        Task<ActionResult<TEntity>> AddAsync(TEntity entity);
+        Task<ActionResult<TEntity>> UpdateAsync(TEntity entityToUpdate, TEntity entityUpdated);
         Task<ActionResult> DeleteAsync(TEntity entity);
     }
 }
