@@ -1,6 +1,11 @@
-from app import create_app
+from flask import Flask
+from app.routes import api
 
-app = create_app()
+app = Flask(__name__)
 
-if __name__ == "__main__":
+# Enregistrement du blueprint API
+app.register_blueprint(api)
+
+# Lancement de l'application
+if __name__ == '__main__':
     app.run(debug=True)
