@@ -18,7 +18,7 @@ namespace data.Models.EntityFramework
         [Required]
         [Column("evt_name")]
         [MaxLength(50)]
-        public required string EventName { get; set; }
+        public string EventName { get; set; }
 
         [Column("evt_hour")]
         [HourComplexity]
