@@ -16,7 +16,7 @@ namespace data.Models.EntityFramework
 
         public static readonly ILoggerFactory MyLoggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseLoggerFactory(MyLoggerFactory)
+            => optionsBuilder.UseLazyLoadingProxies().UseLoggerFactory(MyLoggerFactory)
                                 .EnableSensitiveDataLogging();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace data.Models.EntityFramework
 {
@@ -38,6 +39,7 @@ namespace data.Models.EntityFramework
         [DateComplexity]
         public string DateCreation { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<EventsInvite> UserInvitation { get; set; } = new List<EventsInvite>();
 
         public void UpdateUserValues(Users updatedUser)

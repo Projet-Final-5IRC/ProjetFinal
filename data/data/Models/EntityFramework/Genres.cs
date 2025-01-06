@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace data.Models.EntityFramework
 {
@@ -15,6 +16,7 @@ namespace data.Models.EntityFramework
         [Column("gen_name")]
         public required string GenreName { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Events> EventsGenre { get; set; } = new List<Events>();
 
         public void UpdateGenreValues(Genres updatedGenre)

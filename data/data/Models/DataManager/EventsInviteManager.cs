@@ -31,7 +31,8 @@ namespace data.Models.DataManager
                 throw new ArgumentNullException(nameof(eventDBContext));
             }
 
-            var eventInviteEntity = await eventDBContext.EventInvite.FirstOrDefaultAsync(e => e.idEventsInvite == id);
+            var eventInviteEntity = await eventDBContext.EventInvite
+                                            .FirstOrDefaultAsync(e => e.idEventsInvite == id);
 
             return eventInviteEntity != null ? eventInviteEntity : new NotFoundResult();
         }
