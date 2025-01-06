@@ -40,7 +40,7 @@ namespace data.Models.EntityFramework
 
         [ForeignKey(nameof(IdGenre))]
         [InverseProperty(nameof(Genres.EventsGenre))]
-        public virtual Genres GenreEvent { get; set; } = null!;
+        public virtual Genres? GenreEvent { get; set; } = null!;
 
         public virtual ICollection<EventsInvite> EventInvitation { get; set; } = new List<EventsInvite>();
     }
