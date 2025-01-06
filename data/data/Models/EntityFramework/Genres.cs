@@ -16,5 +16,12 @@ namespace data.Models.EntityFramework
         public required string GenreName { get; set; }
 
         public virtual ICollection<Events> EventsGenre { get; set; } = new List<Events>();
+
+        public void UpdateGenreValues(Genres updatedGenre)
+        {
+            if (!string.IsNullOrEmpty(updatedGenre.GenreName))
+                this.GenreName = updatedGenre.GenreName;
+
+        }
     }
 }

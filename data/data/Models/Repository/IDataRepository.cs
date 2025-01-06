@@ -11,4 +11,9 @@ namespace data.Models.Repository
         Task<ActionResult<TEntity>> UpdateAsync(TEntity entityToUpdate, TEntity entityUpdated);
         Task<ActionResult> DeleteAsync(TEntity entity);
     }
+
+    public interface IDataRepositoryWithEmail<TEntity> : IDataRepository<TEntity>
+    {
+        Task<ActionResult<TEntity>> GetByEmailAsync(string email);
+    }
 }

@@ -35,8 +35,30 @@ namespace data.Models.EntityFramework
 
         [Column("usr_datecreation")]
         [NotNull]
-        public DateTime DateCreation { get; set; } = DateTime.Now;
+        [DateComplexity]
+        public string DateCreation { get; set; }
 
         public virtual ICollection<EventsInvite> UserInvitation { get; set; } = new List<EventsInvite>();
+
+        public void UpdateUserValues(Users updatedUser)
+        {
+            if (!string.IsNullOrEmpty(updatedUser.Email))
+                this.Email = updatedUser.Email;
+
+            if (!string.IsNullOrEmpty(updatedUser.FirstName))
+                this.FirstName = updatedUser.FirstName;
+
+            if (!string.IsNullOrEmpty(updatedUser.LastName))
+                this.LastName = updatedUser.LastName;
+
+            if (!string.IsNullOrEmpty(updatedUser.UserName))
+                this.UserName = updatedUser.UserName;
+
+            if (!string.IsNullOrEmpty(updatedUser.Password))
+                this.Password = updatedUser.Password;
+
+            if (updatedUser.DateCreation != default)
+                this.DateCreation = updatedUser.DateCreation;
+        }
     }
 }
