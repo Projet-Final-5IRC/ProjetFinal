@@ -29,6 +29,25 @@ class BottomNavigationRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [CreateEventView]
+class CreateEventRoute extends PageRouteInfo<void> {
+  const CreateEventRoute({List<PageRouteInfo>? children})
+      : super(
+          CreateEventRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CreateEventRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CreateEventView();
+    },
+  );
+}
+
+/// generated route for
 /// [EventView]
 class EventRoute extends PageRouteInfo<void> {
   const EventRoute({List<PageRouteInfo>? children})
