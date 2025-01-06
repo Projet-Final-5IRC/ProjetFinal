@@ -35,11 +35,11 @@ namespace data.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Users>> GetUserById(int id)
+        public async Task<ActionResult<UserDTO>> GetUserById(int id)
         {
-            var genre = await dataRepository.GetByIdAsync(id);
+            var result = await dataRepository.GetByIdAsync(id);
 
-            return genre;
+            return new UserDTO(result.Value);
         }
 
         // PUT: api/Users/5
