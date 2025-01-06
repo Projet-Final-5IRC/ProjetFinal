@@ -1,0 +1,21 @@
+{
+    "jbrider": {
+      "films_vus": [
+        {
+          "titre": "Titre du film 1",
+          "commentaire": "Super film !",
+          "aime": true
+        },
+        {
+          "titre": "Titre du film 2",
+          "commentaire": "bof !",
+          "aime": false
+        },
+         {
+          "titre": "Titre du film 3",
+          "commentaire": "Trop bien !",
+          "aime": true
+        }
+      ]
+    }
+  }
