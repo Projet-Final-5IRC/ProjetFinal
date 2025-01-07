@@ -1,0 +1,24 @@
+name: Build and Deploy Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Build and push Docker image
+      run: |
+        docker build \
+          --build-arg DB_SERVER=${{ secrets[matrix.project]_DB_SERVER }} \
+          --build-arg DB_PORT=${{secrets_DB_PORT}} \
+          --build-arg DB_NAME=${{ secrets[matrix.project]_DB_NAME }} \
+          --build-arg DB_USER=${{ secrets[matrix.project]_DB_USER }} \
+          --build-arg DB_PASSWORD=${{ secrets[matrix.project]_DB_PASSWORD }} \
+          -t data/myapp:latest ./data
