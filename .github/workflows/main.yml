@@ -15,7 +15,7 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        pwd
+        cd data/
         docker build \
           --build-arg DB_SERVER=${{ secrets.DB_SERVER }} \
           --build-arg DB_PORT=${{ secrets.DB_PORT }} \
