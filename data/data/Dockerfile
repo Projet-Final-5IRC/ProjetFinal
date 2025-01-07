@@ -7,6 +7,13 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+# Generate appsettings.json
+RUN echo '{
+  "ConnectionStrings": {
+    "EventDB": "Server=${DB_SERVER};port=${DB_PORT};Database=${DB_NAME};uid=${DB_USER};password=${DB_PASSWORD}"
+  }
+}' > appsettings.json
+
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
