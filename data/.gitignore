@@ -4,3 +4,4 @@ data/appsettings.json
 dataTests/obj/*
 dataTests/bin/*
 .vs/
+ms-recommend-net/obj/*
