@@ -48,6 +48,25 @@ class CreateEventRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [EventHomeView]
+class EventHomeRoute extends PageRouteInfo<void> {
+  const EventHomeRoute({List<PageRouteInfo>? children})
+      : super(
+          EventHomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'EventHomeRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const EventHomeView();
+    },
+  );
+}
+
+/// generated route for
 /// [EventView]
 class EventRoute extends PageRouteInfo<void> {
   const EventRoute({List<PageRouteInfo>? children})
@@ -86,6 +105,25 @@ class HomeRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [LoginView]
+class LoginRoute extends PageRouteInfo<void> {
+  const LoginRoute({List<PageRouteInfo>? children})
+      : super(
+          LoginRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LoginRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const LoginView();
+    },
+  );
+}
+
+/// generated route for
 /// [ProfilView]
 class ProfilRoute extends PageRouteInfo<void> {
   const ProfilRoute({List<PageRouteInfo>? children})
@@ -100,6 +138,25 @@ class ProfilRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const ProfilView();
+    },
+  );
+}
+
+/// generated route for
+/// [RegisterView]
+class RegisterRoute extends PageRouteInfo<void> {
+  const RegisterRoute({List<PageRouteInfo>? children})
+      : super(
+          RegisterRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'RegisterRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const RegisterView();
     },
   );
 }

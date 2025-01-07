@@ -56,7 +56,7 @@ class EventView extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               CineFouineHugeBoutton(
-                onPressed: () => router.navigate(CreateEventRoute()),
+                onPressed: () => router.push(const CreateEventRoute()),
                 text: "Create",
               ),
               const SizedBox(height: 16),
