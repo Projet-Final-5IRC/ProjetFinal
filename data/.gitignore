@@ -3,3 +3,4 @@ data/bin/*
 dataTests/obj/*
 dataTests/bin/*
 .vs/
+ms-recommend-net/obj/*
