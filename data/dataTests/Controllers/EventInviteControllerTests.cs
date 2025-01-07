@@ -12,6 +12,7 @@ using data.Models.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Microsoft.Extensions.Configuration;
 
 namespace data.Controllers.Tests
 {
@@ -27,8 +28,16 @@ namespace data.Controllers.Tests
 
         public EventInviteControllerTests()
         {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("EventDB");
+
             var builder = new DbContextOptionsBuilder<EventDBContext>()
-                .UseNpgsql("Server=localhost;port=5432;Database=EventsDB;uid=postgres;password=postgres;");
+                .UseNpgsql(connectionString);
+
             _context = new EventDBContext(builder.Options);
             dataRepository = new EventsInviteManager(_context);
             _controller = new EventInviteController(dataRepository);
