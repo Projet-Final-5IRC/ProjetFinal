@@ -8,11 +8,11 @@ EXPOSE 8080
 EXPOSE 8081
 
 # Generate appsettings.json
-RUN echo '{
-  "ConnectionStrings": {
-    "EventDB": "Server=${DB_SERVER};port=${DB_PORT};Database=${DB_NAME};uid=${DB_USER};password=${DB_PASSWORD}"
-  }
-}' > appsettings.json
+RUN echo '{' > appsettings.json && \
+    echo '  "ConnectionStrings": {' >> appsettings.json && \
+    echo '    "EventDB": "Server=${DB_SERVER};port=${DB_PORT};Database=${DB_NAME};uid=${DB_USER};password=${DB_PASSWORD}"' >> appsettings.json && \
+    echo '  }' >> appsettings.json && \
+    echo '}' >> appsettings.json
 
 
 # This stage is used to build the service project
