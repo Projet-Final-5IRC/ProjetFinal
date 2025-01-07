@@ -19,7 +19,7 @@ RUN echo '{' > appsettings.json && \
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["data/data.csproj", "data/"]
+COPY ["data.csproj", "data/"]
 RUN dotnet restore "./data/data.csproj"
 COPY . .
 WORKDIR "/src/data"
