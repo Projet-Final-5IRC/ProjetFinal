@@ -7,22 +7,15 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-# Generate appsettings.json
-RUN echo '{' > appsettings.json && \
-    echo '  "ConnectionStrings": {' >> appsettings.json && \
-    echo '    "EventDB": "Server=${DB_SERVER};port=${DB_PORT};Database=${DB_NAME};uid=${DB_USER};password=${DB_PASSWORD}"' >> appsettings.json && \
-    echo '  }' >> appsettings.json && \
-    echo '}' >> appsettings.json
-
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["./data.csproj", "data/"]
-RUN dotnet restore "./data/data.csproj"
+COPY ["data.csproj", "."]
+RUN dotnet restore "./data.csproj"
 COPY . .
-WORKDIR "/src/data"
+WORKDIR "/src/."
 RUN dotnet build "./data.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
