@@ -3,6 +3,7 @@ using data.Models.EntityFramework;
 using data.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace data.Controllers
 {
@@ -40,6 +41,10 @@ namespace data.Controllers
         {
             var events = await dataRepository.GetByIdAsync(id);
 
+            if(events.Value == null)
+            {
+                return NotFound();
+            }
             return new EventDTO(events.Value);
         }
 

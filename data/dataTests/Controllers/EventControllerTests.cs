@@ -11,6 +11,7 @@ using data.Models.Repository;
 using data.Models.DataManager;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
+using data.Models.DTO;
 
 namespace data.Controllers.Tests
 {
@@ -50,10 +51,10 @@ namespace data.Controllers.Tests
         [TestMethod]
         public async Task GetEventByID_SuccessGetEventByID()
         {
-            var result = await _controller.GetEventById(2);
-            var userInDB = _context.Event.Where(c => c.IdEvent == 2).FirstOrDefault();
+            var result = await _controller.GetEventById(1);
+            var eventInDB = _context.Event.Where(c => c.IdEvent == 1).FirstOrDefault();
 
-            Assert.AreEqual(userInDB.EventName, result.Value.EventName);
+            Assert.AreEqual(eventInDB.EventName, result.Value.EventName);
         }
 
         [TestMethod]
@@ -92,7 +93,7 @@ namespace data.Controllers.Tests
 
             //Assert
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.Value, typeof(List<Events>));
+            Assert.IsInstanceOfType(result.Value, typeof(List<EventDTO>));
             Assert.AreEqual(2, okResult.Count());
             Assert.AreEqual("Soirée Horreur", okResult.First().EventName);
         }
@@ -119,8 +120,8 @@ namespace data.Controllers.Tests
             // Assert
             Assert.IsNotNull(createdResult);
             Assert.AreEqual(201, createdResult.StatusCode); // HTTP 201 Created
-            Assert.AreEqual("GetEvent", createdResult.ActionName);
-            Assert.AreEqual(newEvent.IdEvent, ((Events)createdResult.Value).IdEvent);
+            Assert.AreEqual("GetEventById", createdResult.ActionName);
+            Assert.AreEqual(newEvent.IdEvent, ((EventDTO)createdResult.Value).IdEvent);
         }
 
         [TestMethod]
@@ -167,7 +168,7 @@ namespace data.Controllers.Tests
             var verif = await _controller_Moq.GetEventById(1);
 
             // Assert
-            Assert.IsInstanceOfType(result.Value, typeof(Events));
+            Assert.IsInstanceOfType(result.Value, typeof(EventDTO));
             Assert.AreEqual(updatedEvent.EventName, verif.Value.EventName);
         }
 
