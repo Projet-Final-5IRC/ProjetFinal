@@ -28,7 +28,7 @@ public class UserControllerTests
         public UserControllerTests()
         {
             var builder = new DbContextOptionsBuilder<EventDBContext>()
-                .UseNpgsql("Server=localhost;port=5432;Database=EventsDB;uid=postgres;password=postgres;");
+                .UseNpgsql("Server=projet-final.postgres.database.azure.com;port=5432;Database=EventsDB;uid=projectAdmin;password=5IRCCPELyon");
             _context = new EventDBContext(builder.Options);
             dataRepository = new UsersManager(_context);
             _controller = new UserController(dataRepository);

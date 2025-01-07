@@ -12,6 +12,8 @@ using data.Models.DataManager;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
 using data.Models.DTO;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.Extensions.Logging;
 
 namespace data.Controllers.Tests
 {
@@ -28,7 +30,7 @@ namespace data.Controllers.Tests
         public EventControllerTests()
         {
             var builder = new DbContextOptionsBuilder<EventDBContext>()
-                .UseNpgsql("Server=localhost;port=5432;Database=EventsDB;uid=postgres;password=postgres;");
+                .UseNpgsql("Server = projet - final.postgres.database.azure.com; port = 5432; Database = EventsDB; uid = projectAdmin; password = 5IRCCPELyon");
             _context = new EventDBContext(builder.Options);
             dataRepository = new EventsManager(_context);
             _controller = new EventController(dataRepository);
