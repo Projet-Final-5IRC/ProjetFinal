@@ -37,9 +37,14 @@ namespace data.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDTO>> GetUserById(int id)
         {
-            var result = await dataRepository.GetByIdAsync(id);
+            var user = await dataRepository.GetByIdAsync(id);
 
-            return new UserDTO(result.Value);
+            if (user.Value == null)
+            {
+                return NotFound();
+            }
+
+            return new UserDTO(user.Value);
         }
 
         // PUT: api/Users/5
@@ -76,7 +81,7 @@ namespace data.Controllers
 
             var check = await dataRepository.GetByEmailAsync(user.Email);
 
-            if( check.Value != null)
+            if( check != null)
             {
                 return BadRequest("Email déjà présent");
             }

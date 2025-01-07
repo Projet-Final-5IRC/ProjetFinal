@@ -3,6 +3,7 @@ using data.Models.EntityFramework;
 using data.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace data.Controllers
 {
@@ -38,6 +39,11 @@ namespace data.Controllers
         public async Task<ActionResult<GenreDTO>> GetGenreById(int id)
         {
             var genre = await dataRepository.GetByIdAsync(id);
+
+            if (genre.Value == null)
+            {
+                return NotFound();
+            }
 
             return new GenreDTO(genre.Value);
         }

@@ -16,7 +16,7 @@ namespace data.Models.EntityFramework
 
         [Required]
         [Column("usr_nametag")]
-        public required string UserName { get; set; }
+        public string UserName { get; set; }
 
         [Column("usr_firstname")]
         public string? FirstName { get; set; }
@@ -28,12 +28,12 @@ namespace data.Models.EntityFramework
         [Column("usr_email")]
         [EmailAddress]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Email lenght need to be between 6 and 100 char.")]
-        public required string Email { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [PasswordComplexity]
         [Column("usr_password")]
-        public required string Password { get; set; }
+        public string Password { get; set; }
 
         [Column("usr_datecreation")]
         [NotNull]
