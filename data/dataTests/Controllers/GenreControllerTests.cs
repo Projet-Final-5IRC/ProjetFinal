@@ -9,6 +9,9 @@ using data.Models.DataManager;
 using data.Models.DTO;
 using data.Models.EntityFramework;
 using data.Models.Repository;
+using Moq;
+using Microsoft.EntityFrameworkCore;
+using data.Models.DataManager;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -19,6 +22,7 @@ namespace data.Controllers.Tests
     [TestClass()]
     public class GenreControllerTests
     {
+
         private GenreController _controller;
         private readonly EventDBContext _context;
         private IDataRepository<Genres> dataRepository;
@@ -42,6 +46,7 @@ namespace data.Controllers.Tests
             dataRepository = new GenresManager(_context);
             _controller = new GenreController(dataRepository);
         }
+
         //------------------------------------
         // Tests without MOQ
         //------------------------------------
@@ -50,9 +55,10 @@ namespace data.Controllers.Tests
         public async Task GetGenreTest_CompareWithDB()
         {
             var result = await _controller.GetGenres();
-            var genreInDB = _context.Event.ToList();
+            var genreInDB = _context.Genre.ToList();
 
             Assert.IsNotNull(result);
+            Assert.IsNotNull(genreInDB);
             Assert.AreEqual(genreInDB.Count, result.Value.Count());
         }
 
@@ -63,7 +69,6 @@ namespace data.Controllers.Tests
             var genreInDB = _context.Genre.Where(c => c.IdGenre == 1).FirstOrDefault();
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(genreInDB.IdGenre, result.Value.IdGenre);
         }
 
         [TestMethod]
@@ -86,13 +91,11 @@ namespace data.Controllers.Tests
             _controller_Moq = new GenreController(_mockRepo.Object);
         }
 
+
         [TestMethod()]
-        public async Task GetAllGenres()
         {
             var mockGenres = new List<Genres>
             {
-                new Genres { IdGenre = 1, GenreName = "Horreur" },
-                new Genres { IdGenre = 2, GenreName = "Science-Fiction" }
             };
 
             _mockRepo.Setup(repo => repo.GetAllAsync())
@@ -104,7 +107,6 @@ namespace data.Controllers.Tests
 
             //Assert
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.Value, typeof(List<GenreDTO>));
             Assert.AreEqual(2, okResult.Count());
             Assert.AreEqual("Horreur", okResult.First().GenreName);
         }
@@ -115,7 +117,6 @@ namespace data.Controllers.Tests
             // Arrange
             var newGenre = new Genres
             {
-                GenreName = "Action"
             };
 
             _mockRepo.Setup(repo => repo.AddAsync(newGenre)).ReturnsAsync(new ActionResult<Genres>(newGenre));

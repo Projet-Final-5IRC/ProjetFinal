@@ -1,19 +1,16 @@
-using data.Models.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using ms_evt.Models.DataManager;
-using ms_evt.Models.Repository;
+using ms_evt.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IDataRepository<Events>, EventsManager>();
+builder.Services.AddHttpClient<DataService>();
+builder.Services.AddSingleton<DataService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<EventDBContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("EventsDB")));
 
 var app = builder.Build();
 
