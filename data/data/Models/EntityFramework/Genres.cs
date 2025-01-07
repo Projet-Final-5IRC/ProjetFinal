@@ -14,7 +14,7 @@ namespace data.Models.EntityFramework
 
         [Required]
         [Column("gen_name")]
-        public required string GenreName { get; set; }
+        public string GenreName { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Events> EventsGenre { get; set; } = new List<Events>();

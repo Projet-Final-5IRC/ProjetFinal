@@ -37,9 +37,14 @@ namespace data.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EventInviteDTO>> GetInviteById(int id)
         {
-            var result = await dataRepository.GetByIdAsync(id);
+            var invite = await dataRepository.GetByIdAsync(id);
 
-            return new EventInviteDTO(result.Value);
+            if (invite.Value == null)
+            {
+                return NotFound();
+            }
+
+            return new EventInviteDTO(invite.Value);
         }
 
         // PUT: api/Invites/5
