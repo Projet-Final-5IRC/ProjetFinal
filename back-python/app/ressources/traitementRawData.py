@@ -5,12 +5,12 @@ import pandas as pd
 dossier = '../../data/Rawdata/movies_metadata.csv'
 dataframe = fct.lire_fichier_csv(dossier)
 columns_to_keep3 = [
-    'adult', 'belongs_to_collection', 'budget', 'genres', 'id',
+    'adult','budget', 'genres', 'id',
     'original_language', 'original_title', 'popularity',
     'production_companies', 'production_countries', 'release_date',
     'revenue', 'runtime', 'status', 'title', 'vote_average', 'vote_count'
 ]
-print(dataframe.head())
+print(dataframe.head)
 print("-----------------------------------")
 df = dataframe[columns_to_keep3]
 print(df)
