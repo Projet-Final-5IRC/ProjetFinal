@@ -1,3 +1,4 @@
+import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -39,7 +40,7 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
     this.showSearchButton = false,
     this.avatarUrl,
     this.onAvatarPressed,
-    this.backgroundColor = const Color(0xFF2A6A86),
+    this.backgroundColor = AppColors.secondary2,
     this.titleTextStyle,
     this.bottom,
   });

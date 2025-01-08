@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,7 +11,7 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: Color(0xFF243040),
+      backgroundColor: AppColors.secondary,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +36,7 @@ class HomeView extends ConsumerWidget {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Color(0xFF243040),
+                          AppColors.secondary,
                         ],
                       ),
                     ),
@@ -97,7 +98,7 @@ class HomeView extends ConsumerWidget {
                           icon: SvgPicture.asset("assets/icons/playbutton.svg"),
                           label: Text('Play on platform'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF00AAE5),
+                            backgroundColor: AppColors.primary,
                             foregroundColor: Colors.white,
                             padding: EdgeInsets.symmetric(vertical: 12),
                           ),

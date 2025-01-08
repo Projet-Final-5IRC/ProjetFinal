@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/mainAppBar.dart';
 import 'package:cinefouine/router/app_router.dart';
+import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -50,7 +51,7 @@ class BottomNavigationView extends ConsumerWidget {
                     padding: EdgeInsets.zero,
                     children: const [
                       DrawerHeader(
-                        decoration: BoxDecoration(color: Color(0xFF2A6A86)),
+                        decoration: BoxDecoration(color: AppColors.secondary2),
                         child: Text(
                           "Menu",
                           style: TextStyle(color: Colors.white, fontSize: 24),
@@ -70,7 +71,7 @@ class BottomNavigationView extends ConsumerWidget {
               : null,
           body: ProviderScope(child: child),
           bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Color(0xFF2A6A86),
+            backgroundColor: AppColors.secondary2,
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.white,
             currentIndex: tabsRouter.activeIndex,
