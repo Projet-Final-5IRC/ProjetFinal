@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/data/entities/event/event_info.dart';
 import 'package:cinefouine/data/repositories/event_repository.dart';
+import 'package:cinefouine/modules/event/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinefouine/core/widgets/cinefouineInputField.dart';
@@ -104,6 +105,7 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
                 print("Event added: Name=${_nameController.text}, "
                     "Description=${_descriptionController.text}, "
                     "Date=${_dateController.text}");
+                ref.read(eventsProvider.notifier).updateEvents();
                 router.replaceAll([const EventRoute()]);
                 // Vous pouvez afficher un message de confirmation ou naviguer après l'ajout
               },

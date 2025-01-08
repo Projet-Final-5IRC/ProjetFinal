@@ -26,6 +26,11 @@ class Events extends _$Events {
   Future<List<EventInfo>?> build() async {
     return ref.watch(eventRepositoryProvider).getAllEvents();
   }
+
+  Future<void> updateEvents() async {
+    state = AsyncValue.data(
+        await ref.watch(eventRepositoryProvider).getAllEvents());
+  }
 }
 
 @RoutePage()
@@ -37,7 +42,6 @@ class EventView extends ConsumerWidget {
     final index = ref.watch(_tabBarIndexNotifierProvider);
     final router = ref.watch(appRouterProvider);
     final events = ref.watch(eventsProvider);
-    bool isLoading = false;
     return Scaffold(
       backgroundColor: const Color(0xFF1A1F25),
       body: SafeArea(
@@ -96,37 +100,44 @@ class EventView extends ConsumerWidget {
                 child: events.when(
                   data: (data) {
                     if (data == null) {
-                      return Placeholder();
+                      return const Placeholder();
                     } else {
                       print("BUILD EVENT");
-                      return ListView.builder(
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          final event = data[index];
-                          return EventItem(
-                            title: event.eventName,
-                            description: event.eventDescription,
-                            avatarPath: "assets/images/default_avatar.jpg",
-                            isJoined: false,
-                            ref: ref,
-                          );
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          // Appelle la méthode updateEvents() du provider
+                          await ref
+                              .read(eventsProvider.notifier)
+                              .updateEvents();
                         },
+                        child: ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            final event = data[index];
+                            return EventItem(
+                              title: event.eventName,
+                              description: event.eventDescription,
+                              avatarPath: "assets/images/default_avatar.jpg",
+                              isJoined: false,
+                              ref: ref,
+                            );
+                          },
+                        ),
                       );
                     }
                   },
                   error: (error, stackTrace) {
-                    // Si une erreur survient, affiche un message d'erreur
                     return Center(
-                        child: Text(
-                      'Erreur: $error',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      child: Text(
+                        'Erreur: $error',
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
-                    ));
+                    );
                   },
                   loading: () {
-                    // Si les données sont en train de se charger, affiche un indicateur de chargement
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   },
                 ),
               )
