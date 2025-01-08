@@ -9,6 +9,7 @@ import 'package:cinefouine/modules/createEvent/view.dart';
 import 'package:cinefouine/modules/eventHome/view.dart';
 import 'package:cinefouine/modules/login/view.dart';
 import 'package:cinefouine/modules/register/view.dart';
+import 'package:cinefouine/modules/detailsEvent/view.dart';
 
 part 'app_router.g.dart';
 part 'app_router.gr.dart';
@@ -35,6 +36,7 @@ class AppRouter extends RootStackRouter {
             children: [
               AutoRoute(page: EventRoute.page, initial: true),
               AutoRoute(page: CreateEventRoute.page),
+              AutoRoute(page: DetailsEventRoute.page),              
             ],
           ),
           AutoRoute(page: ProfilRoute.page),

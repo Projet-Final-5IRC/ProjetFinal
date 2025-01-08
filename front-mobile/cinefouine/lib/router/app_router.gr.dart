@@ -48,6 +48,25 @@ class CreateEventRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [DetailsEventView]
+class DetailsEventRoute extends PageRouteInfo<void> {
+  const DetailsEventRoute({List<PageRouteInfo>? children})
+      : super(
+          DetailsEventRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DetailsEventRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DetailsEventView();
+    },
+  );
+}
+
+/// generated route for
 /// [EventHomeView]
 class EventHomeRoute extends PageRouteInfo<void> {
   const EventHomeRoute({List<PageRouteInfo>? children})

@@ -85,36 +85,42 @@ class EventView extends ConsumerWidget {
                       'On se fait peur venez nombreux !',
                       'assets/images/default_avatar.jpg',
                       true,
+                      ref,
                     ),
                     _buildEventItem(
                       'Romance',
                       '',
                       'assets/images/default_avatar.jpg',
                       false,
+                      ref,
                     ),
                     _buildEventItem(
                       'Comedy',
                       '',
                       'assets/images/default_avatar.jpg',
                       false,
+                      ref,
                     ),
                     _buildEventItem(
                       'Comedy',
                       'On rigole on rigole mais on voit ...',
                       'assets/images/default_avatar.jpg',
                       false,
+                      ref,
                     ),
                     _buildEventItem(
                       'Hard Core',
                       '',
                       'assets/images/default_avatar.jpg',
                       false,
+                      ref,
                     ),
                     _buildEventItem(
                       'Any',
                       '',
                       'assets/images/default_avatar.jpg',
                       false,
+                      ref,
                     ),
                   ],
                 ),
@@ -131,47 +137,55 @@ class EventView extends ConsumerWidget {
     String description,
     String avatarPath,
     bool isJoined,
+    WidgetRef ref,
   ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: AssetImage(avatarPath),
-            radius: 20,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-                if (description.isNotEmpty)
+    var router = ref.watch(appRouterProvider);
+
+    return GestureDetector(
+      onTap: () {
+        router.push(const DetailsEventRoute()); // Ouvre la page DetailsEventRoute
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: AssetImage(avatarPath),
+              radius: 20,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    description,
+                    title,
                     style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
+                      color: Colors.white,
+                      fontSize: 16,
                     ),
                   ),
-              ],
+                  if (description.isNotEmpty)
+                    Text(
+                      description,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
-          Cinefouineboutton(
-            isClicked: isJoined,
-            onPressed: () {
-              print("click");
-            },
-            text: "Join",
-            text2: "Joined",
-          ),
-        ],
+            Cinefouineboutton(
+              isClicked: isJoined,
+              onPressed: () {
+                print("click");
+              },
+              text: "Join",
+              text2: "Joined",
+            ),
+          ],
+        ),
       ),
     );
   }

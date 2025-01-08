@@ -6,7 +6,7 @@ part of 'mainAppBar.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$isSearchModeActifHash() => r'0aac0d0dcced2765705709af04e528b36644857c';
+String _$isSearchModeActifHash() => r'1f8b9818573450e8698ab65f091fb7c0b9b566c6';
 
 /// See also [IsSearchModeActif].
 @ProviderFor(IsSearchModeActif)
