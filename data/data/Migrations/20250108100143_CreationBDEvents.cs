@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace data.Migrations
 {
     /// <inheritdoc />
-    public partial class CreationDBEvent : Migration
+    public partial class CreationBDEvents : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,6 +54,7 @@ namespace data.Migrations
                 {
                     evt_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    usr_id = table.Column<int>(type: "integer", nullable: false),
                     evt_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     evt_hour = table.Column<string>(type: "text", nullable: true),
                     evt_date = table.Column<string>(type: "text", nullable: true),
@@ -70,6 +71,13 @@ namespace data.Migrations
                         principalSchema: "public",
                         principalTable: "t_e_genres_utl",
                         principalColumn: "gen_id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "fk_owner_events",
+                        column: x => x.usr_id,
+                        principalSchema: "public",
+                        principalTable: "t_e_users_utl",
+                        principalColumn: "usr_id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -116,6 +124,12 @@ namespace data.Migrations
                 column: "gen_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_t_e_events_utl_usr_id",
+                schema: "public",
+                table: "t_e_events_utl",
+                column: "usr_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_t_e_eventsinvite_utl_ein_id",
                 schema: "public",
                 table: "t_e_eventsinvite_utl",
@@ -153,11 +167,11 @@ namespace data.Migrations
                 schema: "public");
 
             migrationBuilder.DropTable(
-                name: "t_e_users_utl",
+                name: "t_e_genres_utl",
                 schema: "public");
 
             migrationBuilder.DropTable(
-                name: "t_e_genres_utl",
+                name: "t_e_users_utl",
                 schema: "public");
         }
     }
