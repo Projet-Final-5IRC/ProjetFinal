@@ -116,7 +116,13 @@ class EventView extends ConsumerWidget {
                   },
                   error: (error, stackTrace) {
                     // Si une erreur survient, affiche un message d'erreur
-                    return Center(child: Text('Erreur: $error'));
+                    return Center(
+                        child: Text(
+                      'Erreur: $error',
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ));
                   },
                   loading: () {
                     // Si les données sont en train de se charger, affiche un indicateur de chargement
@@ -134,7 +140,7 @@ class EventView extends ConsumerWidget {
 
 class EventItem extends StatelessWidget {
   final String title;
-  final String description;
+  final String? description;
   final String avatarPath;
   final bool isJoined;
   final WidgetRef ref;
@@ -142,7 +148,7 @@ class EventItem extends StatelessWidget {
   const EventItem({
     super.key,
     required this.title,
-    required this.description,
+    this.description,
     required this.avatarPath,
     required this.isJoined,
     required this.ref,
@@ -176,14 +182,13 @@ class EventItem extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  if (description.isNotEmpty)
-                    Text(
-                      description,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
+                  Text(
+                    description ?? "",
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
                     ),
+                  ),
                 ],
               ),
             ),

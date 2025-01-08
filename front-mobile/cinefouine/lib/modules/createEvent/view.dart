@@ -23,8 +23,7 @@ class _CreateEventButton extends _$CreateEventButton {
     required String eventDescription,
     int? idGenre,
     String? genreName,
-    required int idOwner,
-    required String ownerName,
+    required int idUser,
   }) {
     ref.read(eventRepositoryProvider).createEvent(
           eventName: eventName,
@@ -34,8 +33,7 @@ class _CreateEventButton extends _$CreateEventButton {
           idGenre: idGenre,
           genreName: genreName,
           eventDescription: eventDescription,
-          idOwner: idOwner,
-          ownerName: ownerName,
+          idUser: idUser,
         );
   }
 }
@@ -99,10 +97,8 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
                       eventHour: "18:30",
                       eventLocation: "gogo",
                       idGenre: 0,
-                      genreName: "Action",
                       eventDescription: "description",
-                      idOwner: 0,
-                      ownerName: "Rémi",
+                      idUser: 0,
                     );
                 // TODO: Ajouter la logique pour créer l'événement
                 print("Event added: Name=${_nameController.text}, "

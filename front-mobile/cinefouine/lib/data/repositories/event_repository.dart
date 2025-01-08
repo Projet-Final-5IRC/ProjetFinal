@@ -34,8 +34,7 @@ class EventRepository {
     int? idGenre,
     String? genreName,
     required String eventDescription,
-    required int idOwner,
-    required String ownerName,
+    required int idUser,
   }) async {
     await _appApiClient.createEvent(
       eventName: eventName,
@@ -45,8 +44,7 @@ class EventRepository {
       idGenre: idGenre,
       genreName: genreName,
       eventDescription: eventDescription,
-      idOwner: idOwner,
-      ownerName: ownerName,
+      idUser: idUser,
     );
   }
 }

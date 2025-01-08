@@ -20,11 +20,11 @@ class EventInfo with _$EventInfo {
         required String eventDate,
         required String eventHour,
         required String eventLocation,
-        required String eventDescription,
-        required int idGenre,
-        required String genreName,
-        required int idOwner,
-        required String ownerName,
+        required String? eventDescription,
+        required int? idGenre,
+        required String? genreName,
+        required int? idOwner,
+        required String? ownerName,
         required List<int> eventInvitationId,
     }) = _EventInfo;
 

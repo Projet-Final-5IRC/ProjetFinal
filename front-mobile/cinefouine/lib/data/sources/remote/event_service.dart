@@ -10,7 +10,7 @@ part 'event_service.g.dart';
 @Riverpod(keepAlive: true)
 EventService eventService(EventServiceRef ref) {
   final dioClient = ref.watch(dioClientProvider(
-    url: "https://10.0.2.2:7231/api",
+    url: "https://ms-evt-gdefbnh7cma0e2a3.francecentral-01.azurewebsites.net/api",
   ));
   return EventService(
     dioClient: dioClient,
@@ -41,12 +41,11 @@ class EventService {
     required String eventLocation,
     int? idGenre,
     String? genreName,
-    required String eventDescription,
-    required int idOwner,
-    required String ownerName,
+    String? eventDescription,
+    int? idUser,
   }) async {
     final endpoint = CineFouineEndpoints.createEvent;
-        final eventData = {
+    final eventData = {
       "eventName": eventName,
       "eventDate": eventDate,
       "eventHour": eventHour,
@@ -54,8 +53,7 @@ class EventService {
       "idGenre": idGenre,
       "genreName": genreName,
       "eventDescription": eventDescription,
-      "idOwner": idOwner,
-      "ownerName": ownerName,
+      "idUser": idUser,
     };
     final response = await dioClient.post(
       endpoint,

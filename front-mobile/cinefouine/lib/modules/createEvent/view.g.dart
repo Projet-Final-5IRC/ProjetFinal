@@ -6,7 +6,7 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createEventButtonHash() => r'db6afef1b54d703e4dfdb9c6c22832e3090cfec4';
+String _$createEventButtonHash() => r'6617c4f275876fd6d511ecfc4eb000b4da90b9e4';
 
 /// See also [_CreateEventButton].
 @ProviderFor(_CreateEventButton)

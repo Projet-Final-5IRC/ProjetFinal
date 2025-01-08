@@ -25,11 +25,11 @@ mixin _$EventInfo {
   String get eventDate => throw _privateConstructorUsedError;
   String get eventHour => throw _privateConstructorUsedError;
   String get eventLocation => throw _privateConstructorUsedError;
-  String get eventDescription => throw _privateConstructorUsedError;
-  int get idGenre => throw _privateConstructorUsedError;
-  String get genreName => throw _privateConstructorUsedError;
-  int get idOwner => throw _privateConstructorUsedError;
-  String get ownerName => throw _privateConstructorUsedError;
+  String? get eventDescription => throw _privateConstructorUsedError;
+  int? get idGenre => throw _privateConstructorUsedError;
+  String? get genreName => throw _privateConstructorUsedError;
+  int? get idOwner => throw _privateConstructorUsedError;
+  String? get ownerName => throw _privateConstructorUsedError;
   List<int> get eventInvitationId => throw _privateConstructorUsedError;
 
   /// Serializes this EventInfo to a JSON map.
@@ -53,11 +53,11 @@ abstract class $EventInfoCopyWith<$Res> {
       String eventDate,
       String eventHour,
       String eventLocation,
-      String eventDescription,
-      int idGenre,
-      String genreName,
-      int idOwner,
-      String ownerName,
+      String? eventDescription,
+      int? idGenre,
+      String? genreName,
+      int? idOwner,
+      String? ownerName,
       List<int> eventInvitationId});
 }
 
@@ -81,11 +81,11 @@ class _$EventInfoCopyWithImpl<$Res, $Val extends EventInfo>
     Object? eventDate = null,
     Object? eventHour = null,
     Object? eventLocation = null,
-    Object? eventDescription = null,
-    Object? idGenre = null,
-    Object? genreName = null,
-    Object? idOwner = null,
-    Object? ownerName = null,
+    Object? eventDescription = freezed,
+    Object? idGenre = freezed,
+    Object? genreName = freezed,
+    Object? idOwner = freezed,
+    Object? ownerName = freezed,
     Object? eventInvitationId = null,
   }) {
     return _then(_value.copyWith(
@@ -109,26 +109,26 @@ class _$EventInfoCopyWithImpl<$Res, $Val extends EventInfo>
           ? _value.eventLocation
           : eventLocation // ignore: cast_nullable_to_non_nullable
               as String,
-      eventDescription: null == eventDescription
+      eventDescription: freezed == eventDescription
           ? _value.eventDescription
           : eventDescription // ignore: cast_nullable_to_non_nullable
-              as String,
-      idGenre: null == idGenre
+              as String?,
+      idGenre: freezed == idGenre
           ? _value.idGenre
           : idGenre // ignore: cast_nullable_to_non_nullable
-              as int,
-      genreName: null == genreName
+              as int?,
+      genreName: freezed == genreName
           ? _value.genreName
           : genreName // ignore: cast_nullable_to_non_nullable
-              as String,
-      idOwner: null == idOwner
+              as String?,
+      idOwner: freezed == idOwner
           ? _value.idOwner
           : idOwner // ignore: cast_nullable_to_non_nullable
-              as int,
-      ownerName: null == ownerName
+              as int?,
+      ownerName: freezed == ownerName
           ? _value.ownerName
           : ownerName // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       eventInvitationId: null == eventInvitationId
           ? _value.eventInvitationId
           : eventInvitationId // ignore: cast_nullable_to_non_nullable
@@ -151,11 +151,11 @@ abstract class _$$EventInfoImplCopyWith<$Res>
       String eventDate,
       String eventHour,
       String eventLocation,
-      String eventDescription,
-      int idGenre,
-      String genreName,
-      int idOwner,
-      String ownerName,
+      String? eventDescription,
+      int? idGenre,
+      String? genreName,
+      int? idOwner,
+      String? ownerName,
       List<int> eventInvitationId});
 }
 
@@ -177,11 +177,11 @@ class __$$EventInfoImplCopyWithImpl<$Res>
     Object? eventDate = null,
     Object? eventHour = null,
     Object? eventLocation = null,
-    Object? eventDescription = null,
-    Object? idGenre = null,
-    Object? genreName = null,
-    Object? idOwner = null,
-    Object? ownerName = null,
+    Object? eventDescription = freezed,
+    Object? idGenre = freezed,
+    Object? genreName = freezed,
+    Object? idOwner = freezed,
+    Object? ownerName = freezed,
     Object? eventInvitationId = null,
   }) {
     return _then(_$EventInfoImpl(
@@ -205,26 +205,26 @@ class __$$EventInfoImplCopyWithImpl<$Res>
           ? _value.eventLocation
           : eventLocation // ignore: cast_nullable_to_non_nullable
               as String,
-      eventDescription: null == eventDescription
+      eventDescription: freezed == eventDescription
           ? _value.eventDescription
           : eventDescription // ignore: cast_nullable_to_non_nullable
-              as String,
-      idGenre: null == idGenre
+              as String?,
+      idGenre: freezed == idGenre
           ? _value.idGenre
           : idGenre // ignore: cast_nullable_to_non_nullable
-              as int,
-      genreName: null == genreName
+              as int?,
+      genreName: freezed == genreName
           ? _value.genreName
           : genreName // ignore: cast_nullable_to_non_nullable
-              as String,
-      idOwner: null == idOwner
+              as String?,
+      idOwner: freezed == idOwner
           ? _value.idOwner
           : idOwner // ignore: cast_nullable_to_non_nullable
-              as int,
-      ownerName: null == ownerName
+              as int?,
+      ownerName: freezed == ownerName
           ? _value.ownerName
           : ownerName // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       eventInvitationId: null == eventInvitationId
           ? _value._eventInvitationId
           : eventInvitationId // ignore: cast_nullable_to_non_nullable
@@ -264,15 +264,15 @@ class _$EventInfoImpl implements _EventInfo {
   @override
   final String eventLocation;
   @override
-  final String eventDescription;
+  final String? eventDescription;
   @override
-  final int idGenre;
+  final int? idGenre;
   @override
-  final String genreName;
+  final String? genreName;
   @override
-  final int idOwner;
+  final int? idOwner;
   @override
-  final String ownerName;
+  final String? ownerName;
   final List<int> _eventInvitationId;
   @override
   List<int> get eventInvitationId {
@@ -352,11 +352,11 @@ abstract class _EventInfo implements EventInfo {
       required final String eventDate,
       required final String eventHour,
       required final String eventLocation,
-      required final String eventDescription,
-      required final int idGenre,
-      required final String genreName,
-      required final int idOwner,
-      required final String ownerName,
+      required final String? eventDescription,
+      required final int? idGenre,
+      required final String? genreName,
+      required final int? idOwner,
+      required final String? ownerName,
       required final List<int> eventInvitationId}) = _$EventInfoImpl;
 
   factory _EventInfo.fromJson(Map<String, dynamic> json) =
@@ -373,15 +373,15 @@ abstract class _EventInfo implements EventInfo {
   @override
   String get eventLocation;
   @override
-  String get eventDescription;
+  String? get eventDescription;
   @override
-  int get idGenre;
+  int? get idGenre;
   @override
-  String get genreName;
+  String? get genreName;
   @override
-  int get idOwner;
+  int? get idOwner;
   @override
-  String get ownerName;
+  String? get ownerName;
   @override
   List<int> get eventInvitationId;
 
