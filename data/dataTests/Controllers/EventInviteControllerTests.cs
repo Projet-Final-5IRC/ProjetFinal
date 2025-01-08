@@ -28,15 +28,8 @@ namespace data.Controllers.Tests
 
         public EventInviteControllerTests()
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            var connectionString = configuration.GetConnectionString("EventDB");
-
             var builder = new DbContextOptionsBuilder<EventDBContext>()
-                .UseNpgsql(connectionString);
+                .UseNpgsql("Server=projet-final.postgres.database.azure.com; port=5432; Database=EventsDB; uid=projectAdmin; password=5IRCCPELyon");
 
             _context = new EventDBContext(builder.Options);
             dataRepository = new EventsInviteManager(_context);
@@ -59,8 +52,8 @@ namespace data.Controllers.Tests
         [TestMethod]
         public async Task GetInviteByID_SuccessGetInviteByID()
         {
-            var result = await _controller.GetInviteById(0);
-            var invitInDB = _context.EventInvite.Where(c => c.idEventsInvite == 0).FirstOrDefault();
+            var result = await _controller.GetInviteById(1);
+            var invitInDB = _context.EventInvite.Where(c => c.idEventsInvite == 1).FirstOrDefault();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(invitInDB.idEventsInvite, result.Value.IdEventsInvite);
