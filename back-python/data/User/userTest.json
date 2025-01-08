@@ -1,0 +1,32 @@
+{
+    "nomUser": {
+      "1": [
+        {
+          "titre": "Titre du film 1",
+          "commentaire": "Super film !",
+          "likes": true
+        }
+      ],
+      "3": [
+        {
+          "titre": "Titre du film 3",
+          "commentaire": "bof !",
+          "likes": false
+        }
+      ],
+      "5": [
+        {
+          "titre": "Titre du film 5",
+          "commentaire": "Trop bien !",
+          "likes": false
+        }
+      ],
+      "7": [
+        {
+          "titre": "Titre du film 7",
+          "commentaire": "Trop bien !",
+          "likes": true
+        }
+      ]
+    }
+  }

@@ -16,6 +16,9 @@ namespace data.Models.EntityFramework
         [Column("evt_id")]
         public int IdEvent { get; set; }
 
+        [Column("usr_id")]
+        public int IdUser { get; set; }
+
         [Required]
         [Column("evt_name")]
         [MaxLength(50)]
@@ -42,6 +45,10 @@ namespace data.Models.EntityFramework
         [ForeignKey(nameof(IdGenre))]
         [InverseProperty(nameof(Genres.EventsGenre))]
         public virtual Genres? GenreEvent { get; set; } = null!;
+
+        [ForeignKey(nameof(IdUser))]
+        [InverseProperty(nameof(Users.EventOwned))]
+        public virtual Users? UserOwner { get; set; } = null!;
 
         [JsonIgnore]
         public virtual ICollection<EventsInvite> EventInvitation { get; set; } = new List<EventsInvite>();
