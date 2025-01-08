@@ -43,7 +43,7 @@ namespace data.Controllers.Tests
         public async Task GetInviteTest_CompareWithDB()
         {
             var result = await _controller.GetInvites();
-            var invitInDB = _context.Event.ToList();
+            var invitInDB = _context.EventInvite.ToList();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(invitInDB.Count, result.Value.Count());
