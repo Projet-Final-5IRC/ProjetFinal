@@ -111,3 +111,6 @@ C:\School\Projet_Final\ms-recommend-net\obj\Debug\net8.0\refint\ms-recommend-net
 C:\School\Projet_Final\ms-recommend-net\obj\Debug\net8.0\ms-recommend-net.pdb
 C:\School\Projet_Final\ms-recommend-net\obj\Debug\net8.0\ms-recommend-net.genruntimeconfig.cache
 C:\School\Projet_Final\ms-recommend-net\obj\Debug\net8.0\ref\ms-recommend-net.dll
+C:\School\Projet_Final\ms-recommend-net\bin\Debug\net8.0\Apache.NMS.dll
+C:\School\Projet_Final\ms-recommend-net\bin\Debug\net8.0\Apache.NMS.ActiveMQ.dll
+C:\School\Projet_Final\ms-recommend-net\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
