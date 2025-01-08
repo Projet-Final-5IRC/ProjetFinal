@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ms-recommend-net.props" />
+</Project>
