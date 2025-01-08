@@ -7,7 +7,7 @@ part of 'view.dart';
 // **************************************************************************
 
 String _$tabBarIndexNotifierHash() =>
-    r'e429ce253979f91040dbb6a650cf78cea67c2cf9';
+    r'777c0459fa345fb005c97f10dc8701577c23bf31';
 
 /// See also [_TabBarIndexNotifier].
 @ProviderFor(_TabBarIndexNotifier)
