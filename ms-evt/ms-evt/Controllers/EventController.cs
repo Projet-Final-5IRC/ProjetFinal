@@ -42,7 +42,7 @@ namespace ms_evt.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erreur : {ex.Message}");
+                return StatusCode(404, $"Event not found : {ex.Message}");
             }
         }
 

@@ -47,7 +47,7 @@ jobs:
       - name: Run tests
         run: |
           cd data
-          dotnet test --no-build --verbosity normal
+          dotnet test
 
       - name: dotnet publish
         run: |
@@ -57,7 +57,7 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: .net-app
+          name: ms-data
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
@@ -72,7 +72,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: .net-app
+          name: ms-data
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
