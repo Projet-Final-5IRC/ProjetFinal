@@ -21,7 +21,7 @@ namespace ms_recommend_net.Services
                 .Select(p => p.Genre)
                 .ToListAsync();
 
-            return await _context.Movies
+            return await _context.Films
                 .Where(m => userPreferences.Contains(m.Genre))
                 .ToListAsync();
         }

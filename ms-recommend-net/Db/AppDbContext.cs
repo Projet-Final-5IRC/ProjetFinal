@@ -8,11 +8,11 @@ namespace ms_recommend_net.Db
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Users> Users { get; set; }
-        public DbSet<Films> Movies { get; set; }
+        public DbSet<Films> Films { get; set; }
         public DbSet<Preference> Preferences { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Users>().HasKey(u => u.Id_user);
+            modelBuilder.Entity<Users>().HasKey(u => u.IdUser);
             modelBuilder.Entity<Films>().HasKey(m => m.Id);
             modelBuilder.Entity<Preference>().HasKey(p => p.Id);
         }

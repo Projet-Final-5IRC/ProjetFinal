@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "cKA+QqsTtqI=",
+  "dgSpecHash": "6x87AV/ZEtE=",
   "success": true,
   "projectFilePath": "C:\\School\\Projet_Final\\ms-recommend-net\\ms-recommend-net.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\bhunt\\.nuget\\packages\\apache.nms\\1.8.0\\apache.nms.1.8.0.nupkg.sha512",
+    "C:\\Users\\bhunt\\.nuget\\packages\\apache.nms.activemq\\1.7.2\\apache.nms.activemq.1.7.2.nupkg.sha512",
     "C:\\Users\\bhunt\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\bhunt\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "C:\\Users\\bhunt\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.3\\microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",
@@ -52,5 +54,26 @@
     "C:\\Users\\bhunt\\.nuget\\packages\\system.text.json\\8.0.0\\system.text.json.8.0.0.nupkg.sha512",
     "C:\\Users\\bhunt\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Apache.NMS.ActiveMQ 1.7.2 depends on Apache.NMS (>= 1.7.1) but Apache.NMS 1.7.1 was not found. Apache.NMS 1.8.0 was resolved instead.",
+      "libraryId": "Apache.NMS",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Apache.NMS.ActiveMQ 1.7.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Apache.NMS.ActiveMQ",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }
