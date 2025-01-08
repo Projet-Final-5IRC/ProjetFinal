@@ -44,10 +44,16 @@ jobs:
           cd data
           dotnet build --configuration Release
 
+      - name: Clean and restore
+        run: |
+          cd data
+          dotnet clean
+          dotnet restore
+
       - name: Run tests
         run: |
           cd data
-          dotnet test dataTests/dataTests.csproj --no-build --verbosity normal
+          dotnet test dataTests/dataTests.csproj --no-build --verbosity detailed --diag:logfile.txt
 
       - name: dotnet publish
         run: |
