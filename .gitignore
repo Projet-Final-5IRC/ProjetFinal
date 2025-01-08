@@ -9,3 +9,5 @@ back-python/venv/
 back-python/__pycache__/
 back-python/app/__pycache__/
 back-python/app/recommender/__pycache__/
+data/obj/
+data/bin/
