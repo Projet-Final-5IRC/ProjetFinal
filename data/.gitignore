@@ -1,4 +1,7 @@
-﻿.vs
-appsettings.*
-obj/
-bin/
+data/obj/*
+data/bin/*
+data/appsettings.json
+dataTests/obj/*
+dataTests/bin/*
+.vs/
+.idea/
