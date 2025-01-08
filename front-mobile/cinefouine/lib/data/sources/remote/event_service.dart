@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cinefouine/data/entities/event/event_info.dart';
 import 'package:cinefouine/data/sources/cine_fouine_endpoints.dart';
 import 'package:cinefouine/data/sources/dio_client.dart';
+import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'event_service.g.dart';
@@ -10,7 +11,8 @@ part 'event_service.g.dart';
 @Riverpod(keepAlive: true)
 EventService eventService(EventServiceRef ref) {
   final dioClient = ref.watch(dioClientProvider(
-    url: "https://ms-evt-gdefbnh7cma0e2a3.francecentral-01.azurewebsites.net/api",
+    url:
+        "https://ms-evt-gdefbnh7cma0e2a3.francecentral-01.azurewebsites.net/api",
   ));
   return EventService(
     dioClient: dioClient,
@@ -51,19 +53,26 @@ class EventService {
       "eventHour": eventHour,
       "eventLocation": eventLocation,
       "idGenre": idGenre,
-      "genreName": genreName,
       "eventDescription": eventDescription,
-      "idUser": idUser,
+      "idUser": idUser
     };
-    final response = await dioClient.post(
-      endpoint,
-      data: eventData,
-    );
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      print("Événement créé avec succès : ${response.data}");
-    } else {
-      print(
-          "Erreur lors de la création de l'événement : ${response.statusCode}");
+
+    try {
+      final response = await dioClient.post(
+        endpoint,
+        data: eventData,
+      );
+    } on DioException catch (e) {
+      if (e.response != null) {
+        // Une réponse a été reçue mais le serveur a retourné une erreur
+        print(
+            "Erreur Dio (status code : ${e.response?.statusCode}): ${e.response?.data}");
+      } else {
+        // Pas de réponse reçue
+        print("Erreur de connexion : ${e.message}");
+      }
+    } catch (e) {
+      print("Erreur inconnue : $e");
     }
   }
 }

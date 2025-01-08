@@ -96,9 +96,9 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
                       eventDate: "09:12:2023",
                       eventHour: "18:30",
                       eventLocation: "gogo",
-                      idGenre: 0,
+                      idGenre: 1,
                       eventDescription: "description",
-                      idUser: 0,
+                      idUser: 1,
                     );
                 // TODO: Ajouter la logique pour créer l'événement
                 print("Event added: Name=${_nameController.text}, "
