@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ms_recommend_net.Db;
 using ms_recommend_net.Interfaces;
 using ms_recommend_net.Models;
+using ms_recommend_net.Services;
 
 namespace ms_recommend_net.Controllers
 {
@@ -12,11 +13,13 @@ namespace ms_recommend_net.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IRecommendationService _recommendationService;
+        private readonly ActiveMqService _activeMqService;
 
-        public RecommendationController(AppDbContext context, IRecommendationService recommendationService)
+        public RecommendationController(AppDbContext context, IRecommendationService recommendationService, ActiveMqService activeMqService)
         {
             _context = context;
             _recommendationService = recommendationService;
+            _activeMqService = activeMqService;
         }
 
         [HttpGet("{userId}")]

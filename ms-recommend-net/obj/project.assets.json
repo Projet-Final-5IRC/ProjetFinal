@@ -2,6 +2,31 @@
   "version": 3,
   "targets": {
     "net8.0": {
+      "Apache.NMS/1.8.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Apache.NMS.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Apache.NMS.dll": {}
+        }
+      },
+      "Apache.NMS.ActiveMQ/1.7.2": {
+        "type": "package",
+        "dependencies": {
+          "Apache.NMS": "1.7.1"
+        },
+        "compile": {
+          "lib/net40/Apache.NMS.ActiveMQ.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net40/Apache.NMS.ActiveMQ.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -969,6 +994,44 @@
     }
   },
   "libraries": {
+    "Apache.NMS/1.8.0": {
+      "sha512": "kN2PzpT4YLseq0SRPfI0BKZ17PlkVwBUyug1KtauoVHe4QALSIlUCW8rkB/1kPpDCjvRF093FEEVGmMUhPhSew==",
+      "type": "package",
+      "path": "apache.nms/1.8.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "NOTICE.txt",
+        "apache.nms.1.8.0.nupkg.sha512",
+        "apache.nms.nuspec",
+        "lib/net35/Apache.NMS.dll",
+        "lib/net40/Apache.NMS.dll",
+        "lib/netstandard2.0/Apache.NMS.dll"
+      ]
+    },
+    "Apache.NMS.ActiveMQ/1.7.2": {
+      "sha512": "byKSg5/G7JGoDzSGGw4KK43/hpOGrXCtjZyjBcEjTF6ZscnrUiy8r20nyv85P55+nNmfa8q+tSF0GURd1GxYag==",
+      "type": "package",
+      "path": "apache.nms.activemq/1.7.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "NOTICE.txt",
+        "apache.nms.activemq.1.7.2.nupkg.sha512",
+        "apache.nms.activemq.nuspec",
+        "lib/net20/Apache.NMS.ActiveMQ.dll",
+        "lib/net20/Apache.NMS.ActiveMQ.pdb",
+        "lib/net20/Apache.NMS.ActiveMQ.xml",
+        "lib/net35/Apache.NMS.ActiveMQ.dll",
+        "lib/net35/Apache.NMS.ActiveMQ.pdb",
+        "lib/net35/Apache.NMS.ActiveMQ.xml",
+        "lib/net40/Apache.NMS.ActiveMQ.dll",
+        "lib/net40/Apache.NMS.ActiveMQ.pdb",
+        "lib/net40/Apache.NMS.ActiveMQ.xml"
+      ]
+    },
     "Humanizer.Core/2.14.1": {
       "sha512": "lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw==",
       "type": "package",
@@ -2717,6 +2780,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "Apache.NMS.ActiveMQ >= 1.7.2",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.4",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.4",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 8.0.4",
@@ -2748,6 +2812,7 @@
         "net8.0"
       ],
       "sources": {
+        "https://api.nuget.org/v3/index.json": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2772,6 +2837,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "Apache.NMS.ActiveMQ": {
+            "target": "Package",
+            "version": "[1.7.2, )"
+          },
           "Microsoft.EntityFrameworkCore.Design": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
@@ -2815,5 +2884,27 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Apache.NMS.ActiveMQ 1.7.2 depends on Apache.NMS (>= 1.7.1) but Apache.NMS 1.7.1 was not found. Apache.NMS 1.8.0 was resolved instead.",
+      "libraryId": "Apache.NMS",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Apache.NMS.ActiveMQ 1.7.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Apache.NMS.ActiveMQ",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }
