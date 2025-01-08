@@ -1,0 +1,55 @@
+[
+  {
+    "ContainingType": "ms_recommend_net.Controllers.RecommendationController",
+    "Method": "GetRecommendations",
+    "RelativePath": "api/Recommendation/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ms_recommend_net.Controllers.RecommendationController",
+    "Method": "GetPreferences",
+    "RelativePath": "api/Recommendation/preferences/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ms_recommend_net.Controllers.RecommendationController",
+    "Method": "UpdatePreferences",
+    "RelativePath": "api/Recommendation/update-preferences/{userId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "preferences",
+        "Type": "System.Collections.Generic.List\u00601[[ms_recommend_net.Models.Preference, ms-recommend-net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
