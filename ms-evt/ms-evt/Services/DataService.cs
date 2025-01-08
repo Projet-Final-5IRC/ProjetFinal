@@ -21,16 +21,16 @@ namespace ms_evt.Services
             _httpClient.BaseAddress = new Uri(apiBaseUrl);
         }
 
-        public async Task<List<EventDTO>> GetEventsAsync(string endpoint)
+        public async Task<List<T>> GetAllAsync<T>(string endpoint)
         {
             var response = await _httpClient.GetStringAsync(endpoint);
-            return JsonConvert.DeserializeObject<List<EventDTO>>(response);
+            return JsonConvert.DeserializeObject<List<T>>(response);
         }
 
-        public async Task<EventDTO> GetEventByIdAsync(string endpoint,int id)
+        public async Task<T> GetByIdAsync<T>(string endpoint,int id)
         {
             var response = await _httpClient.GetStringAsync($"{endpoint}/{id}");
-            return JsonConvert.DeserializeObject<EventDTO>(response);
+            return JsonConvert.DeserializeObject<T>(response);
         }
 
         public async Task<HttpStatusCode> PostEventAsync(string endpoint, EventDTO data)
@@ -41,7 +41,15 @@ namespace ms_evt.Services
             return response.StatusCode;
         }
 
-        public async Task<HttpStatusCode> DeleteEventAsync(string endpoint, int id)
+        public async Task<HttpStatusCode> PostInviteAsync(string endpoint, InviteDTO invite)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(invite),System.Text.Encoding.UTF8,"application/json");
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            return response.StatusCode;
+        }
+
+        public async Task<HttpStatusCode> DeleteAsync(string endpoint, int id)
         {
             var response = await _httpClient.DeleteAsync($"{endpoint}/{id}");
             return response.StatusCode;
