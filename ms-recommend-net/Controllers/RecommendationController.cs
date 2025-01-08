@@ -25,29 +25,18 @@ namespace ms_recommend_net.Controllers
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetRecommendations(int userId)
         {
-            var recommendations = await _recommendationService.GetRecommendationsAsync(userId);
-
-            if (!recommendations.Any())
-            {
-                return NotFound("Aucune recommandation disponible.");
-            }
-
-            return Ok(recommendations);
+            return null;
         }
 
         [HttpPost("update-preferences/{userId}")]
         public async Task<IActionResult> UpdatePreferences(int userId, [FromBody] List<Preference> preferences)
         {
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null)
+            var success = await _recommendationService.UpdatePreferencesAsync(userId, preferences);
+
+            if (!success)
             {
                 return NotFound("Utilisateur non trouvé.");
             }
-
-            // Update preferences
-            _context.Preferences.RemoveRange(_context.Preferences.Where(p => p.UserId == userId));
-            await _context.Preferences.AddRangeAsync(preferences);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -55,7 +44,7 @@ namespace ms_recommend_net.Controllers
         [HttpGet("preferences/{userId}")]
         public async Task<IActionResult> GetPreferences(int userId)
         {
-            var preferences = await _context.Preferences.Where(p => p.UserId == userId).ToListAsync();
+            var preferences = await _recommendationService.GetPreferencesAsync(userId);
 
             if (!preferences.Any())
             {

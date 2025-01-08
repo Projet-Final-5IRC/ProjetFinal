@@ -116,61 +116,13 @@
             "type": "integer",
             "format": "int32"
           },
-          "genre": {
+          "type": {
             "type": "string",
             "nullable": true
           },
-          "actor": {
+          "value": {
             "type": "string",
             "nullable": true
-          },
-          "director": {
-            "type": "string",
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/Users"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Users": {
-        "required": [
-          "email",
-          "password",
-          "userName"
-        ],
-        "type": "object",
-        "properties": {
-          "idUser": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userName": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "maxLength": 100,
-            "minLength": 6,
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "dateCreation": {
-            "type": "string",
-            "format": "date-time"
           }
         },
         "additionalProperties": false
