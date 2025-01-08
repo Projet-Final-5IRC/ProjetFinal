@@ -7,7 +7,7 @@
 # Pour obtenir une version plus récente, vous devez mettre à jour le SHA.
 # Vous pouvez également référencer une balise ou une branche, mais l’action peut changer sans avertissement.
 
-name: Build and deploy ASP.Net Core app to an Azure Web App
+name: Build and deploy ms-data
 
 env:
   AZURE_WEBAPP_NAME: ms-data   # set this to your application's name
@@ -44,6 +44,11 @@ jobs:
           cd data
           dotnet build --configuration Release
 
+      - name: Run tests
+        run: |
+          cd data
+          dotnet test --no-build --verbosity normal
+
       - name: dotnet publish
         run: |
           cd data
@@ -58,6 +63,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    if: success()
     environment:
       name: 'production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
