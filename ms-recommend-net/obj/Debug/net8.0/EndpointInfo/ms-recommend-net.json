@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Recommendation/{userId}": {
+    "/api/Recommendation/get-recommendations/{userId}": {
       "get": {
         "tags": [
           "Recommendation"

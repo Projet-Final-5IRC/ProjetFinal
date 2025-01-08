@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\School\\Projet_Final\\ms-recommend-net\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|c:\\school\\projet_final\\ms-recommend-net\\models\\users.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|solutionrelative:models\\users.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|c:\\school\\projet_final\\ms-recommend-net\\db\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|solutionrelative:db\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|c:\\school\\projet_final\\ms-recommend-net\\services\\recommendationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|solutionrelative:services\\recommendationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|c:\\school\\projet_final\\ms-recommend-net\\interfaces\\irecommendationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|solutionrelative:interfaces\\irecommendationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|c:\\school\\projet_final\\ms-recommend-net\\controllers\\recommendationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -23,16 +23,16 @@
       "RelativeMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|solutionrelative:models\\preferences.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|c:\\school\\projet_final\\ms-recommend-net\\interfaces\\irecommendationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|solutionrelative:interfaces\\irecommendationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|c:\\school\\projet_final\\ms-recommend-net\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|c:\\school\\projet_final\\ms-recommend-net\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|c:\\school\\projet_final\\ms-recommend-net\\models\\users.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|solutionrelative:models\\users.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{807340FF-630A-477C-83A8-B54E8AF91CBF}|ms-recommend-net.csproj|c:\\school\\projet_final\\ms-recommend-net\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -46,12 +46,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{6324226f-61b6-4f28-92ee-18d4b5fe1e48}"
@@ -59,19 +55,32 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Users.cs",
+              "DocumentMoniker": "C:\\School\\Projet_Final\\ms-recommend-net\\Models\\Users.cs",
+              "RelativeDocumentMoniker": "Models\\Users.cs",
+              "ToolTip": "C:\\School\\Projet_Final\\ms-recommend-net\\Models\\Users.cs",
+              "RelativeToolTip": "Models\\Users.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-08T14:50:20.557Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "AppDbContext.cs",
               "DocumentMoniker": "C:\\School\\Projet_Final\\ms-recommend-net\\Db\\AppDbContext.cs",
               "RelativeDocumentMoniker": "Db\\AppDbContext.cs",
-              "ToolTip": "C:\\School\\Projet_Final\\ms-recommend-net\\Db\\AppDbContext.cs*",
-              "RelativeToolTip": "Db\\AppDbContext.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA/AAAAAAAAAA==",
+              "ToolTip": "C:\\School\\Projet_Final\\ms-recommend-net\\Db\\AppDbContext.cs",
+              "RelativeToolTip": "Db\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-08T14:23:27.651Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "IRecommendationService.cs",
               "DocumentMoniker": "C:\\School\\Projet_Final\\ms-recommend-net\\Interfaces\\IRecommendationService.cs",
               "RelativeDocumentMoniker": "Interfaces\\IRecommendationService.cs",
@@ -90,14 +99,14 @@
               "RelativeDocumentMoniker": "Models\\Preferences.cs",
               "ToolTip": "C:\\School\\Projet_Final\\ms-recommend-net\\Models\\Preferences.cs",
               "RelativeToolTip": "Models\\Preferences.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-08T13:04:49.455Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\School\\Projet_Final\\ms-recommend-net\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
@@ -121,7 +130,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\School\\Projet_Final\\ms-recommend-net\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -134,28 +143,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "RecommendationService.cs",
               "DocumentMoniker": "C:\\School\\Projet_Final\\ms-recommend-net\\Services\\RecommendationService.cs",
               "RelativeDocumentMoniker": "Services\\RecommendationService.cs",
               "ToolTip": "C:\\School\\Projet_Final\\ms-recommend-net\\Services\\RecommendationService.cs",
               "RelativeToolTip": "Services\\RecommendationService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAcAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAABcAAAAAAAAAAAA1wCcAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-07T14:14:03.581Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Users.cs",
-              "DocumentMoniker": "C:\\School\\Projet_Final\\ms-recommend-net\\Models\\Users.cs",
-              "RelativeDocumentMoniker": "Models\\Users.cs",
-              "ToolTip": "C:\\School\\Projet_Final\\ms-recommend-net\\Models\\Users.cs",
-              "RelativeToolTip": "Models\\Users.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABoAAABKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-07T13:48:38.652Z"
             },
             {
               "$type": "Document",
@@ -165,7 +162,7 @@
               "RelativeDocumentMoniker": "Controllers\\RecommendationController.cs",
               "ToolTip": "C:\\School\\Projet_Final\\ms-recommend-net\\Controllers\\RecommendationController.cs",
               "RelativeToolTip": "Controllers\\RecommendationController.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAtwBsAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAIAywBgAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-07T12:32:51.124Z",
               "EditorCaption": ""

@@ -2,7 +2,7 @@
   {
     "ContainingType": "ms_recommend_net.Controllers.RecommendationController",
     "Method": "GetRecommendations",
-    "RelativePath": "api/Recommendation/{userId}",
+    "RelativePath": "api/Recommendation/get-recommendations/{userId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

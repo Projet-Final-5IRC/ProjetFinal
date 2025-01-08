@@ -22,7 +22,7 @@ namespace ms_recommend_net.Controllers
             _activeMqService = activeMqService;
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("get-recommendations/{userId}")]
         public async Task<IActionResult> GetRecommendations(int userId)
         {
             return null;
