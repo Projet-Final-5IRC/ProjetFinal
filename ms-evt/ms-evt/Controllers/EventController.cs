@@ -23,7 +23,7 @@ namespace ms_evt.Controllers
         {
             try
             {
-                var data = await _dataService.GetEventsAsync("api/Event");
+                var data = await _dataService.GetAllAsync<EventDTO>("api/Event");
                 return Ok(data);
             }
             catch (Exception ex)
@@ -37,7 +37,7 @@ namespace ms_evt.Controllers
         {
             try
             {
-                var data = await _dataService.GetEventByIdAsync("api/Event", id);
+                var data = await _dataService.GetByIdAsync<EventDTO>("api/Event", id);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -60,12 +60,40 @@ namespace ms_evt.Controllers
             }
         }
 
+        [HttpPost("InviteUser")]
+        public async Task<IActionResult> InviteUser(InviteDTO inviteDTO)
+        {
+            try
+            {
+                var data = await _dataService.PostInviteAsync("api/EventInvite", inviteDTO);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur : {ex.Message}");
+            }
+        }
+
         [HttpDelete("DeleteEvent")]
         public async Task<IActionResult> DeleteEvent(int id)
         {
             try
             {
-                var data = await _dataService.DeleteEventAsync("api/Event", id);
+                var data = await _dataService.DeleteAsync("api/Event", id);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur : {ex.Message}");
+            }
+        }
+
+        [HttpDelete("DeleteInvite")]
+        public async Task<IActionResult> DeleteInvite(int id)
+        {
+            try
+            {
+                var data = await _dataService.DeleteAsync("api/EventInvite", id);
                 return Ok(data);
             }
             catch (Exception ex)

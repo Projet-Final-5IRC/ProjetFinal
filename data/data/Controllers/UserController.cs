@@ -81,7 +81,7 @@ namespace data.Controllers
 
             var check = await dataRepository.GetByEmailAsync(user.Email);
 
-            if( check != null)
+            if( check.Value != null)
             {
                 return BadRequest("Email déjà présent");
             }
