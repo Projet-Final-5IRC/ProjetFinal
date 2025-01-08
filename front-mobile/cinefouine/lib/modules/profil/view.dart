@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,7 +10,7 @@ class ProfilView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: Color(0xFF243040),
+      backgroundColor: AppColors.secondary,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.0),
@@ -31,7 +32,7 @@ class ProfilView extends ConsumerWidget {
                   Stack(
                     children: [
                       ClipOval(
-                        child: Container(
+                        child: SizedBox(
                           width: 126.0,
                           height: 126.0,
                           child: Image.asset(
@@ -50,7 +51,7 @@ class ProfilView extends ConsumerWidget {
                           child: Container(
                             padding: EdgeInsets.all(6.0),
                             decoration: BoxDecoration(
-                              color: Color(0xFF00AAE5),
+                              color: AppColors.primary,
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
