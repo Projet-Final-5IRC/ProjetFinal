@@ -5,6 +5,10 @@ import 'package:cinefouine/modules/home/view.dart';
 import 'package:cinefouine/modules/event/view.dart';
 import 'package:cinefouine/modules/profil/view.dart';
 import 'package:cinefouine/modules/bottomNavigation/view.dart';
+import 'package:cinefouine/modules/createEvent/view.dart';
+import 'package:cinefouine/modules/eventHome/view.dart';
+import 'package:cinefouine/modules/login/view.dart';
+import 'package:cinefouine/modules/register/view.dart';
 
 part 'app_router.g.dart';
 part 'app_router.gr.dart';
@@ -22,13 +26,18 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(
-          page: BottomNavigationRoute.page, 
-          initial: true,
-          children: [
-            AutoRoute(page: HomeRoute.page, initial: true),
-            AutoRoute(page: EventRoute.page),
-            AutoRoute(page: ProfilRoute.page),
-          ]),
+        AutoRoute(page: LoginRoute.page, initial: true),
+        AutoRoute(page: RegisterRoute.page),
+        AutoRoute(page: BottomNavigationRoute.page, children: [
+          AutoRoute(page: HomeRoute.page, initial: true),
+          AutoRoute(
+            page: EventHomeRoute.page,
+            children: [
+              AutoRoute(page: EventRoute.page, initial: true),
+              AutoRoute(page: CreateEventRoute.page),
+            ],
+          ),
+          AutoRoute(page: ProfilRoute.page),
+        ]),
       ];
 }
