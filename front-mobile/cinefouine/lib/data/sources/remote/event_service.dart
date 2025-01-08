@@ -10,7 +10,7 @@ part 'event_service.g.dart';
 @Riverpod(keepAlive: true)
 EventService eventService(EventServiceRef ref) {
   final dioClient = ref.watch(dioClientProvider(
-    url: "https://10.0.2.2:7231/api",
+    url: "https://ms-evt-gdefbnh7cma0e2a3.francecentral-01.azurewebsites.net/api",
   ));
   return EventService(
     dioClient: dioClient,
@@ -32,5 +32,38 @@ class EventService {
           EventListExtension.eventFromJson(jsonEncode(json)),
     );
     return apiResult;
+  }
+
+  Future<void> createEvent({
+    required String eventName,
+    required String eventDate,
+    required String eventHour,
+    required String eventLocation,
+    int? idGenre,
+    String? genreName,
+    String? eventDescription,
+    int? idUser,
+  }) async {
+    final endpoint = CineFouineEndpoints.createEvent;
+    final eventData = {
+      "eventName": eventName,
+      "eventDate": eventDate,
+      "eventHour": eventHour,
+      "eventLocation": eventLocation,
+      "idGenre": idGenre,
+      "genreName": genreName,
+      "eventDescription": eventDescription,
+      "idUser": idUser,
+    };
+    final response = await dioClient.post(
+      endpoint,
+      data: eventData,
+    );
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      print("Événement créé avec succès : ${response.data}");
+    } else {
+      print(
+          "Erreur lors de la création de l'événement : ${response.statusCode}");
+    }
   }
 }

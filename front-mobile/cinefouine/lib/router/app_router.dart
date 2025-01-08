@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cinefouine/modules/eventInvite/view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cinefouine/modules/home/view.dart';
@@ -9,6 +10,7 @@ import 'package:cinefouine/modules/createEvent/view.dart';
 import 'package:cinefouine/modules/eventHome/view.dart';
 import 'package:cinefouine/modules/login/view.dart';
 import 'package:cinefouine/modules/register/view.dart';
+import 'package:cinefouine/modules/detailsEvent/view.dart';
 
 part 'app_router.g.dart';
 part 'app_router.gr.dart';
@@ -35,6 +37,8 @@ class AppRouter extends RootStackRouter {
             children: [
               AutoRoute(page: EventRoute.page, initial: true),
               AutoRoute(page: CreateEventRoute.page),
+              AutoRoute(page: DetailsEventRoute.page),              
+              AutoRoute(page: EventInviteRoute.page),              
             ],
           ),
           AutoRoute(page: ProfilRoute.page),

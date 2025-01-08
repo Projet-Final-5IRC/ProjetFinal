@@ -17,13 +17,34 @@ EventRepository eventRepository(EventRepositoryRef ref) {
 class EventRepository {
   const EventRepository({
     required EventService appApiClient,
-  })  : _appApiClient = appApiClient;
+  }) : _appApiClient = appApiClient;
 
   final EventService _appApiClient;
 
   Future<List<EventInfo>?> getAllEvents() async {
     final events = await _appApiClient.getAllEvents();
-    print(events);
     return events;
+  }
+
+  Future<void> createEvent({
+    required String eventName,
+    required String eventDate,
+    required String eventHour,
+    required String eventLocation,
+    int? idGenre,
+    String? genreName,
+    required String eventDescription,
+    required int idUser,
+  }) async {
+    await _appApiClient.createEvent(
+      eventName: eventName,
+      eventDate: eventDate,
+      eventHour: eventHour,
+      eventLocation: eventLocation,
+      idGenre: idGenre,
+      genreName: genreName,
+      eventDescription: eventDescription,
+      idUser: idUser,
+    );
   }
 }

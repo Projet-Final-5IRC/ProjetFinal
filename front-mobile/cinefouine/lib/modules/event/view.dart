@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/cineFouineBoutton.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
-import 'package:cinefouine/data/entities/repositories/event_repository.dart';
+import 'package:cinefouine/data/entities/event/event_info.dart';
+import 'package:cinefouine/data/repositories/event_repository.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,14 +20,24 @@ class _TabBarIndexNotifier extends _$TabBarIndexNotifier {
   }
 }
 
+@Riverpod(keepAlive: false)
+class Events extends _$Events {
+  @override
+  Future<List<EventInfo>?> build() async {
+    return ref.watch(eventRepositoryProvider).getAllEvents();
+  }
+}
+
 @RoutePage()
 class EventView extends ConsumerWidget {
   const EventView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var index = ref.watch(_tabBarIndexNotifierProvider);
-    var router = ref.watch(appRouterProvider);
+    final index = ref.watch(_tabBarIndexNotifierProvider);
+    final router = ref.watch(appRouterProvider);
+    final events = ref.watch(eventsProvider);
+    bool isLoading = false;
     return Scaffold(
       backgroundColor: const Color(0xFF1A1F25),
       body: SafeArea(
@@ -58,8 +69,8 @@ class EventView extends ConsumerWidget {
               const SizedBox(height: 8),
               CineFouineHugeBoutton(
                 onPressed: () async {
-                  await ref.read(eventRepositoryProvider).getAllEvents();
-                  //router.push(const CreateEventRoute());
+                  //await ref.read(eventRepositoryProvider).getAllEvents();
+                  router.push(const CreateEventRoute());
                 },
                 text: "Create",
               ),
@@ -82,100 +93,115 @@ class EventView extends ConsumerWidget {
                 ],
               ),
               Expanded(
-                child: ListView(
-                  children: [
-                    _buildEventItem(
-                      'Horror',
-                      'On se fait peur venez nombreux !',
-                      'assets/images/default_avatar.jpg',
-                      true,
-                    ),
-                    _buildEventItem(
-                      'Romance',
-                      '',
-                      'assets/images/default_avatar.jpg',
-                      false,
-                    ),
-                    _buildEventItem(
-                      'Comedy',
-                      '',
-                      'assets/images/default_avatar.jpg',
-                      false,
-                    ),
-                    _buildEventItem(
-                      'Comedy',
-                      'On rigole on rigole mais on voit ...',
-                      'assets/images/default_avatar.jpg',
-                      false,
-                    ),
-                    _buildEventItem(
-                      'Hard Core',
-                      '',
-                      'assets/images/default_avatar.jpg',
-                      false,
-                    ),
-                    _buildEventItem(
-                      'Any',
-                      '',
-                      'assets/images/default_avatar.jpg',
-                      false,
-                    ),
-                  ],
+                child: events.when(
+                  data: (data) {
+                    if (data == null) {
+                      return Placeholder();
+                    } else {
+                      print("BUILD EVENT");
+                      return ListView.builder(
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          final event = data[index];
+                          return EventItem(
+                            title: event.eventName,
+                            description: event.eventDescription,
+                            avatarPath: "assets/images/default_avatar.jpg",
+                            isJoined: false,
+                            ref: ref,
+                          );
+                        },
+                      );
+                    }
+                  },
+                  error: (error, stackTrace) {
+                    // Si une erreur survient, affiche un message d'erreur
+                    return Center(
+                        child: Text(
+                      'Erreur: $error',
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ));
+                  },
+                  loading: () {
+                    // Si les données sont en train de se charger, affiche un indicateur de chargement
+                    return Center(child: CircularProgressIndicator());
+                  },
                 ),
-              ),
+              )
             ],
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildEventItem(
-    String title,
-    String description,
-    String avatarPath,
-    bool isJoined,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: AssetImage(avatarPath),
-            radius: 20,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-                if (description.isNotEmpty)
+class EventItem extends StatelessWidget {
+  final String title;
+  final String? description;
+  final String avatarPath;
+  final bool isJoined;
+  final WidgetRef ref;
+
+  const EventItem({
+    super.key,
+    required this.title,
+    this.description,
+    required this.avatarPath,
+    required this.isJoined,
+    required this.ref,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var router = ref.watch(appRouterProvider);
+
+    return GestureDetector(
+      onTap: () {
+        router.push(const DetailsEventRoute());
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: AssetImage(avatarPath),
+              radius: 20,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    description,
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    description ?? "",
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
                     ),
                   ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Cinefouineboutton(
-            isClicked: isJoined,
-            onPressed: () {
-              print("click");
-            },
-            text: "Join",
-            text2: "Joined",
-          ),
-        ],
+            Cinefouineboutton(
+              isClicked: isJoined,
+              onPressed: () {
+                print("click");
+              },
+              text: "Join",
+              text2: "Joined",
+            ),
+          ],
+        ),
       ),
     );
   }

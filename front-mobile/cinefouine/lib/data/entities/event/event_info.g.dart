@@ -13,10 +13,14 @@ _$EventInfoImpl _$$EventInfoImplFromJson(Map<String, dynamic> json) =>
       eventDate: json['eventDate'] as String,
       eventHour: json['eventHour'] as String,
       eventLocation: json['eventLocation'] as String,
-      eventDescription: json['eventDescription'] as String,
+      eventDescription: json['eventDescription'] as String?,
       idGenre: (json['idGenre'] as num?)?.toInt(),
       genreName: json['genreName'] as String?,
-      eventInvitationId: json['eventInvitationId'] as List<dynamic>,
+      idOwner: (json['idOwner'] as num?)?.toInt(),
+      ownerName: json['ownerName'] as String?,
+      eventInvitationId: (json['eventInvitationId'] as List<dynamic>)
+          .map((e) => (e as num).toInt())
+          .toList(),
     );
 
 Map<String, dynamic> _$$EventInfoImplToJson(_$EventInfoImpl instance) =>
@@ -29,5 +33,7 @@ Map<String, dynamic> _$$EventInfoImplToJson(_$EventInfoImpl instance) =>
       'eventDescription': instance.eventDescription,
       'idGenre': instance.idGenre,
       'genreName': instance.genreName,
+      'idOwner': instance.idOwner,
+      'ownerName': instance.ownerName,
       'eventInvitationId': instance.eventInvitationId,
     };
