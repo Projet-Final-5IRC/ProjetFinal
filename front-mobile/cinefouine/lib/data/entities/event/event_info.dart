@@ -21,9 +21,11 @@ class EventInfo with _$EventInfo {
         required String eventHour,
         required String eventLocation,
         required String eventDescription,
-        required int? idGenre,
-        required String? genreName,
-        required List<dynamic> eventInvitationId,
+        required int idGenre,
+        required String genreName,
+        required int idOwner,
+        required String ownerName,
+        required List<int> eventInvitationId,
     }) = _EventInfo;
 
     factory EventInfo.fromJson(Map<String, dynamic> json) => _$EventInfoFromJson(json);

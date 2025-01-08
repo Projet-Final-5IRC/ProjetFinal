@@ -33,4 +33,39 @@ class EventService {
     );
     return apiResult;
   }
+
+  Future<void> createEvent({
+    required String eventName,
+    required String eventDate,
+    required String eventHour,
+    required String eventLocation,
+    int? idGenre,
+    String? genreName,
+    required String eventDescription,
+    required int idOwner,
+    required String ownerName,
+  }) async {
+    final endpoint = CineFouineEndpoints.createEvent;
+        final eventData = {
+      "eventName": eventName,
+      "eventDate": eventDate,
+      "eventHour": eventHour,
+      "eventLocation": eventLocation,
+      "idGenre": idGenre,
+      "genreName": genreName,
+      "eventDescription": eventDescription,
+      "idOwner": idOwner,
+      "ownerName": ownerName,
+    };
+    final response = await dioClient.post(
+      endpoint,
+      data: eventData,
+    );
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      print("Événement créé avec succès : ${response.data}");
+    } else {
+      print(
+          "Erreur lors de la création de l'événement : ${response.statusCode}");
+    }
+  }
 }

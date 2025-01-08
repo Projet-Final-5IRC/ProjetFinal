@@ -1,11 +1,44 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:cinefouine/core/widgets/mainAppBar.dart';
-import 'package:cinefouine/theme/app_colors.dart';
+import 'package:cinefouine/data/entities/event/event_info.dart';
+import 'package:cinefouine/data/repositories/event_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinefouine/core/widgets/cinefouineInputField.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
 import 'package:cinefouine/router/app_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'view.g.dart';
+
+@Riverpod(keepAlive: false)
+class _CreateEventButton extends _$CreateEventButton {
+  @override
+  bool build() => true;
+
+  void createEvent({
+    required String eventName,
+    required String eventDate,
+    required String eventHour,
+    required String eventLocation,
+    required String eventDescription,
+    int? idGenre,
+    String? genreName,
+    required int idOwner,
+    required String ownerName,
+  }) {
+    ref.read(eventRepositoryProvider).createEvent(
+          eventName: eventName,
+          eventDate: eventDate,
+          eventHour: eventHour,
+          eventLocation: eventLocation,
+          idGenre: idGenre,
+          genreName: genreName,
+          eventDescription: eventDescription,
+          idOwner: idOwner,
+          ownerName: ownerName,
+        );
+  }
+}
 
 @RoutePage()
 class CreateEventView extends ConsumerStatefulWidget {
@@ -60,6 +93,17 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
             const SizedBox(height: 32),
             CineFouineHugeBoutton(
               onPressed: () {
+                ref.read(_createEventButtonProvider.notifier).createEvent(
+                      eventName: "eventdepuislapp",
+                      eventDate: "09:12:2023",
+                      eventHour: "18:30",
+                      eventLocation: "gogo",
+                      idGenre: 0,
+                      genreName: "Action",
+                      eventDescription: "description",
+                      idOwner: 0,
+                      ownerName: "Rémi",
+                    );
                 // TODO: Ajouter la logique pour créer l'événement
                 print("Event added: Name=${_nameController.text}, "
                     "Description=${_descriptionController.text}, "
