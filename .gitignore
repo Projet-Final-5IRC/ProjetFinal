@@ -11,4 +11,7 @@ back-python/__pycache__/
 back-python/app/__pycache__/
 back-python/app/recommender/__pycache__/
 data/obj/
+*/bin
+*/obj
+MovieMS/MovieMS.csproj
 data/bin/
