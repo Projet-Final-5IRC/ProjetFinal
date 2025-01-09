@@ -58,8 +58,8 @@ namespace data.Controllers.Tests
         [TestMethod]
         public async Task GetGenreByID_SuccessGetGenreByID()
         {
-            var result = await _controller.GetGenreById(1);
-            var genreInDB = _context.Genre.Where(c => c.IdGenre == 1).FirstOrDefault();
+            var result = await _controller.GetGenreById(3);
+            var genreInDB = _context.Genre.Where(c => c.IdGenre == 3).FirstOrDefault();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(genreInDB.GenreName, result.Value.GenreName);
