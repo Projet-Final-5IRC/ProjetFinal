@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cinefouine/data/entities/event/movie_info.dart';
 import 'package:cinefouine/data/repositories/movie_repository.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isSearchModeActif = ref.watch(isSearchModeActifProvider);
     final movieRepository = ref.watch(movieRepositoryProvider);
-    final suggestionsStream = StreamController<List<String>>.broadcast();
+    final suggestionsStream = StreamController<List<MovieInfo>?>.broadcast();
 
     void onSearchTextChanged(String query) async {
       if (query.isEmpty) {
@@ -82,7 +83,7 @@ debugPrint("APP-DEBUG: Suggestions reçues : $suggestions");
                   ),
                   onChanged: onSearchTextChanged,
                 ),
-                StreamBuilder<List<String>>(
+                StreamBuilder<List<MovieInfo>?>(
                   stream: suggestionsStream.stream,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -95,7 +96,7 @@ debugPrint("APP-DEBUG: Suggestions reçues : $suggestions");
                         final suggestion = snapshot.data![index];
                         return ListTile(
                           title: Text(
-                            suggestion,
+                            suggestion.title,
                             style: const TextStyle(color: Colors.white),
                           ),
                           onTap: () {
