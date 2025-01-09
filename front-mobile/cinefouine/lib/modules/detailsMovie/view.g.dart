@@ -6,12 +6,12 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$movieSeletedHash() => r'a339c09b8450b260673eb54ff57535a59a65483e';
+String _$movieSeletedHash() => r'c82ceb50191f8e3243887951f9f3726950e8c09b';
 
 /// See also [MovieSeleted].
 @ProviderFor(MovieSeleted)
 final movieSeletedProvider =
-    AutoDisposeNotifierProvider<MovieSeleted, MovieInfo?>.internal(
+    NotifierProvider<MovieSeleted, MovieInfo?>.internal(
   MovieSeleted.new,
   name: r'movieSeletedProvider',
   debugGetCreateSourceHash:
@@ -20,6 +20,6 @@ final movieSeletedProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$MovieSeleted = AutoDisposeNotifier<MovieInfo?>;
+typedef _$MovieSeleted = Notifier<MovieInfo?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

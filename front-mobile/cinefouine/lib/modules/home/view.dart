@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/mainAppBar.dart';
 import 'package:cinefouine/data/entities/movie/movie_info.dart';
 import 'package:cinefouine/data/repositories/movie_repository.dart';
+import 'package:cinefouine/modules/detailsMovie/view.dart';
+import 'package:cinefouine/router/app_router.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -92,7 +94,7 @@ class SearchContent extends ConsumerWidget {
   }
 }
 
-class MovieCard extends StatelessWidget {
+class MovieCard extends ConsumerWidget {
   final MovieInfo movie;
 
   const MovieCard({
@@ -101,11 +103,12 @@ class MovieCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
     return InkWell(
       onTap: () {
-        // Utilisez AutoRoute pour la navigation
-        //context.router.push(MovieDetailsRoute(movieId: movie.id));
+        ref.read(movieSeletedProvider.notifier).setMovie(movie);
+        router.push(DetailsMovieRoute());
       },
       child: Card(
         elevation: 4,
