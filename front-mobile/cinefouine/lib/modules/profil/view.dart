@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,9 @@ class ProfilView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //final preferences = ref.watch(preferencesProvider);
+    //final userName = preferences.userNamePreferences.load() ?? "Non connecté";
+
     return Scaffold(
       backgroundColor: AppColors.secondary,
       body: SingleChildScrollView(
@@ -17,9 +21,9 @@ class ProfilView extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Elon Musk",
-                style: TextStyle(
+              Text(
+                "userName",
+                style: const TextStyle(
                   fontSize: 36.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -88,104 +92,11 @@ class ProfilView extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              Text(
-                "Mail: remi.louedec@laposte.net",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "Tel: 06 ** ** ** 76",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "Password: ********",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                "Mes films",
-                style: TextStyle(
-                  fontSize: 36.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "Film regardé: 42",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
-              ),
-              Text(
-                "Heures regardé: 6969 heures",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildSection("Favoris",
-                  ["Harry Potter", "Stars wars", "Le seigneur des anneaux"]),
-              const SizedBox(height: 16),
-              _buildSection("Ma liste",
-                  ["Le hobbit", "Les tuchs", "Pirates des caraibes"]),
+              // Reste de votre code...
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildSection(String title, List<String> items) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            Icon(Icons.chevron_right, color: Colors.white),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: items
-              .map((item) => Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 8.0),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ))
-              .toList(),
-        ),
-      ],
     );
   }
 }

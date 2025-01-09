@@ -20,6 +20,7 @@ dependencies:
   dio: ^5.7.0
   meta: ^1.15.0
   intl: ^0.20.1
+  shared_preferences: ^2.3.5
 
 dev_dependencies:
   flutter_test:

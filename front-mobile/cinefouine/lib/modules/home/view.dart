@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/mainAppBar.dart';
-import 'package:cinefouine/data/entities/event/movie_info.dart';
+import 'package:cinefouine/data/entities/movie/movie_info.dart';
 import 'package:cinefouine/data/repositories/movie_repository.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
