@@ -1,18 +1,19 @@
-// main_app_bar.dart
+import 'dart:async';
+
+import 'package:cinefouine/data/repositories/movie_repository.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'movie_service.dart';
 
-part 'main_app_bar.g.dart';
+part 'mainAppBar.g.dart';
 
 @Riverpod(keepAlive: false)
-class IsSearchModeActive extends _$IsSearchModeActive {
+class IsSearchModeActif extends _$IsSearchModeActif {
   @override
   bool build() => false;
 
-  void toggle() {
+  void switchValue() {
     state = !state;
   }
 }
@@ -49,22 +50,78 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSearchModeActive = ref.watch(isSearchModeActiveProvider);
+    final isSearchModeActif = ref.watch(isSearchModeActifProvider);
+    final movieRepository = ref.watch(movieRepositoryProvider);
+    final suggestionsStream = StreamController<List<String>>.broadcast();
+
+    void onSearchTextChanged(String query) async {
+      if (query.isEmpty) {
+        suggestionsStream.add([]);
+        debugPrint("APP-DEBUG: Query vide, suggestions réinitialisées.");
+        return;
+      }
+      try {
+        debugPrint("APP-DEBUG: Recherche de suggestions pour : $query");
+        final suggestions = await movieRepository.getMovieSuggestions(query);
+debugPrint("APP-DEBUG: Suggestions reçues : $suggestions");
+        suggestionsStream.add(suggestions);
+      } catch (e) {
+        debugPrint("APP-DEBUG: Erreur lors de la recherche des suggestions : $e");
+      }
+    }
+
     return AppBar(
-      title: isSearchModeActive
-          ? SearchField()
-          : Text(
+      title: Column(
+              children: [
+                TextField(
+                  cursorColor: Colors.white,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: "Recherche ...",
+                    labelStyle: const TextStyle(color: Colors.grey),
+                  ),
+                  onChanged: onSearchTextChanged,
+                ),
+                StreamBuilder<List<String>>(
+                  stream: suggestionsStream.stream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        final suggestion = snapshot.data![index];
+                        return ListTile(
+                          title: Text(
+                            suggestion,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          onTap: () {
+                            // Logique pour gérer la sélection
+                            // Exemple : Naviguer vers la page de détails du film
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            )
+  /*        : Text(
               title,
               style: titleTextStyle ??
                   const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
-            ),
+            )*/,
       actions: [
         ...?actions,
         if (showSearchButton)
-          _buildSearchButton(ref.read(isSearchModeActiveProvider.notifier).toggle),
+          _buildSearchButton(
+              ref.read(isSearchModeActifProvider.notifier).switchValue),
         if (showAvatar) _buildAvatar(),
       ],
       leading: _buildLeading(context),
@@ -102,7 +159,7 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
         onPressed: () => Scaffold.of(context).openDrawer(),
       );
     }
-    return const SizedBox(
+    return SizedBox(
       width: 24.0,
       height: 24.0,
     );
@@ -132,78 +189,4 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize =>
       Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0));
-}
-
-class SearchField extends ConsumerStatefulWidget {
-  const SearchField({super.key});
-
-  @override
-  ConsumerState<SearchField> createState() => _SearchFieldState();
-}
-
-class _SearchFieldState extends ConsumerState<SearchField> {
-  final TextEditingController _controller = TextEditingController();
-  late Future<List<String>> _suggestions;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.addListener(_onSearchChanged);
-  }
-
-  void _onSearchChanged() {
-    final query = _controller.text;
-    if (query.isNotEmpty) {
-      setState(() {
-        _suggestions = ref.read(movieServiceProvider).getMovieSuggestions(query);
-      });
-    } else {
-      setState(() {
-        _suggestions = Future.value([]);
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          controller: _controller,
-          cursorColor: Colors.white,
-          style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(
-            labelText: "Recherche ...",
-            labelStyle: TextStyle(color: Colors.grey),
-          ),
-        ),
-        FutureBuilder<List<String>>(
-          future: _suggestions,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Erreur: ${snapshot.error}');
-            } else if (snapshot.hasData) {
-              final suggestions = snapshot.data!;
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: suggestions.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(suggestions[index]),
-                    onTap: () {
-                      // Gérer la sélection d'une suggestion
-                    },
-                  );
-                },
-              );
-            } else {
-              return const Text('Aucune suggestion');
-            }
-          },
-        ),
-      ],
-    );
-  }
 }
