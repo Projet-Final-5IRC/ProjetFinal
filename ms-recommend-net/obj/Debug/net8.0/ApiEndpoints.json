@@ -33,6 +33,22 @@
   },
   {
     "ContainingType": "ms_recommend_net.Controllers.RecommendationController",
+    "Method": "ProcessMovieTitle",
+    "RelativePath": "api/Recommendation/process-movie-title/{movieTitle}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "movieTitle",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ms_recommend_net.Controllers.RecommendationController",
     "Method": "UpdatePreferences",
     "RelativePath": "api/Recommendation/update-preferences/{userId}",
     "HttpMethod": "POST",

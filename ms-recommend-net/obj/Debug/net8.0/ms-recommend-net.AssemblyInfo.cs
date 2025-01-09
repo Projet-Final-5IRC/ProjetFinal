@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ms-recommend-net")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+09b421928f075833adf3f4ee71d997800404cff8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3b4915e84e759e19b4a0ac9aa5630008ed9571a2")]
 [assembly: System.Reflection.AssemblyProductAttribute("ms-recommend-net")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ms-recommend-net")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

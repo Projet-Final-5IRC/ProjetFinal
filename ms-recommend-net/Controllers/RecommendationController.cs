@@ -14,12 +14,14 @@ namespace ms_recommend_net.Controllers
         private readonly AppDbContext _context;
         private readonly IRecommendationService _recommendationService;
         private readonly ActiveMqService _activeMqService;
+        private readonly TmdbService _tmdbService;
 
-        public RecommendationController(AppDbContext context, IRecommendationService recommendationService, ActiveMqService activeMqService)
+        public RecommendationController(AppDbContext context, IRecommendationService recommendationService, ActiveMqService activeMqService, TmdbService tmdbService)
         {
             _context = context;
             _recommendationService = recommendationService;
             _activeMqService = activeMqService;
+            _tmdbService = tmdbService;
         }
 
         [HttpGet("get-recommendations/{userId}")]
@@ -53,5 +55,29 @@ namespace ms_recommend_net.Controllers
 
             return Ok(preferences);
         }
+
+        [HttpGet("process-movie-title/{movieTitle}")]
+        public async Task<IActionResult> ProcessMovieTitle(string movieTitle)
+        {
+            try
+            {
+                // Rechercher l'identifiant du film
+                var movieId = await _tmdbService.GetMovieIdAsync(movieTitle);
+
+                if (movieId == null)
+                {
+                    return NotFound("Aucun film correspondant trouvé dans l'API TMDB.");
+                }
+
+                // Récupérer les détails du film
+                var movieDetails = await _tmdbService.GetMovieDetailsAsync(movieId.Value);
+
+                return Ok(movieDetails);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        } 
     }
 }
