@@ -35,6 +35,7 @@ namespace data.Models.DataManager
             }
 
             var eventEntity = await eventDBContext.Event.FirstOrDefaultAsync(e => e.IdEvent == id);
+            Console.WriteLine(eventEntity);
 
             return eventEntity != null ? eventEntity : new NotFoundResult();
         }

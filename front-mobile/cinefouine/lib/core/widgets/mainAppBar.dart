@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cinefouine/data/repositories/movie_repository.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,24 +51,72 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isSearchModeActif = ref.watch(isSearchModeActifProvider);
+    final movieRepository = ref.watch(movieRepositoryProvider);
+    final suggestionsStream = StreamController<List<String>>.broadcast();
+
+    void onSearchTextChanged(String query) async {
+      if (query.isEmpty) {
+        suggestionsStream.add([]);
+        debugPrint("APP-DEBUG: Query vide, suggestions réinitialisées.");
+        return;
+      }
+      try {
+        debugPrint("APP-DEBUG: Recherche de suggestions pour : $query");
+        final suggestions = await movieRepository.getMovieSuggestions(query);
+debugPrint("APP-DEBUG: Suggestions reçues : $suggestions");
+        suggestionsStream.add(suggestions);
+      } catch (e) {
+        debugPrint("APP-DEBUG: Erreur lors de la recherche des suggestions : $e");
+      }
+    }
+
     return AppBar(
-      title: isSearchModeActif
-          ? TextField(
-              cursorColor: Colors.white,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                labelText: "Recherche ...",
-                labelStyle: const TextStyle(color: Colors.grey),
-              ),
+      title: Column(
+              children: [
+                TextField(
+                  cursorColor: Colors.white,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: "Recherche ...",
+                    labelStyle: const TextStyle(color: Colors.grey),
+                  ),
+                  onChanged: onSearchTextChanged,
+                ),
+                StreamBuilder<List<String>>(
+                  stream: suggestionsStream.stream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        final suggestion = snapshot.data![index];
+                        return ListTile(
+                          title: Text(
+                            suggestion,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          onTap: () {
+                            // Logique pour gérer la sélection
+                            // Exemple : Naviguer vers la page de détails du film
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
             )
-          : Text(
+  /*        : Text(
               title,
               style: titleTextStyle ??
                   const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
-            ),
+            )*/,
       actions: [
         ...?actions,
         if (showSearchButton)
@@ -90,29 +141,29 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
-Widget? _buildLeading(BuildContext context) {
-  if (isBackNavigationAvailable) {
-    return IconButton(
-      icon: const Icon(
-        Icons.arrow_back_ios_outlined,
-        color: Colors.white,
-      ),
-      onPressed: onBackButtonPressed,
-    );
-  } else if (showBurgerMenu) {
-    return IconButton(
-      icon: const Icon(
-        Icons.menu,
-        color: Colors.white,
-      ),
-      onPressed: () => Scaffold.of(context).openDrawer(),
+  Widget? _buildLeading(BuildContext context) {
+    if (isBackNavigationAvailable) {
+      return IconButton(
+        icon: const Icon(
+          Icons.arrow_back_ios_outlined,
+          color: Colors.white,
+        ),
+        onPressed: onBackButtonPressed,
+      );
+    } else if (showBurgerMenu) {
+      return IconButton(
+        icon: const Icon(
+          Icons.menu,
+          color: Colors.white,
+        ),
+        onPressed: () => Scaffold.of(context).openDrawer(),
+      );
+    }
+    return SizedBox(
+      width: 24.0,
+      height: 24.0,
     );
   }
-  return SizedBox(
-    width: 24.0,
-    height: 24.0,
-  );
-}
 
   Widget _buildAvatar() {
     return GestureDetector(
