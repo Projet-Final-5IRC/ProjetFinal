@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:cinefouine/data/entities/event/movie_info.dart';
+import 'package:cinefouine/data/entities/movie/movie_info.dart';
 import 'package:cinefouine/data/sources/dio_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,15 +15,21 @@ MovieService movieService(MovieServiceRef ref) {
 
 class MovieService {
   MovieService({required this.dioClient});
-
   final DioClient dioClient;
 
   Future<List<MovieInfo>?> getMovieSuggestions(String query) async {
     final response = await dioClient.get<List<MovieInfo>>(
-      '/Movies/suggestions',
+      '/Movies/search',
       queryParameters: {'query': query},
-      deserializer: (json) =>
-          MovieListExtension.movieFromJson(jsonEncode(json)),
+      deserializer: (json) => MovieListExtension.movieFromJson(jsonEncode(json)),
+    );
+    return response;
+  }
+
+  Future<MovieInfo?> getMovieDetails(int movieId) async {
+    final response = await dioClient.get<MovieInfo>(
+      '/Movies/$movieId',
+      deserializer: (json) => MovieInfo.fromJson(json as Map<String, dynamic>),
     );
     return response;
   }

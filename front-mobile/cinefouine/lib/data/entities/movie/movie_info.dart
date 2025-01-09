@@ -11,8 +11,14 @@ String movieInfoToJson(List<MovieInfo> data) => json.encode(List<dynamic>.from(d
 @freezed
 class MovieInfo with _$MovieInfo {
     const factory MovieInfo({
-        required int id,
-        required String title,
+      @JsonKey(name: 'id') required int id,
+      @JsonKey(name: 'title') required String title,
+      @JsonKey(name: 'overview') required String? overview,
+      @JsonKey(name: 'poster_path') required String? posterPath,
+      @JsonKey(name: 'release_date') required DateTime? releaseDate,
+      @JsonKey(name: 'popularity') required double? popularity,
+      @JsonKey(name: 'vote_average') required double? voteAverage,
+      @JsonKey(name: 'vote_count') required int? voteCount,
     }) = _MovieInfo;
 
     factory MovieInfo.fromJson(Map<String, dynamic> json) => _$MovieInfoFromJson(json);

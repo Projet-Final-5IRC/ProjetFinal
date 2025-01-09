@@ -1,5 +1,4 @@
-// movie_repository.dart
-import 'package:cinefouine/data/entities/event/movie_info.dart';
+import 'package:cinefouine/data/entities/movie/movie_info.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cinefouine/data/sources/remote/movie_service.dart';
 import 'package:meta/meta.dart';
@@ -27,4 +26,8 @@ class MovieRepository {
     return suggestions;
   }
 
+  Future<MovieInfo?> getMovieDetails(int movieId) async {
+    final movieDetails = await _appApiClient.getMovieDetails(movieId);
+    return movieDetails;
+  }
 }

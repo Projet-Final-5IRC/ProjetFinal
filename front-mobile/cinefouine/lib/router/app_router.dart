@@ -11,6 +11,8 @@ import 'package:cinefouine/modules/eventHome/view.dart';
 import 'package:cinefouine/modules/login/view.dart';
 import 'package:cinefouine/modules/register/view.dart';
 import 'package:cinefouine/modules/detailsEvent/view.dart';
+import 'package:cinefouine/modules/detailsMovie/view.dart';  // Ajoutez l'import de la page DetailsMovie
+
 
 part 'app_router.g.dart';
 part 'app_router.gr.dart';
@@ -30,6 +32,7 @@ class AppRouter extends RootStackRouter {
   List<AutoRoute> get routes => [
         AutoRoute(page: LoginRoute.page, initial: true),
         AutoRoute(page: RegisterRoute.page),
+        AutoRoute(page: DetailsMovieRoute.page),
         AutoRoute(page: BottomNavigationRoute.page, children: [
           AutoRoute(page: HomeRoute.page, initial: true),
           AutoRoute(
@@ -42,6 +45,7 @@ class AppRouter extends RootStackRouter {
             ],
           ),
           AutoRoute(page: ProfilRoute.page),
+
         ]),
       ];
 }

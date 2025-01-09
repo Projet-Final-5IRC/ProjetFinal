@@ -40,14 +40,6 @@ class DioClient {
     _client.options.baseUrl = baseUrl;
     //_client.interceptors.clear(); if need to clear dio instance interceptors
     // Désactive la vérification des certificats SSL
-    (_client.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
-        (client) {
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-      return null;
-    };
-    _client.interceptors
-        .add(LogInterceptor(requestBody: true, responseBody: true));
 
     if (_interceptors != null) {
       _client.interceptors.addAll(_interceptors);

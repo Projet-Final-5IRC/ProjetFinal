@@ -67,6 +67,25 @@ class DetailsEventRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [DetailsMovieView]
+class DetailsMovieRoute extends PageRouteInfo<void> {
+  const DetailsMovieRoute({List<PageRouteInfo>? children})
+      : super(
+          DetailsMovieRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DetailsMovieRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DetailsMovieView();
+    },
+  );
+}
+
+/// generated route for
 /// [EventHomeView]
 class EventHomeRoute extends PageRouteInfo<void> {
   const EventHomeRoute({List<PageRouteInfo>? children})
