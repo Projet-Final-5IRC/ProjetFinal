@@ -10,7 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 pathUser = "../../data/User/userTest1.json"
 pathMovie = "../../data/Movies/movies.json"
 
-exitDataUser = []
+exitDataUserLike = []
 exitDataUserSeen = []
 exitDataMovie = []
 
@@ -23,21 +23,22 @@ with open(pathUser, 'r') as json_file:
 entry_data = {}
 with open(pathMovie, 'r') as file:
     entry_data = json.load(file)           
-                
+      
 # mise en forme data pour RFC
 ## User Training
-exitDataUser = fct.traitement_like(entry_data, entry_json, exitDataUser)
+print("-----------------------------------")
+print("-----------Fonction traitment------")
+exitDataUser = fct.traitement_like(entry_data, entry_json, exitDataUserLike) 
+print(f"exitDataUser à la fin de la boucle: {exitDataUser}")
+print("-----------------------------------")
+print("-----------------------------------")
 exitDataUserSeen = fct.traitement_seen(entry_data, entry_json, exitDataUserSeen)
-## Movie Data for prediction
+print(f"exitDataUser à la fin de la boucle: {exitDataUserSeen}")
+print("-----------------------------------")
+print("-----------------------------------")
+## Movie Data for prediction (total database)
 exitDataMovie = fct.traitement_movie(entry_data, exitDataMovie)
-
-print("-----------------------------------")
-print(exitDataUser.head())
-print("-----------------------------------")
-print(exitDataUserSeen.head())
-print("-----------------------------------")
-print(exitDataMovie.head())
-print("-----------------------------------")
+print("---------Fin traitement------------")
 
 ###########################à faire ###########################
 # # Formater les données pour les adapter au DataFrame
