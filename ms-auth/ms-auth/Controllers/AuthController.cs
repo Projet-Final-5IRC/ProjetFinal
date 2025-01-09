@@ -27,13 +27,13 @@ namespace ms_auth.Controllers
             try
             {
                 var data = await _dataService.PostUserAsync("/api/User", userDTO);
-                if (data.Item1 == HttpStatusCode.Created)
+                if (data.StatusCode == HttpStatusCode.Created)
                 {
-                    return Ok(data.Item2);
+                    return Ok(data.Data);
                 }
                 else
                 {
-                    return BadRequest(data.Item2);
+                    return BadRequest(data.ErrorMessage);
                 }
             }
             catch (Exception ex)
