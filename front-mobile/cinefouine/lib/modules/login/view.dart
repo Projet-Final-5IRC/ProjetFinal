@@ -48,12 +48,14 @@ class _LoginViewState extends ConsumerState<LoginView> {
             const SizedBox(height: 32),
             CineFouineInputField(
               controller: _emailController,
+              onChanged: (value) {},
               hintText: "Email or Phone no",
             ),
             const SizedBox(height: 16),
             CineFouineInputField(
               controller: _passwordController,
               hintText: "Password",
+              onChanged: (value) {},
               isPassword: true,
             ),
             const SizedBox(height: 32),
@@ -77,7 +79,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           _rememberMe = value!;
                         });
                       },
-                      activeColor: const Color(0xFF0099CC), // Couleur du checkbox
+                      activeColor:
+                          const Color(0xFF0099CC), // Couleur du checkbox
                     ),
                     const Text(
                       "Remember me",
@@ -91,7 +94,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 ),
               ],
             ),
-            const SizedBox(height: 24), // Ajout d'un espace avant le texte d'inscription
+            const SizedBox(
+                height: 24), // Ajout d'un espace avant le texte d'inscription
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

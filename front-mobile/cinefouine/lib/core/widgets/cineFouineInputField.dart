@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
 class CineFouineInputField extends StatelessWidget {
-  final TextEditingController controller;
   final String hintText;
   final bool isPassword;
+  final ValueChanged<String> onChanged;
 
   const CineFouineInputField({
     super.key,
-    required this.controller,
     required this.hintText,
+    required this.onChanged,
     this.isPassword = false,
-  });
+    TextEditingController? controller
+  }) : _controller = controller;
+
+  final TextEditingController? _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class CineFouineInputField extends StatelessWidget {
         borderRadius: BorderRadius.circular(8), // Bords arrondis
       ),
       child: TextField(
-        controller: controller,
+        controller: _controller,
         obscureText: isPassword,
         cursorColor: Colors.white, // Couleur du curseur
         decoration: InputDecoration(
@@ -30,7 +33,8 @@ class CineFouineInputField extends StatelessWidget {
             color: Colors.white70, // Texte indicatif légèrement transparent
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8), // Même rayon que le conteneur
+            borderRadius:
+                BorderRadius.circular(8), // Même rayon que le conteneur
             borderSide: BorderSide.none, // Pas de bordure par défaut
           ),
           focusedBorder: OutlineInputBorder(
@@ -48,6 +52,9 @@ class CineFouineInputField extends StatelessWidget {
         style: const TextStyle(
           color: Colors.white, // Texte saisi en blanc
         ),
+        onChanged: (value) {
+          onChanged(value);
+        },
       ),
     );
   }

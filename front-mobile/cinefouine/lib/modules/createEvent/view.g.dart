@@ -6,12 +6,28 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createEventButtonHash() => r'6617c4f275876fd6d511ecfc4eb000b4da90b9e4';
+String _$createEventFormHash() => r'3f252b6a87e578467b586845d96f39cfaa17af00';
+
+/// See also [CreateEventForm].
+@ProviderFor(CreateEventForm)
+final createEventFormProvider =
+    AutoDisposeNotifierProvider<CreateEventForm, CreateEventStatus>.internal(
+  CreateEventForm.new,
+  name: r'createEventFormProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$createEventFormHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CreateEventForm = AutoDisposeNotifier<CreateEventStatus>;
+String _$createEventButtonHash() => r'58bce4bbbda945dada02606f7c1ce2d0d9ef6c98';
 
 /// See also [_CreateEventButton].
 @ProviderFor(_CreateEventButton)
 final _createEventButtonProvider =
-    AutoDisposeNotifierProvider<_CreateEventButton, bool>.internal(
+    AutoDisposeAsyncNotifierProvider<_CreateEventButton, bool>.internal(
   _CreateEventButton.new,
   name: r'_createEventButtonProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,6 +37,6 @@ final _createEventButtonProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$CreateEventButton = AutoDisposeNotifier<bool>;
+typedef _$CreateEventButton = AutoDisposeAsyncNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

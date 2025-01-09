@@ -44,12 +44,13 @@ class DioClient {
         (client) {
       client.badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
+      return null;
     };
     _client.interceptors
         .add(LogInterceptor(requestBody: true, responseBody: true));
 
     if (_interceptors != null) {
-      _client.interceptors.addAll(_interceptors!);
+      _client.interceptors.addAll(_interceptors);
     }
   }
 

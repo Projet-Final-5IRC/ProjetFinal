@@ -5,7 +5,6 @@ import 'package:cinefouine/core/widgets/cinefouineInputField.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
 import 'package:cinefouine/router/app_router.dart';
 
-
 @RoutePage()
 class RegisterView extends ConsumerWidget {
   const RegisterView({super.key});
@@ -19,7 +18,8 @@ class RegisterView extends ConsumerWidget {
     final TextEditingController phoneController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-    final TextEditingController confirmPasswordController = TextEditingController();
+    final TextEditingController confirmPasswordController =
+        TextEditingController();
 
     return Scaffold(
       backgroundColor: const Color(0xFF16213E), // Couleur de fond
@@ -50,27 +50,32 @@ class RegisterView extends ConsumerWidget {
               const SizedBox(height: 24),
               CineFouineInputField(
                 controller: nicknameController,
+                onChanged: (value) {},
                 hintText: "Nickname",
               ),
               const SizedBox(height: 16),
               CineFouineInputField(
                 controller: phoneController,
+                onChanged: (value) {},
                 hintText: "Phone",
               ),
               const SizedBox(height: 16),
               CineFouineInputField(
                 controller: emailController,
+                onChanged: (value) {},
                 hintText: "Email",
               ),
               const SizedBox(height: 16),
               CineFouineInputField(
                 controller: passwordController,
+                onChanged: (value) {},
                 hintText: "Password",
                 isPassword: true,
               ),
               const SizedBox(height: 16),
               CineFouineInputField(
                 controller: confirmPasswordController,
+                onChanged: (value) {},
                 hintText: "Confirm Password",
                 isPassword: true,
               ),
