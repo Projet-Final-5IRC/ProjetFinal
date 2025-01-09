@@ -6,7 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinefouine/core/widgets/cinefouineInputField.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
 import 'package:cinefouine/router/app_router.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:intl/intl.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart'; // Pour formater la date et l'heure
 
 part 'view.g.dart';
 
@@ -35,31 +36,17 @@ class CreateEventForm extends _$CreateEventForm {
     );
   }
 
-  void setHours(
-    String hours,
-  ) {
+  void setHours(String hours) {
     state = state.copyWith(
       hours: hours,
     );
   }
 
-  void setLocation(
-    String location,
-  ) {
+  void setLocation(String location) {
     state = state.copyWith(
       location: location,
     );
   }
-/*
-  void isFieldsEmpty() {
-    ref.read(_isButtonActiveProvider.notifier).setState(
-          value: state.confirmPassword.isNotEmpty &&
-              state.password.isNotEmpty &&
-              state.username.isNotEmpty &&
-              state.name.isNotEmpty,
-        );
-  }
-  */
 }
 
 @Riverpod(keepAlive: false)
@@ -83,8 +70,8 @@ class _CreateEventButton extends _$CreateEventButton {
           "idUser: 1");
       ref.read(eventRepositoryProvider).createEvent(
             eventName: eventForm.title,
-            eventDate: eventForm.date,
-            eventHour: eventForm.hours,
+            eventDate: eventForm.date,  // La date est formatée avant l'envoi
+            eventHour: eventForm.hours, // L'heure est également formatée avant l'envoi
             eventLocation: eventForm.location,
             idGenre: 1,
             eventDescription: eventForm.description,
@@ -123,6 +110,37 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
     super.dispose();
   }
 
+  // Sélecteur de date
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null) {
+      _dateController.text = DateFormat('dd:MM:yyyy').format(pickedDate);
+      ref.read(createEventFormProvider.notifier).setDate(_dateController.text);
+    }
+  }
+
+  // Sélecteur d'heure (format 24h)
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedTime != null) {
+      // Crée un objet DateTime avec l'heure et les minutes
+      final now = DateTime.now();
+      final time = DateTime(now.year, now.month, now.day, pickedTime.hour, pickedTime.minute);
+
+      // Utilisation de 'HH:mm' pour formater l'heure en format 24 heures
+      _hoursController.text = DateFormat('HH:mm').format(time);
+      ref.read(createEventFormProvider.notifier).setHours(_hoursController.text);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(appRouterProvider);
@@ -139,8 +157,9 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
         isLoading = true;
       },
     );
+
     return Scaffold(
-      backgroundColor: const Color(0xFF243040), // Couleur de fond
+      backgroundColor: const Color(0xFF243040),
       appBar: AppBar(
         title: const Text("Create Event"),
         backgroundColor: const Color(0xFF16213E),
@@ -171,24 +190,26 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
               hintText: "Description",
             ),
             const SizedBox(height: 16),
-            CineFouineInputField(
-              controller: _dateController,
-              onChanged: (value) {
-                ref
-                    .read(createEventFormProvider.notifier)
-                    .setDate(_dateController.text);
-              },
-              hintText: "Date",
+            GestureDetector(
+              onTap: () => _selectDate(context),
+              child: AbsorbPointer(
+                child: CineFouineInputField(
+                  controller: _dateController,
+                  onChanged: (value) {},  // Fonction vide pour éviter l'erreur
+                  hintText: "Date (dd:MM:yyyy)",
+                ),
+              ),
             ),
             const SizedBox(height: 16),
-            CineFouineInputField(
-              controller: _hoursController,
-              onChanged: (value) {
-                ref
-                    .read(createEventFormProvider.notifier)
-                    .setHours(_hoursController.text);
-              },
-              hintText: "Hours",
+            GestureDetector(
+              onTap: () => _selectTime(context),
+              child: AbsorbPointer(
+                child: CineFouineInputField(
+                  controller: _hoursController,
+                  onChanged: (value) {},  // Fonction vide pour éviter l'erreur
+                  hintText: "Time (HH:mm)",
+                ),
+              ),
             ),
             const SizedBox(height: 16),
             CineFouineInputField(
@@ -202,8 +223,8 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
             ),
             const SizedBox(height: 32),
             if (createEventForm.isError)
-              Text("Erreur dans la création"), //TODO improve
-            if (isLoading) CircularProgressIndicator(),
+              Text("Erreur dans la création"),
+            if (isLoading) const CircularProgressIndicator(),
             CineFouineHugeBoutton(
               onPressed: () async {
                 if (!isLoading) {
