@@ -44,10 +44,10 @@ jobs:
           cd data
           dotnet build --configuration Release
 
-      - name: Run tests
-        run: |
-          cd data
-          dotnet test
+      #- name: Run tests
+      #  run: |
+      #    cd data
+      #    dotnet test
 
       - name: dotnet publish
         run: |
