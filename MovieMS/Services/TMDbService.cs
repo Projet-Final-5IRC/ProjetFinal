@@ -36,4 +36,43 @@ public class TMDbService
 
         return movies;
     }
+    
+    public async Task<List<RentalPlatform>> GetRentalProvidersAsync(int movieId, string country = "US")
+    {
+        var response = await _httpClient.GetAsync($"{_baseUrl}/movie/{movieId}/watch/providers?api_key={_apiKey}");
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception($"Erreur lors de l'appel à TMDb API : {response.ReasonPhrase}");
+        }
+
+        var content = await response.Content.ReadAsStringAsync();
+        var json = JsonConvert.DeserializeObject<dynamic>(content);
+
+        // Vérifiez si le pays spécifié existe dans "results"
+        var countryData = json.results?[country];
+        if (countryData == null) return new List<RentalPlatform>();
+
+        var providers = new List<RentalPlatform>();
+
+        // Ajouter les plateformes pour chaque type (rent, buy, flatrate)
+        foreach (var type in new[] { "rent", "buy", "flatrate" })
+        {
+            if (countryData[type] != null)
+            {
+                foreach (var provider in countryData[type])
+                {
+                    providers.Add(new RentalPlatform
+                    {
+                        ProviderName = provider.provider_name,
+                        LogoPath = provider.logo_path,
+                        Type = type,
+                        TmdbLink = countryData.link
+                    });
+                }
+            }
+        }
+
+        return providers;
+    }
+    
 }
