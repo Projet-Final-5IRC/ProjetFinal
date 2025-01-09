@@ -13,6 +13,10 @@ namespace data.Models.EntityFramework
         public int IdGenre { get; set; }
 
         [Required]
+        [Column("gen_tmid")]
+        public int IdTMDBGenre { get; set; }
+
+        [Required]
         [Column("gen_name")]
         public string GenreName { get; set; }
 
@@ -21,6 +25,9 @@ namespace data.Models.EntityFramework
 
         public void UpdateGenreValues(Genres updatedGenre)
         {
+            if (updatedGenre.IdTMDBGenre != 0)
+                this.IdTMDBGenre = updatedGenre.IdTMDBGenre;
+
             if (!string.IsNullOrEmpty(updatedGenre.GenreName))
                 this.GenreName = updatedGenre.GenreName;
 
