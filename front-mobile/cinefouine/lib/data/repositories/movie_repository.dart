@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-// movie_repository.dart
-=======
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
 import 'package:cinefouine/data/entities/movie/movie_info.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cinefouine/data/sources/remote/movie_service.dart';

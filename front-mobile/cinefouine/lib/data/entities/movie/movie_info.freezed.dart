@@ -20,10 +20,6 @@ MovieInfo _$MovieInfoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MovieInfo {
-<<<<<<< HEAD
-  int get id => throw _privateConstructorUsedError;
-  String get title => throw _privateConstructorUsedError;
-=======
   @JsonKey(name: 'id')
   int get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'title')
@@ -40,7 +36,6 @@ mixin _$MovieInfo {
   double? get voteAverage => throw _privateConstructorUsedError;
   @JsonKey(name: 'vote_count')
   int? get voteCount => throw _privateConstructorUsedError;
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
 
   /// Serializes this MovieInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -57,9 +52,6 @@ abstract class $MovieInfoCopyWith<$Res> {
   factory $MovieInfoCopyWith(MovieInfo value, $Res Function(MovieInfo) then) =
       _$MovieInfoCopyWithImpl<$Res, MovieInfo>;
   @useResult
-<<<<<<< HEAD
-  $Res call({int id, String title});
-=======
   $Res call(
       {@JsonKey(name: 'id') int id,
       @JsonKey(name: 'title') String title,
@@ -69,7 +61,6 @@ abstract class $MovieInfoCopyWith<$Res> {
       @JsonKey(name: 'popularity') double? popularity,
       @JsonKey(name: 'vote_average') double? voteAverage,
       @JsonKey(name: 'vote_count') int? voteCount});
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
 }
 
 /// @nodoc
@@ -89,15 +80,12 @@ class _$MovieInfoCopyWithImpl<$Res, $Val extends MovieInfo>
   $Res call({
     Object? id = null,
     Object? title = null,
-<<<<<<< HEAD
-=======
     Object? overview = freezed,
     Object? posterPath = freezed,
     Object? releaseDate = freezed,
     Object? popularity = freezed,
     Object? voteAverage = freezed,
     Object? voteCount = freezed,
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -108,8 +96,6 @@ class _$MovieInfoCopyWithImpl<$Res, $Val extends MovieInfo>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-<<<<<<< HEAD
-=======
       overview: freezed == overview
           ? _value.overview
           : overview // ignore: cast_nullable_to_non_nullable
@@ -134,7 +120,6 @@ class _$MovieInfoCopyWithImpl<$Res, $Val extends MovieInfo>
           ? _value.voteCount
           : voteCount // ignore: cast_nullable_to_non_nullable
               as int?,
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
     ) as $Val);
   }
 }
@@ -147,9 +132,6 @@ abstract class _$$MovieInfoImplCopyWith<$Res>
       __$$MovieInfoImplCopyWithImpl<$Res>;
   @override
   @useResult
-<<<<<<< HEAD
-  $Res call({int id, String title});
-=======
   $Res call(
       {@JsonKey(name: 'id') int id,
       @JsonKey(name: 'title') String title,
@@ -159,7 +141,6 @@ abstract class _$$MovieInfoImplCopyWith<$Res>
       @JsonKey(name: 'popularity') double? popularity,
       @JsonKey(name: 'vote_average') double? voteAverage,
       @JsonKey(name: 'vote_count') int? voteCount});
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
 }
 
 /// @nodoc
@@ -177,15 +158,12 @@ class __$$MovieInfoImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? title = null,
-<<<<<<< HEAD
-=======
     Object? overview = freezed,
     Object? posterPath = freezed,
     Object? releaseDate = freezed,
     Object? popularity = freezed,
     Object? voteAverage = freezed,
     Object? voteCount = freezed,
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
   }) {
     return _then(_$MovieInfoImpl(
       id: null == id
@@ -196,8 +174,6 @@ class __$$MovieInfoImplCopyWithImpl<$Res>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-<<<<<<< HEAD
-=======
       overview: freezed == overview
           ? _value.overview
           : overview // ignore: cast_nullable_to_non_nullable
@@ -222,7 +198,6 @@ class __$$MovieInfoImplCopyWithImpl<$Res>
           ? _value.voteCount
           : voteCount // ignore: cast_nullable_to_non_nullable
               as int?,
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
     ));
   }
 }
@@ -230,9 +205,6 @@ class __$$MovieInfoImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$MovieInfoImpl implements _MovieInfo {
-<<<<<<< HEAD
-  const _$MovieInfoImpl({required this.id, required this.title});
-=======
   const _$MovieInfoImpl(
       {@JsonKey(name: 'id') required this.id,
       @JsonKey(name: 'title') required this.title,
@@ -242,21 +214,11 @@ class _$MovieInfoImpl implements _MovieInfo {
       @JsonKey(name: 'popularity') required this.popularity,
       @JsonKey(name: 'vote_average') required this.voteAverage,
       @JsonKey(name: 'vote_count') required this.voteCount});
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
 
   factory _$MovieInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$MovieInfoImplFromJson(json);
 
   @override
-<<<<<<< HEAD
-  final int id;
-  @override
-  final String title;
-
-  @override
-  String toString() {
-    return 'MovieInfo(id: $id, title: $title)';
-=======
   @JsonKey(name: 'id')
   final int id;
   @override
@@ -284,7 +246,6 @@ class _$MovieInfoImpl implements _MovieInfo {
   @override
   String toString() {
     return 'MovieInfo(id: $id, title: $title, overview: $overview, posterPath: $posterPath, releaseDate: $releaseDate, popularity: $popularity, voteAverage: $voteAverage, voteCount: $voteCount)';
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
   }
 
   @override
@@ -293,9 +254,6 @@ class _$MovieInfoImpl implements _MovieInfo {
         (other.runtimeType == runtimeType &&
             other is _$MovieInfoImpl &&
             (identical(other.id, id) || other.id == id) &&
-<<<<<<< HEAD
-            (identical(other.title, title) || other.title == title));
-=======
             (identical(other.title, title) || other.title == title) &&
             (identical(other.overview, overview) ||
                 other.overview == overview) &&
@@ -309,17 +267,12 @@ class _$MovieInfoImpl implements _MovieInfo {
                 other.voteAverage == voteAverage) &&
             (identical(other.voteCount, voteCount) ||
                 other.voteCount == voteCount));
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-<<<<<<< HEAD
-  int get hashCode => Object.hash(runtimeType, id, title);
-=======
   int get hashCode => Object.hash(runtimeType, id, title, overview, posterPath,
       releaseDate, popularity, voteAverage, voteCount);
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
 
   /// Create a copy of MovieInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -339,9 +292,6 @@ class _$MovieInfoImpl implements _MovieInfo {
 
 abstract class _MovieInfo implements MovieInfo {
   const factory _MovieInfo(
-<<<<<<< HEAD
-      {required final int id, required final String title}) = _$MovieInfoImpl;
-=======
           {@JsonKey(name: 'id') required final int id,
           @JsonKey(name: 'title') required final String title,
           @JsonKey(name: 'overview') required final String? overview,
@@ -351,17 +301,11 @@ abstract class _MovieInfo implements MovieInfo {
           @JsonKey(name: 'vote_average') required final double? voteAverage,
           @JsonKey(name: 'vote_count') required final int? voteCount}) =
       _$MovieInfoImpl;
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
 
   factory _MovieInfo.fromJson(Map<String, dynamic> json) =
       _$MovieInfoImpl.fromJson;
 
   @override
-<<<<<<< HEAD
-  int get id;
-  @override
-  String get title;
-=======
   @JsonKey(name: 'id')
   int get id;
   @override
@@ -385,7 +329,6 @@ abstract class _MovieInfo implements MovieInfo {
   @override
   @JsonKey(name: 'vote_count')
   int? get voteCount;
->>>>>>> 3400e68ac9f10d092a5ada2bdcf5c82ef2efa6df
 
   /// Create a copy of MovieInfo
   /// with the given fields replaced by the non-null parameter values.
