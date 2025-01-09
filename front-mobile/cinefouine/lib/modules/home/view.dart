@@ -50,23 +50,28 @@ class SearchContent extends ConsumerWidget {
         ref.watch(listMovieSearchedProvider).when(
           data: (movies) {
             if (movies == null || movies.isEmpty) {
-              return Text(
-                "Aucun film trouvé",
-                style: const TextStyle(color: Colors.white),
+              return const Center(
+                child: Text(
+                  "Aucun film trouvé",
+                  style: TextStyle(color: Colors.white),
+                ),
               );
             }
 
-            return ListView.builder(
+            return GridView.builder(
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.7,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
               itemCount: movies.length,
               itemBuilder: (context, index) {
                 final movie = movies[index];
-                return ListTile(
-                  title:
-                      Text(movie.title, style: TextStyle(color: Colors.white)),
-                  subtitle: Text(movie.id.toString(),
-                      style: TextStyle(color: Colors.white70)),
-                );
+                return MovieCard(movie: movie);
               },
             );
           },
@@ -83,6 +88,112 @@ class SearchContent extends ConsumerWidget {
           },
         ),
       ],
+    );
+  }
+}
+
+class MovieCard extends StatelessWidget {
+  final MovieInfo movie;
+
+  const MovieCard({
+    super.key,
+    required this.movie,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        // Utilisez AutoRoute pour la navigation
+        //context.router.push(MovieDetailsRoute(movieId: movie.id));
+      },
+      child: Card(
+        elevation: 4,
+        color: AppColors.secondary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Poster
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                child: movie.posterPath != null
+                    ? Image.network(
+                        'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+                      )
+                    : _buildPlaceholder(),
+              ),
+            ),
+            
+            // Movie Info
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    movie.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  if (movie.releaseDate != null)
+                    Text(
+                      '${movie.releaseDate?.year}',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.7),
+                        fontSize: 12,
+                      ),
+                    ),
+                  const SizedBox(height: 4),
+                  if (movie.voteAverage != null)
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star_rounded,
+                          color: Colors.amber,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          movie.voteAverage!.toStringAsFixed(1),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      color: Colors.grey[800],
+      child: const Center(
+        child: Icon(
+          Icons.movie_outlined,
+          color: Colors.white54,
+          size: 48,
+        ),
+      ),
     );
   }
 }
