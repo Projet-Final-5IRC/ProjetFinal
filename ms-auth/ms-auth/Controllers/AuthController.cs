@@ -29,7 +29,7 @@ namespace ms_auth.Controllers
                 var data = await _dataService.PostUserAsync("/api/User", userDTO);
                 if (data.Item1 == HttpStatusCode.Created)
                 {
-                    return Ok("["+data.Item2+"]");
+                    return Ok(data.Item2);
                 }
                 else
                 {

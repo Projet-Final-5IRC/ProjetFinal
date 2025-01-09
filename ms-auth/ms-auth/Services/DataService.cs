@@ -26,20 +26,21 @@ namespace ms_auth.Services
             return JsonConvert.DeserializeObject<T>(response);
         }
 
-        public async Task<(HttpStatusCode,string)> PostUserAsync(string endpoint, UserDTO data)
+        public async Task<(HttpStatusCode,UserDTO)> PostUserAsync(string endpoint, UserDTO data)
         {
             var content = new StringContent(JsonConvert.SerializeObject(data), System.Text.Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(endpoint, content);
 
 
             var responseContent = await response.Content.ReadAsStringAsync();
+            var jsonResponse = JsonConvert.DeserializeObject<UserDTO>(responseContent);
             //var userResponse = await _httpClient.GetAsync(response.Headers.Location);
             //userResponse.EnsureSuccessStatusCode();
 
             //var responseContent = await userResponse.Content.ReadAsStringAsync();
             //var user = JsonConvert.DeserializeObject<UserDTO>(responseContent);
 
-            return (response.StatusCode,responseContent);
+            return (response.StatusCode, jsonResponse);
         }
     }
 }
