@@ -21,8 +21,8 @@ class AuthRepository {
   const AuthRepository({
     required AuthService authApiClient,
     //required Preferences preferences,
-  })  : _authApiClient = authApiClient;
-        //_preferences = preferences;
+  }) : _authApiClient = authApiClient;
+  //_preferences = preferences;
 
   final AuthService _authApiClient;
   //final Preferences _preferences;
@@ -55,6 +55,18 @@ class AuthRepository {
     }
     */
 
+    return userInfo;
+  }
+
+  Future<UserInfo?> login({
+    required String email,
+    required String password,
+  }) async {
+    final userInfo = await _authApiClient.login(
+      email: email,
+      password: password,
+    );
+    print(userInfo.toString());
     return userInfo;
   }
 }
