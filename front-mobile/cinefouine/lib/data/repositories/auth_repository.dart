@@ -1,4 +1,5 @@
 import 'package:cinefouine/data/entities/user/user_info.dart';
+import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cinefouine/data/sources/remote/auth_service.dart';
@@ -9,10 +10,10 @@ part 'auth_repository.g.dart';
 @Riverpod(keepAlive: true)
 AuthRepository authRepository(AuthRepositoryRef ref) {
   final AuthService authService = ref.read(authServiceProvider);
-  //final Preferences preferences = ref.read(preferencesProvider);
+  final Preferences preferences = ref.read(preferencesProvider);
   return AuthRepository(
     authApiClient: authService,
-    //preferences: preferences,
+    preferences: preferences,
   );
 }
 
@@ -20,12 +21,12 @@ AuthRepository authRepository(AuthRepositoryRef ref) {
 class AuthRepository {
   const AuthRepository({
     required AuthService authApiClient,
-    //required Preferences preferences,
-  }) : _authApiClient = authApiClient;
-  //_preferences = preferences;
+    required Preferences preferences,
+  })  : _authApiClient = authApiClient,
+        _preferences = preferences;
 
   final AuthService _authApiClient;
-  //final Preferences _preferences;
+  final Preferences _preferences;
 
   Future<UserInfo?> register({
     required String userName,
@@ -45,16 +46,6 @@ class AuthRepository {
       password: password,
       dateCreation: dateCreation,
     );
-    /*
-    if (userInfo != null) {
-      _preferences.idUserPreferences.save(userInfo.idUser);
-      _preferences.firstNamePreferences.save(userInfo.firstName);
-      _preferences.lastNamePreferences.save(userInfo.lastName);
-      _preferences.emailPreferences.save(userInfo.email);
-      _preferences.userNamePreferences.save(userInfo.userName);
-    }
-    */
-
     return userInfo;
   }
 
@@ -66,7 +57,13 @@ class AuthRepository {
       email: email,
       password: password,
     );
-    print(userInfo.toString());
+    if (userInfo != null) {
+      _preferences.idUserPreferences.save(userInfo.idUser);
+      _preferences.firstNamePreferences.save(userInfo.firstName);
+      _preferences.lastNamePreferences.save(userInfo.lastName);
+      _preferences.emailPreferences.save(userInfo.email);
+      _preferences.userNamePreferences.save(userInfo.userName);
+    }
     return userInfo;
   }
 }

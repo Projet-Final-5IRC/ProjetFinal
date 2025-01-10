@@ -21,7 +21,7 @@ final loginFormProvider =
 );
 
 typedef _$LoginForm = AutoDisposeNotifier<LoginStatus>;
-String _$loginButtonHash() => r'60d4e6fd17d5ca381702c91dad0a4fc4a8e07bc8';
+String _$loginButtonHash() => r'5431491f82804839f1b79104c102ffe3ef3c498c';
 
 /// See also [_LoginButton].
 @ProviderFor(_LoginButton)

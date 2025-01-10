@@ -1,4 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
+import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
+import 'package:cinefouine/router/app_router.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +12,9 @@ class ProfilView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final Preferences preferences = ref.watch(preferencesProvider);
+    final router = ref.watch(appRouterProvider);
+
     return Scaffold(
       backgroundColor: AppColors.secondary,
       body: SingleChildScrollView(
@@ -17,8 +23,8 @@ class ProfilView extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Elon Musk",
+              Text(
+                "${preferences.firstNamePreferences.load() ?? ""} ${preferences.lastNamePreferences.load() ?? ""}",
                 style: TextStyle(
                   fontSize: 36.0,
                   fontWeight: FontWeight.bold,
@@ -89,7 +95,7 @@ class ProfilView extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                "Mail: remi.louedec@laposte.net",
+                "Mail: ${preferences.emailPreferences.load() ?? ""}",
                 style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.white,
@@ -97,15 +103,7 @@ class ProfilView extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                "Tel: 06 ** ** ** 76",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "Password: ********",
+                "Password: ***",
                 style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.white,
@@ -141,6 +139,19 @@ class ProfilView extends ConsumerWidget {
               const SizedBox(height: 16),
               _buildSection("Ma liste",
                   ["Le hobbit", "Les tuchs", "Pirates des caraibes"]),
+              SizedBox(height: 24),
+              CineFouineHugeBoutton(
+                onPressed: () {
+                  preferences.idUserPreferences.save(null);
+                  preferences.firstNamePreferences.save(null);
+                  preferences.lastNamePreferences.save(null);
+                  preferences.emailPreferences.save(null);
+                  preferences.userNamePreferences.save(null);
+
+                  router.replaceAll([const LoginRoute()]);
+                },
+                text: "Logout",
+              ),
             ],
           ),
         ),
