@@ -25,10 +25,17 @@ class MovieService {
     );
     return response;
   }
-
   Future<MovieInfo?> getMovieDetails(int movieId) async {
     final response = await dioClient.get<MovieInfo>(
       '/Movies/$movieId',
+      deserializer: (json) => MovieInfo.fromJson(json as Map<String, dynamic>),
+    );
+    return response;
+  }  
+  
+  Future<MovieInfo?> getMovieActors(int movieId) async {
+    final response = await dioClient.get<MovieInfo>(
+      '/Movies/$movieId/actors',
       deserializer: (json) => MovieInfo.fromJson(json as Map<String, dynamic>),
     );
     return response;
