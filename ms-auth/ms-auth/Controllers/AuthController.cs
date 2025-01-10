@@ -41,5 +41,25 @@ namespace ms_auth.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("login")]
+        public async Task<ActionResult<UserEndDTO>> LoginUser([FromQuery]UserLoginDTO userDTO)
+        {
+            var user = await _dataService.GetByEmailAsync<UserDTO>("/api/User/email/", userDTO.email);
+
+            if(user == null)
+            {
+                return null;
+            }
+
+            if(user.Password == userDTO.password)
+            {
+                return Ok(new UserEndDTO(user));
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }
