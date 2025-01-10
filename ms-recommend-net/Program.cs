@@ -17,6 +17,9 @@ builder.Services.AddSingleton(new ActiveMqService(
     builder.Configuration.GetValue<string>("ActiveMq:QueueName")
 ));
 
+builder.Services.AddHttpClient<TmdbService>();
+builder.Services.Configure<TmdbService>(builder.Configuration);
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
