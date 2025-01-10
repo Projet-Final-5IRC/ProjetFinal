@@ -123,6 +123,22 @@ class EventRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [GenresSelectionView]
+class GenresSelectionRoute extends PageRouteInfo<void> {
+  const GenresSelectionRoute({List<PageRouteInfo>? children})
+    : super(GenresSelectionRoute.name, initialChildren: children);
+
+  static const String name = 'GenresSelectionRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const GenresSelectionView();
+    },
+  );
+}
+
+/// generated route for
 /// [HomeView]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
