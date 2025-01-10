@@ -57,6 +57,7 @@ dataframeUserLikeData = pd.DataFrame(dataUserLike)
 dataframeUserLikeData = dataframeUserLikeData.astype(str)  # Tout convertir en chaînes
 dataframeMovie = pd.DataFrame(exitDataMovie)
 dataframeMovie = dataframeMovie.astype(str)  # Tout convertir en chaînes
+dataframeMovieReturn = dataframeMovie
 print("-----------------------------------")
 print("dataframeUserLikeData")
 print(dataframeUserLikeData)
@@ -108,5 +109,11 @@ print("-----------------------------------")
 ## Si on veux tester la précision du modèle
 ## Il faut alors les mêmes données en entrainement et en test
 #print("Précision :", accuracy_score(dataframeMovie, predicted_values))
-print("-----------------------------------")
+print("-------traitement data return------")
+df_return = pd.DataFrame(predicted_values, columns=['like'])
+df_return = pd.concat([df_return, dataframeMovieReturn], axis=1)
+print("df_return : \n")
+print(df_return.head())
+print("----------Fin traitement-----------")
+
 
