@@ -78,29 +78,25 @@ def ModelPrediction(dataframeUserLikeData, dataframeUserLike, dataframeMovie, rf
     predicted_values = rfc.predict(dataframeMovie)
     return predicted_values
 
-def TraitementDataFinish(predicted_values, dataframeMovieReturn, dataUserLike):
+def TraitementDataFinish(predicted_values, dataframeMovieReturn, entry_json):
+    likes_str = entry_json.get("likes", "")
+    likes_list = list(map(int, likes_str.split(',')))
+    
     df_return = pd.DataFrame(predicted_values, columns=['like'])
     df_return = pd.concat([df_return, dataframeMovieReturn], axis=1)
-    print("df_return raw")
-    print(df_return.head())
     #Filtrer pour avoir uniquement les likes
-    df_return = df_return.query('like == 1')    
-    print("df_return après nettoyage like ")
-    print(df_return.head())
-    # # Supprimer toutes les colonnes sauf l'id
-    # df_return = df_return.query('like == 1')[['id']]
-    # print("df_return après nettoyage idKeep")
-    # print(df_return.head())
-    # # Supprimer si déjà vus
-    # for i in range(len(dataUserLike)):
-    #     x = dataUserLike[i]
-    #     df_return = df_return.query('id' == str(x))
-    # print("df_return suppression si déjà vu")
-    # print(df_return.head())
-    # # Choisir jusqu'à 10 films
-    # df_return = df_return.sample(n=3)
-    # print("df_return après choix 3 films")
-    # print(df_return.head())
+    df_return = df_return.loc[df_return['like'] == '1']
+    # Supprimer toutes les colonnes sauf l'id
+    df_return = df_return.drop(columns=[col for col in df_return.columns if col != 'id'])
+    # Supprimer si déjà vus
+    for i in range(len(likes_list)):
+        x = likes_list[i]
+        print("x : "+str(x))
+        # Trouver l'index de la ligne où 'id' est égal à 2
+        # Supprimer la ligne
+        df_return = df_return.drop(df_return[df_return['id'] == str(x)].index)
+    # Choix aléatoire parmit la sélection
+    df_return = df_return.sample(n=3)
     # Le passer en json et envoyer la valeur de retour
     json_result = df_return.to_json(orient='records') 
     
@@ -146,7 +142,7 @@ def MainFunction():
     print(predictedValues)
     print("-------TraitementFinish---------")
     # Traitement données retour : 
-    df_return = TraitementDataFinish(predictedValues, dataframeMovieReturn, dataUserLike)
+    df_return = TraitementDataFinish(predictedValues, dataframeMovieReturn, entry_json)
     print("df_return : \n")
     print(df_return)
     print("---------------------------------")
