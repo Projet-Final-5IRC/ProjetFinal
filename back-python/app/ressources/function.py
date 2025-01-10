@@ -16,106 +16,25 @@ def mef_like_user(entry_data, search_id) :
     #     print("Aucun élément trouvé avec l'ID", search_id)
     return result
 
-def traitement_like(entry_data, entry_json, exitData):
-    
-    topic_list = [
-        "adult", "budget", "genres", "id", "original_language", "original_title",
-        "popularity", "production_companies", "production_countries", "release_date",
-        "revenue", "runtime", "status", "title", "vote_average", "vote_count"
-    ]
-   
-    # Vérification de 'likes_str'
-    likes_str = entry_json.get("likes", "")
-    if not likes_str:
-        print("Pas de likes pour cet utilisateur, choix aléatoire")
-        # Choisir 3 ids au hasard et les ranger dans une liste
-        ids = [item['id'] for item in entry_data]
-        random_list = random.sample(ids, 3)
-        # print("random list")
-        # print(random_list)
-        if random_list:  # Vérification que la liste n'est pas vide
-            # print("On rentre dans la boucle random_list")
-            for i in range(len(random_list)):
-                numberLike = random_list[i]
-                # print(f"numberLike : {numberLike}")
-                new_entry_data = {}
-                
-                # Ouvrir les données du film correspondant
-                result = mef_like_user(entry_data, str(numberLike))
-                # print(f"Résultat pour le film {numberLike}: {result}")
-                
-                if result:
-                    # On suppose que result est une liste contenant un dictionnaire
-                    film_data = result[0]  # Prendre le premier dictionnaire de la liste
-                    # print(f"Données du film récupérées : {film_data}")
-                    
-                    # Récupérer les données pertinentes de l'image
-                    for topic in topic_list:
-                        if topic in film_data:
-                            new_entry_data[topic] = film_data.get(topic)
-                            # print(f"{topic} ajouté depuis film_data")
-                        elif topic in entry_data:
-                            new_entry_data[topic] = entry_data.get(topic)
-                            # print(f"{topic} ajouté depuis entry_data")
-                    
-                    # Ajouter les données formatées à la liste des données
-                    exitData.append(new_entry_data)
-                    print(f"new_entry_data à la fin de la boucle: {new_entry_data}")
-                    print("-----------------------------------")
-                else:
-                    print(f"Le film {numberLike} n'existe plus.")
-        else:
-            print("ERREUR - La liste des numéros aléatoires est vide.")
-        return exitData
-
-    # print(f"likes_str : {likes_str}")
-    likes_list = list(map(int, likes_str.split(',')))  # Conversion en liste d'entiers
-    # print(f"likes_list : {likes_list}")
-    
-    if likes_list:  # Vérification si la liste n'est pas vide
-        for i in range(len(likes_list)):
-            numberLike = likes_list[i]
-            # print(f"numberLike : {numberLike}")
-            new_entry_data = {}
-            
-            # Ouvrir les données du film correspondant
-            result = mef_like_user(entry_data, str(numberLike))
-            # print(f"Résultat pour le film {numberLike}: {result}")
-            
-            if result:
-                film_data = result[0]  # Prendre le premier dictionnaire de la liste
-                # print(f"Données du film récupérées : {film_data}")
-                
-                # Récupérer les données pertinentes de l'image
-                for topic in topic_list:
-                    if topic in film_data:
-                        new_entry_data[topic] = film_data.get(topic)
-                        # print(f"{topic} ajouté depuis film_data")
-                    elif topic in entry_data:
-                        new_entry_data[topic] = entry_data.get(topic)
-                        # print(f"{topic} ajouté depuis entry_data")
-                
-                # Ajouter les données formatées à la liste des données
-                exitData.append(new_entry_data)
-                print(f"new_entry_data à la fin de la boucle: {new_entry_data}")
-                print("-----------------------------------")
-            else:
-                print(f"Le film {numberLike} n'existe plus.")
-    else : 
-        print("ERREUR - problème de traitement des likes en entrée")
-    return exitData        
+# topic_list = [
+#     "adult", "budget", "genres", "id", "original_language", "original_title",
+#     "popularity", "production_companies", "production_countries", "release_date",
+#     "revenue", "runtime", "status", "title", "vote_average", "vote_count"
+#     ]
 
 def traitement_seen(entry_data, entry_json, exitData):
     
     topic_list = [
-        "adult", "budget", "genres", "id", "original_language", "original_title",
-        "popularity", "production_companies", "production_countries", "release_date",
-        "revenue", "runtime", "status", "title", "vote_average", "vote_count"
+        "adult", "id", "revenue", "runtime"
     ]
-   
+    resultLikes = []
+    likes_str = entry_json.get("likes", "")
+    likes_list = list(map(int, likes_str.split(',')))  # Conversion en liste d'entiers
+    # print("Like liste : \n")
+    # print(likes_list)
     # Vérification de 'likes_str'
-    likes_str = entry_json.get("seen", "")
-    if not likes_str:
+    seen_str = entry_json.get("seen", "")
+    if not seen_str:
         print("Pas de films vus pour cet utilisateur, choix aléatoire")
         # Choisir 3 ids au hasard et les ranger dans une liste
         ids = [item['id'] for item in entry_data]
@@ -149,8 +68,9 @@ def traitement_seen(entry_data, entry_json, exitData):
                     
                     # Ajouter les données formatées à la liste des données
                     exitData.append(new_entry_data)
-                    print(f"new_entry_data à la fin de la boucle: {new_entry_data}")
-                    print("-----------------------------------")
+                    #print(f"new_entry_data à la fin de la boucle: {new_entry_data}")
+                    # print("-----------------------------------")
+    
                 else:
                     print(f"Le film {numberSeen} n'existe plus.")
         else:
@@ -158,14 +78,13 @@ def traitement_seen(entry_data, entry_json, exitData):
         return exitData
 
     # print(f"likes_str : {likes_str}")
-    likes_list = list(map(int, likes_str.split(',')))  # Conversion en liste d'entiers
+    seen_list = list(map(int, seen_str.split(',')))  # Conversion en liste d'entiers
     # print(f"likes_list : {likes_list}")
     
-    if likes_list:  # Vérification si la liste n'est pas vide
-        for i in range(len(likes_list)):
-            numberSeen = likes_list[i]
-            # print(f"numberLike : {numberSeen}")
+    if seen_list:  # Vérification si la liste n'est pas vide
+        for i in range(len(seen_list)):
             new_entry_data = {}
+            numberSeen = seen_list[i]
             
             # Ouvrir les données du film correspondant
             result = mef_like_user(entry_data, str(numberSeen))
@@ -186,20 +105,31 @@ def traitement_seen(entry_data, entry_json, exitData):
                 
                 # Ajouter les données formatées à la liste des données
                 exitData.append(new_entry_data)
-                print(f"new_entry_data à la fin de la boucle: {new_entry_data}")
-                print("-----------------------------------")
+                #print(f"new_entry_data à la fin de la boucle: {new_entry_data}")
+                # print("-----------------------------------")
+                # print("entrée : "+str(numberSeen))
+                
+                # print("Tableau de resul likes : \n")
+                # print(resultLikes)  
+                like = 0
+                for i in range (len(likes_list)):
+                    # print("element actuelle de la like list")
+                    # print(likes_list[i])
+                    if likes_list[i] == numberSeen :
+                        like = 1
+                #     print("etat de like "+str(like))
+                # print("etat final de like "+str(like))
+                resultLikes.append(like)   
             else:
                 print(f"Le film {numberSeen} n'existe plus.")
     else : 
         print("problème de traitement des likes en entrée")
-    return exitData
+    return exitData, resultLikes
 
 def traitement_movie(entry_data, exitData) :
     
     topic_list = [
-        "adult", "budget", "genres", "id", "original_language", "original_title",
-        "popularity", "production_companies", "production_countries", "release_date",
-        "revenue", "runtime", "status", "title", "vote_average", "vote_count"
+        "adult", "id", "revenue", "runtime"
     ]
     
     # Filtrer les données pour ne garder que les clés dans topic_list
@@ -208,7 +138,7 @@ def traitement_movie(entry_data, exitData) :
         for item in entry_data
     ]
     print("Données filtrées ")
-    
+
     return exitData
 
 # ### Lire un json###
@@ -242,6 +172,94 @@ def lire_fichier_csv(chemin_fichier):
     df = pd.read_csv(chemin_fichier)
     return df
 
+# def traitement_like(entry_data, entry_json, exitData):
+    
+#     topic_list = [
+#         "adult", "budget", "genres", "id", "original_language", "original_title",
+#         "popularity", "production_companies", "production_countries", "release_date",
+#         "revenue", "runtime", "status", "title", "vote_average", "vote_count"
+#     ]
+   
+#     # Vérification de 'likes_str'
+#     likes_str = entry_json.get("likes", "")
+#     if not likes_str:
+#         print("Pas de likes pour cet utilisateur, choix aléatoire")
+#         # Choisir 3 ids au hasard et les ranger dans une liste
+#         ids = [item['id'] for item in entry_data]
+#         random_list = random.sample(ids, 3)
+#         # print("random list")
+#         # print(random_list)
+#         if random_list:  # Vérification que la liste n'est pas vide
+#             # print("On rentre dans la boucle random_list")
+#             for i in range(len(random_list)):
+#                 numberLike = random_list[i]
+#                 # print(f"numberLike : {numberLike}")
+#                 new_entry_data = {}
+                
+#                 # Ouvrir les données du film correspondant
+#                 result = mef_like_user(entry_data, str(numberLike))
+#                 # print(f"Résultat pour le film {numberLike}: {result}")
+                
+#                 if result:
+#                     # On suppose que result est une liste contenant un dictionnaire
+#                     film_data = result[0]  # Prendre le premier dictionnaire de la liste
+#                     # print(f"Données du film récupérées : {film_data}")
+                    
+#                     # Récupérer les données pertinentes de l'image
+#                     for topic in topic_list:
+#                         if topic in film_data:
+#                             new_entry_data[topic] = film_data.get(topic)
+#                             # print(f"{topic} ajouté depuis film_data")
+#                         elif topic in entry_data:
+#                             new_entry_data[topic] = entry_data.get(topic)
+#                             # print(f"{topic} ajouté depuis entry_data")
+                    
+#                     # Ajouter les données formatées à la liste des données
+#                     exitData.append(new_entry_data)
+#                     print(f"new_entry_data à la fin de la boucle: {new_entry_data}")
+#                     print("-----------------------------------")
+#                 else:
+#                     print(f"Le film {numberLike} n'existe plus.")
+#         else:
+#             print("ERREUR - La liste des numéros aléatoires est vide.")
+#         return exitData
+
+#     # print(f"likes_str : {likes_str}")
+#     likes_list = list(map(int, likes_str.split(',')))  # Conversion en liste d'entiers
+#     # print(f"likes_list : {likes_list}")
+    
+#     if likes_list:  # Vérification si la liste n'est pas vide
+#         for i in range(len(likes_list)):
+#             numberLike = likes_list[i]
+#             # print(f"numberLike : {numberLike}")
+#             new_entry_data = {}
+            
+#             # Ouvrir les données du film correspondant
+#             result = mef_like_user(entry_data, str(numberLike))
+#             # print(f"Résultat pour le film {numberLike}: {result}")
+            
+#             if result:
+#                 film_data = result[0]  # Prendre le premier dictionnaire de la liste
+#                 # print(f"Données du film récupérées : {film_data}")
+                
+#                 # Récupérer les données pertinentes de l'image
+#                 for topic in topic_list:
+#                     if topic in film_data:
+#                         new_entry_data[topic] = film_data.get(topic)
+#                         # print(f"{topic} ajouté depuis film_data")
+#                     elif topic in entry_data:
+#                         new_entry_data[topic] = entry_data.get(topic)
+#                         # print(f"{topic} ajouté depuis entry_data")
+                
+#                 # Ajouter les données formatées à la liste des données
+#                 exitData.append(new_entry_data)
+#                 print(f"new_entry_data à la fin de la boucle: {new_entry_data}")
+#                 print("-----------------------------------")
+#             else:
+#                 print(f"Le film {numberLike} n'existe plus.")
+#     else : 
+#         print("ERREUR - problème de traitement des likes en entrée")
+#     return exitData        
 
 ### Films que l'utilisateur à aimé, à modifier pour les films vus
 # def traitement_like(entry_data, entry_json, exitData) :
