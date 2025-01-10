@@ -5,7 +5,7 @@ import pandas as pd
 dossier = '../../data/Rawdata/movies_metadata.csv'
 json_file_path = '../../data/Movies/movies.json'
 
-# Colonnes à supprimer
+# Colonnes à garder
 columns_to_keep = [
     'adult', 'budget', 'genres', 'id', 'original_language', 
     'original_title', 'popularity', 'production_companies', 

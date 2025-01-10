@@ -137,7 +137,7 @@ def traitement_movie(entry_data, exitData) :
         {key: item[key] for key in item if key in topic_list}
         for item in entry_data
     ]
-    print("Données filtrées ")
+    #print("Données filtrées ")
 
     return exitData
 

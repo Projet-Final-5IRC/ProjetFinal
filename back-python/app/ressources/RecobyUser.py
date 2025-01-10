@@ -1,4 +1,4 @@
-from app.ressources import function as fct
+import function as fct
 
 import pandas as pd
 import json
@@ -9,11 +9,20 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
+# pathUser = "../../data/User/userTest1.json"
+# pathMovie = "../../data/Movies/movies.json"
+
+# rfc = RandomForestClassifier(
+#     n_estimators=10,
+#     max_depth=3,
+#     random_state=0,
+# )
+
 
 def JsonInput(pathUser, pathMovie):
     #### Data ####
     # User
-    entry_json = {}  
+    entry_json = {}  # Dictionnaire pour stocker les données JSON de l'utilisateur
     with open(pathUser, 'r') as json_file:
         entry_json = json.load(json_file)
     # Movies
@@ -22,6 +31,12 @@ def JsonInput(pathUser, pathMovie):
         entry_data = json.load(file)
     return entry_json, entry_data
 
+# print("-----------------------------------")
+# print("-----------Fonction traitment------")
+# exitDataUser = fct.traitement_like(entry_data, entry_json, exitDataUserLike)
+# print(f"exitDataUser à la fin de la boucle: {exitDataUser}")
+# print("-----------------------------------")
+
 def TraitementMain(entry_json, entry_data):
     exitDataUserSeen = []
     exitDataMovie = []
@@ -29,7 +44,20 @@ def TraitementMain(entry_json, entry_data):
     exitDataUserSeen = fct.traitement_seen(entry_data, entry_json, exitDataUserSeen)
     exitDataMovie = fct.traitement_movie(entry_data, exitDataMovie)
     
+    # print(f"exitDataUser data à la fin de la boucle: {exitDataUserSeen[0]}")
+    # print("-----------------------------------")
+    # print(f"exitDataUser likes à la fin de la boucle: {exitDataUserSeen[1]}")
+    # print("-----------------------------------")
+    ## Movie Data for prediction (total database)
+    ########################################################
+    # dataUserLike= exitDataUserSeen[0]
+    # userLike = exitDataUserSeen[1]
+    ########################################################
     return exitDataUserSeen, exitDataMovie
+
+# print("---------Fin traitement------------")
+# print("-----------------------------------")
+# print("------Création Dataframe-----------")
 
 def CreationDataframe(userLike, dataUserLike, exitDataMovie):
     
@@ -44,6 +72,10 @@ def CreationDataframe(userLike, dataUserLike, exitDataMovie):
     dataframeMovieReturn = dataframeMovie
 
     return dataframeUserLike, dataframeUserLikeData, dataframeMovie, dataframeMovieReturn
+
+# print("-----------Fin Dataframe-----------")
+# print("-----------------------------------")
+# print("--------Encodage-------------------")
 
 def Encodage(dataframeUserLikeData, dataframeMovie): 
     le1 = LabelEncoder()
@@ -73,82 +105,30 @@ def Encodage(dataframeUserLikeData, dataframeMovie):
     
     return dataframeUserLikeData, dataframeMovie
 
+# print("----------Fin Encodage-------------")
+# print("-----------------------------------")
+# print("-----Entrainement du modèle--------")
+
 def ModelPrediction(dataframeUserLikeData, dataframeUserLike, dataframeMovie, rfc):
     rfc = rfc.fit(dataframeUserLikeData, dataframeUserLike)
+    # print("-----------------------------------")
+    # Prédiction sur les données d'entraînement
+    # print("--------Model prevision------------")
     predicted_values = rfc.predict(dataframeMovie)
     return predicted_values
+# print("-----------------------------------")
+# print("Valeurs prédites :", predicted_values)
+# print("-----------------------------------")
+## Si on veux tester la précision du modèle
+## Il faut alors les mêmes données en entrainement et en test
+#print("Précision :", accuracy_score(dataframeMovie, predicted_values))
+# print("-------traitement data return------")
 
-def TraitementDataFinish(predicted_values, dataframeMovieReturn, dataUserLike):
+def TraitementDataFinish(predicted_values, dataframeMovieReturn):
     df_return = pd.DataFrame(predicted_values, columns=['like'])
     df_return = pd.concat([df_return, dataframeMovieReturn], axis=1)
-    print("df_return raw")
-    print(df_return.head())
-    #Filtrer pour avoir uniquement les likes
-    df_return = df_return.query('like == 1')    
-    print("df_return après nettoyage like ")
-    print(df_return.head())
-    # # Supprimer toutes les colonnes sauf l'id
-    # df_return = df_return.query('like == 1')[['id']]
-    # print("df_return après nettoyage idKeep")
-    # print(df_return.head())
-    # # Supprimer si déjà vus
-    # for i in range(len(dataUserLike)):
-    #     x = dataUserLike[i]
-    #     df_return = df_return.query('id' == str(x))
-    # print("df_return suppression si déjà vu")
-    # print(df_return.head())
-    # # Choisir jusqu'à 10 films
-    # df_return = df_return.sample(n=3)
-    # print("df_return après choix 3 films")
-    # print(df_return.head())
-    # Le passer en json et envoyer la valeur de retour
-    json_result = df_return.to_json(orient='records') 
-    
-    return json_result
-
-def MainFunction():
-        
-    pathUser = "./data/User/userTest1.json"
-    pathMovie = "./data/Movies/movies.json"
-
-    rfc = RandomForestClassifier(
-        n_estimators=10,
-        max_depth=3,
-        random_state=0,
-    )
-    print("------------json-------------------")
-    #Json issus du Prompt
-    jsonInput = JsonInput(pathUser, pathMovie)
-    entry_json = jsonInput[0]
-    entry_data = jsonInput[1]
-    print("---------traitementMain--------------")
-    #1er traitement de données
-    traitementMain = TraitementMain(entry_json, entry_data)
-    exitDataUserSeen = traitementMain[0]
-    dataUserLike= exitDataUserSeen[0]
-    userLike = exitDataUserSeen[1]
-    exitDataMovie = traitementMain[1]
-    print("------------Dataframe----------------")
-    # Creation des dataframes
-    creationDataframe = CreationDataframe(userLike, dataUserLike, exitDataMovie)
-    dataframeUserLike = creationDataframe[0]
-    dataframeUserLikeData = creationDataframe[1]
-    dataframeMovie = creationDataframe[2]
-    dataframeMovieReturn = creationDataframe[3]
-    print("---------Encodage--------------")
-    # Encodage des dataframes
-    encodage = Encodage(dataframeUserLikeData, dataframeMovie)
-    dataframeUserLikeData = encodage[0]
-    dataframeMovie = encodage[1]
-    print("-------ModelPrediction---------")
-    # Entrainement du modèle et prédictions
-    predictedValues = ModelPrediction(dataframeUserLikeData, dataframeUserLike, dataframeMovie, rfc)
-    print(predictedValues)
-    print("-------TraitementFinish---------")
-    # Traitement données retour : 
-    df_return = TraitementDataFinish(predictedValues, dataframeMovieReturn, dataUserLike)
-    print("df_return : \n")
-    print(df_return)
-    print("---------------------------------")
     
     return df_return
+# print("df_return : \n")
+# print(df_return.head())
+# print("----------Fin traitement-----------")
