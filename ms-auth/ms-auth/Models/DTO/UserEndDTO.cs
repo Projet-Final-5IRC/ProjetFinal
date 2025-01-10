@@ -8,5 +8,15 @@
         public string LastName { get; set; }
         public string Email { get; set; }
         public string DateCreation { get; set; }
+
+        public UserEndDTO(UserDTO userDTO)
+        {
+            IdUser = userDTO.IdUser;
+            UserName = userDTO.UserName;
+            FirstName = userDTO.FirstName;
+            LastName = userDTO.LastName;
+            Email = userDTO.Email;
+            DateCreation = userDTO.DateCreation;
+        }
     }
 }
