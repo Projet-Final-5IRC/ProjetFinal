@@ -3,6 +3,7 @@ import 'package:cinefouine/core/widgets/cineFouineBoutton.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
 import 'package:cinefouine/data/entities/event/event_info.dart';
 import 'package:cinefouine/data/repositories/event_repository.dart';
+import 'package:cinefouine/modules/detailsEvent/view.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -73,7 +74,6 @@ class EventView extends ConsumerWidget {
               const SizedBox(height: 8),
               CineFouineHugeBoutton(
                 onPressed: () async {
-                  //await ref.read(eventRepositoryProvider).getAllEvents();
                   router.push(const CreateEventRoute());
                 },
                 text: "Create",
@@ -102,7 +102,6 @@ class EventView extends ConsumerWidget {
                     if (data == null) {
                       return const Placeholder();
                     } else {
-                      print("BUILD EVENT");
                       return RefreshIndicator(
                         onRefresh: () async {
                           // Appelle la méthode updateEvents() du provider
@@ -115,8 +114,7 @@ class EventView extends ConsumerWidget {
                           itemBuilder: (context, index) {
                             final event = data[index];
                             return EventItem(
-                              title: event.eventName,
-                              description: event.eventDescription,
+                              event: event,
                               avatarPath: "assets/images/default_avatar.jpg",
                               isJoined: false,
                               ref: ref,
@@ -150,27 +148,26 @@ class EventView extends ConsumerWidget {
 }
 
 class EventItem extends StatelessWidget {
-  final String title;
-  final String? description;
+  final EventInfo event;
   final String avatarPath;
   final bool isJoined;
   final WidgetRef ref;
 
   const EventItem({
     super.key,
-    required this.title,
-    this.description,
     required this.avatarPath,
     required this.isJoined,
     required this.ref,
+    required this.event,
   });
 
   @override
   Widget build(BuildContext context) {
     var router = ref.watch(appRouterProvider);
 
-    return GestureDetector(
+    return InkWell(
       onTap: () {
+        ref.read(eventSeletedProvider.notifier).setEvent(event);
         router.push(const DetailsEventRoute());
       },
       child: Padding(
@@ -187,14 +184,14 @@ class EventItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    event.eventName,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                     ),
                   ),
                   Text(
-                    description ?? "",
+                    event.eventDescription ?? "",
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
@@ -206,7 +203,7 @@ class EventItem extends StatelessWidget {
             Cinefouineboutton(
               isClicked: isJoined,
               onPressed: () {
-                print("click");
+                print("join");
               },
               text: "Join",
               text2: "Joined",

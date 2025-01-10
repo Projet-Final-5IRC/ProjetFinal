@@ -104,7 +104,7 @@ class MovieCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(appRouterProvider);
+          final router = ref.watch(appRouterProvider);
     return InkWell(
       onTap: () {
         ref.read(movieSeletedProvider.notifier).setMovie(movie);

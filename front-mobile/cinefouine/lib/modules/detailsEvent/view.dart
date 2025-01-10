@@ -1,19 +1,38 @@
+import 'package:cinefouine/data/entities/event/event_info.dart';
+import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/cineFouineBoutton.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'view.g.dart';
+
+@Riverpod(keepAlive: true)
+class EventSeleted extends _$EventSeleted {
+  @override
+  EventInfo? build() => null;
+
+  void setEvent(EventInfo value) {
+    state = value;
+  }
+}
 
 @RoutePage()
-class DetailsEventView extends StatelessWidget {
+class DetailsEventView extends ConsumerWidget {
   const DetailsEventView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eventSelected = ref.watch(eventSeletedProvider);
+
     return Scaffold(
-      backgroundColor: const Color(0xFF16213E), // Couleur sombre pour l'arrière-plan
+      backgroundColor: AppColors.secondary,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF16213E),
-        title: const Text("Event Details"),
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -22,26 +41,27 @@ class DetailsEventView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                "Created by ${eventSelected?.idOwner}",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   CircleAvatar(
-                    backgroundImage: const AssetImage("assets/images/default_avatar.jpg"),
+                    backgroundImage:
+                        const AssetImage("assets/images/default_avatar.jpg"),
                     radius: 40,
                   ),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Created by Sarah",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 8),
+                    children: [
                       Text(
                         "Theme",
                         style: TextStyle(
@@ -50,7 +70,27 @@ class DetailsEventView extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Horror",
+                        eventSelected?.genreName ?? "",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Horaire",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        "${eventSelected?.eventDate ?? ""} at ${eventSelected?.eventHour ?? ""}",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -69,22 +109,22 @@ class DetailsEventView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                "On se fait peur venez nombreux !\nSurtout Rémi vient, j’ai quelque chose à te montrer :))",
+              Text(
+                eventSelected?.eventDescription ?? "",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                 ),
               ),
               const SizedBox(height: 16),
-            Cinefouineboutton(
-              isClicked: false,
-              onPressed: () {
-                print("click");
-              },
-              text: "Join",
-              text2: "Joined",
-            ),
+              Cinefouineboutton(
+                isClicked: false,
+                onPressed: () {
+                  print("click");
+                },
+                text: "Join",
+                text2: "Joined",
+              ),
               const SizedBox(height: 24),
               const Text(
                 "Membres",
