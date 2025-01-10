@@ -1,25 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'view.dart';
+part of 'genre_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eventSeletedHash() => r'bef6111a8e1e64cfd31edac89d68fc4711d8c747';
+String _$genreServiceHash() => r'a820b0e36f3bb0fd4ead1b9a72fec3d531a745bc';
 
-/// See also [EventSeleted].
-@ProviderFor(EventSeleted)
-final eventSeletedProvider =
-    NotifierProvider<EventSeleted, EventInfo?>.internal(
-  EventSeleted.new,
-  name: r'eventSeletedProvider',
+/// See also [genreService].
+@ProviderFor(genreService)
+final genreServiceProvider = Provider<GenreService>.internal(
+  genreService,
+  name: r'genreServiceProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$eventSeletedHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$genreServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$EventSeleted = Notifier<EventInfo?>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GenreServiceRef = ProviderRef<GenreService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
