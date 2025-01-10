@@ -10,6 +10,7 @@ builder.Services.AddScoped<IDataRepository<Events>, EventsManager>();
 builder.Services.AddScoped<IDataRepository<Genres>, GenresManager>();
 builder.Services.AddScoped<IDataRepositoryWithEmail<Users>, UsersManager>();
 builder.Services.AddScoped<IDataRepository<EventsInvite>, EventsInviteManager>();
+builder.Services.AddScoped<IDataRepository<Preference>, PreferenceManager>();
 
 builder.Services.AddControllers();
 
