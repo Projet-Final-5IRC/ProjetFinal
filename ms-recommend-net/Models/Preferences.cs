@@ -7,10 +7,13 @@ namespace ms_recommend_net.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; } // Primary key
-        public int UserId { get; set; }
-        public string Genre { get; set; } = string.Empty; // Initialized to prevent null warning
-        public string Actor { get; set; } = string.Empty; // Added Actor preference
-        public string Director { get; set; } = string.Empty; // Added Director preference
-        public Users User { get; set; } = null!; // Marked as non-nullable and must be initialized
+
+        public int UserId { get; set; } // Foreign key
+
+        public string Type { get; set; } = string.Empty; // Maps to 'type' column in the database
+
+        public string Value { get; set; } = string.Empty; // Maps to 'value' column in the database
+
     }
+
 }
