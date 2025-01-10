@@ -22,8 +22,13 @@ namespace ms_auth.Services
 
         public async Task<T> GetByEmailAsync<T>(string endpoint, string email)
         {
-            var response = await _httpClient.GetStringAsync($"{endpoint}?email={email}");
-            return JsonConvert.DeserializeObject<T>(response);
+            var response = await _httpClient.GetStringAsync($"{endpoint}{email}");
+
+            if (response != null)
+            {
+                return JsonConvert.DeserializeObject<T>(response);
+            }
+            return JsonConvert.DeserializeObject<T>(null);
         }
 
         public async Task<APIResponseDTO> PostUserAsync(string endpoint, UserDTO data)
