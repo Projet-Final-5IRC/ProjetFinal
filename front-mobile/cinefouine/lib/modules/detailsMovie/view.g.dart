@@ -6,12 +6,12 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$movieSeletedHash() => r'c82ceb50191f8e3243887951f9f3726950e8c09b';
+String _$movieSeletedHash() => r'034776888362ce69cbe95ff9cabb1afa9673d3d9';
 
 /// See also [MovieSeleted].
 @ProviderFor(MovieSeleted)
 final movieSeletedProvider =
-    NotifierProvider<MovieSeleted, MovieInfo?>.internal(
+    AsyncNotifierProvider<MovieSeleted, MovieInfoDetail?>.internal(
   MovieSeleted.new,
   name: r'movieSeletedProvider',
   debugGetCreateSourceHash:
@@ -20,6 +20,6 @@ final movieSeletedProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$MovieSeleted = Notifier<MovieInfo?>;
+typedef _$MovieSeleted = AsyncNotifier<MovieInfoDetail?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

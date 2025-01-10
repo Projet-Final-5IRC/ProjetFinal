@@ -64,6 +64,7 @@ class DioClient {
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
+      print("la réponse : ${response}");
       if ((response.statusCode == 200 || response.statusCode == 201) &&
           deserializer != null) {
         final Object json = response.data as Object;
