@@ -75,4 +75,61 @@ public class TMDbService
         return providers;
     }
     
+    public async Task<MovieDetails> GetMovieDetailsAsync(int movieId)
+    {
+        var response = await _httpClient.GetAsync($"{_baseUrl}/movie/{movieId}?api_key={_apiKey}");
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception($"Erreur lors de l'appel à TMDb API : {response.ReasonPhrase}");
+        }
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        // Désérialiser uniquement les champs nécessaires
+        var json = JsonConvert.DeserializeObject<dynamic>(content);
+
+        var movieDetails = new MovieDetails
+        {
+            Title = json.title,
+            Overview = json.overview,
+            PosterPath = json.poster_path,
+            Runtime = json.runtime,
+            ReleaseDate = json.release_date,
+            Genres = json.genres.ToObject<List<Genre>>() // Mapper les genres
+        };
+
+        return movieDetails;
+    }
+    
+    public async Task<List<Actor>> GetMovieActorsAsync(int movieId)
+    {
+        var response = await _httpClient.GetAsync($"{_baseUrl}/movie/{movieId}/credits?api_key={_apiKey}");
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception($"Erreur lors de l'appel à TMDb API : {response.ReasonPhrase}");
+        }
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        // Désérialiser la réponse JSON dans le modèle typé
+        var credits = JsonConvert.DeserializeObject<MovieCreditsResponse>(content);
+
+        // Filtrer les acteurs et limiter à 10, triés par popularité décroissante
+        var actors = credits.Cast
+            .Where(c => c.KnownForDepartment == "Acting")
+            .OrderByDescending(c => c.Popularity) // Tri par popularité décroissante
+            .Take(10)
+            .Select(c => new Actor
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Character = c.Character,
+                ProfilePath = c.ProfilePath,
+                Popularity = c.Popularity
+            }).ToList();
+
+        return actors;
+    }
+    
+    
 }
