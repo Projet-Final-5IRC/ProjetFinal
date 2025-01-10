@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/mainAppBar.dart';
 import 'package:cinefouine/data/entities/movie/movie_info.dart';
+import 'package:cinefouine/data/entities/movie/movie_info_detail.dart';
+import 'package:cinefouine/data/repositories/movie_repository.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +16,20 @@ part 'view.g.dart';
 @Riverpod(keepAlive: true)
 class MovieSeleted extends _$MovieSeleted {
   @override
-  MovieInfo? build() => null;
+  FutureOr<MovieInfoDetail?> build() async {
+    AsyncValue.loading();
+    return null;
+  }
 
-  void setMovie(MovieInfo value) {
-    state = value;
+  Future<bool> setMovie(MovieInfo? value) async {
+    AsyncValue.loading();
+    final repoMovie = ref.read(movieRepositoryProvider);
+    if (value != null) {
+      state = AsyncValue.data(await repoMovie.getMovieDetails(value.id));
+    } else {
+      state = AsyncValue.data(null);
+    }
+    return true;
   }
 }
 
@@ -30,142 +42,145 @@ class DetailsMovieView extends ConsumerWidget {
     final movieSelected = ref.watch(movieSeletedProvider);
     final router = ref.watch(appRouterProvider);
 
-    if (movieSelected == null) {
-      return Scaffold(
-        appBar: MainAppBar(
-          title: "Details Film",
-          isBackNavigationAvailable: router.canNavigateBack,
-          onBackButtonPressed: () => router.maybePop(),
-        ),
-        backgroundColor: AppColors.secondary,
-        body: const Center(
-          child: Text(
-            "Aucun film sélectionné.",
-            style: TextStyle(color: AppColors.white),
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       appBar: MainAppBar(
         title: "Details Film",
         isBackNavigationAvailable: router.canNavigateBack,
-        onBackButtonPressed: () => router.maybePop(),
+        onBackButtonPressed: () {
+          ref.read(movieSeletedProvider.notifier).setMovie(null);
+          router.maybePop();
+        },
       ),
-        backgroundColor: AppColors.secondary,
+      backgroundColor: AppColors.secondary,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildMovieHeader(movieSelected),
-            const SizedBox(height: 16),
-            Text(
-              movieSelected.overview ?? "Aucune description disponible.",
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 14,
+        child: movieSelected.when(
+          data: (data) {
+            if (data == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildMovieHeader(data),
+                const SizedBox(height: 16),
+                Text(
+                  data.details?.overview ?? "Aucune description disponible.",
+                  style: const TextStyle(
+                    color: AppColors.white,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildActorsSection(data),
+                const SizedBox(height: 16),
+                CineFouineHugeBoutton(onPressed: () {}, text: "Quiz"),
+                const SizedBox(height: 16),
+                _buildRatingSection(),
+                const SizedBox(height: 16),
+                _buildCommentsSection(),
+              ],
+            );
+          },
+          error: (error, stackTrace) {
+            return Center(
+              child: Text(
+                'Erreur: $error',
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            _buildActorsSection(),
-            const SizedBox(height: 16),
-            CineFouineHugeBoutton( 
-                       onPressed: () {},
-                      text: "Quiz"),
-            const SizedBox(height: 16),
-            _buildRatingSection(),
-            const SizedBox(height: 16),
-            _buildCommentsSection(),
-          ],
+            );
+          },
+          loading: () {
+            return const Center(child: CircularProgressIndicator());
+          },
         ),
       ),
     );
   }
 
-Widget _buildMovieHeader(MovieInfo movie) {
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      if (movie.posterPath != null)
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.network(
-            'https://image.tmdb.org/t/p/w500${movie.posterPath}',
-            width: 100,
-            height: 150,
-            fit: BoxFit.cover,
+  Widget _buildMovieHeader(MovieInfoDetail movie) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (movie.details?.posterPath != null)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              'https://image.tmdb.org/t/p/w500${movie.details?.posterPath}',
+              width: 100,
+              height: 150,
+              fit: BoxFit.cover,
+            ),
+          ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                movie.details?.title ?? "Unkown",
+                style: const TextStyle(
+                  color: AppColors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Année: ${movie.details?.releaseDate?.year ?? "Inconnue"}",
+                style: const TextStyle(color: AppColors.white, fontSize: 14),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Cinefouineboutton(onPressed: () {}, text: "Regarder"),
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 40, // Taille du cercle
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.primary, // Contour bleu
+                        width: 2,
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.thumb_up, color: AppColors.white),
+                      onPressed: () {},
+                      iconSize: 20, // Taille du pouce
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 40, // Taille du cercle
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.red, // Contour rouge
+                        width: 2,
+                      ),
+                    ),
+                    child: IconButton(
+                      icon:
+                          const Icon(Icons.thumb_down, color: AppColors.white),
+                      onPressed: () {},
+                      iconSize: 20, // Taille du pouce
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-      const SizedBox(width: 16),
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              movie.title,
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "Année: ${movie.releaseDate?.year ?? "Inconnue"}",
-              style: const TextStyle(color: AppColors.white, fontSize: 14),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Cinefouineboutton(onPressed: () {}, text: "Regarder"),
-                const SizedBox(width: 8),
-                Container(
-                  width: 40, // Taille du cercle
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppColors.primary, // Contour bleu
-                      width: 2,
-                    ),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.thumb_up, color: AppColors.white),
-                    onPressed: () {},
-                    iconSize: 20, // Taille du pouce
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  width: 40, // Taille du cercle
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.red, // Contour rouge
-                      width: 2,
-                    ),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.thumb_down, color: AppColors.white),
-                    onPressed: () {},
-                    iconSize: 20, // Taille du pouce
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
-
-
-  Widget _buildActorsSection() {
+  Widget _buildActorsSection(MovieInfoDetail movie) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -178,29 +193,53 @@ Widget _buildMovieHeader(MovieInfo movie) {
           ),
         ),
         const SizedBox(height: 8),
-        Row(
-          children: List.generate(
-            3,
-            (index) => Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      "https://via.placeholder.com/80",
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
-                    ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal, // Permet le défilement horizontal
+          child: Row(
+            children: List.generate(
+              movie.actors?.length ?? 0,
+              (index) {
+                final actor = movie.actors?[index];
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          actor?.profilePath != null
+                              ? "https://image.tmdb.org/t/p/w500${actor?.profilePath}"
+                              : "https://via.placeholder.com/80", // Image par défaut si `profilePath` est null
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        actor?.name ??
+                            "Unknown", // Affiche "Unknown" si `name` est null
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontSize: 12,
+                          overflow:
+                              TextOverflow.ellipsis, // Gestion du débordement
+                        ),
+                        maxLines: 1,
+                      ),
+                      Text(
+                        actor?.character ?? "", // Affiche le personnage
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 10,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        maxLines: 1,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Henry Cavill",
-                    style: TextStyle(color: AppColors.white, fontSize: 12),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ),
@@ -267,7 +306,8 @@ Widget _buildMovieHeader(MovieInfo movie) {
     );
   }
 
-  Widget _buildCommentItem({required String avatarUrl, required String comment}) {
+  Widget _buildCommentItem(
+      {required String avatarUrl, required String comment}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
