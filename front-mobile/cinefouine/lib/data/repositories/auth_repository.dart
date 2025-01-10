@@ -1,5 +1,4 @@
 import 'package:cinefouine/data/entities/user/user_info.dart';
-import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cinefouine/data/sources/remote/auth_service.dart';

@@ -73,7 +73,7 @@ class _CreateEventButton extends _$CreateEventButton {
             eventDate: eventForm.date,  // La date est formatée avant l'envoi
             eventHour: eventForm.hours, // L'heure est également formatée avant l'envoi
             eventLocation: eventForm.location,
-            idGenre: 1,
+            idGenre: 3,
             eventDescription: eventForm.description,
             idUser: 1,
           );
