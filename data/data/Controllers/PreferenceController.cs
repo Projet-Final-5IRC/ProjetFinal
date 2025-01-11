@@ -10,9 +10,9 @@ namespace data.Controllers
     [ApiController]
     public class PreferenceController : ControllerBase
     {
-        private readonly IDataRepository<Preference> dataRepository;
+        private readonly IDataRepositoryWithPreference<Preference> dataRepository;
 
-        public PreferenceController(IDataRepository<Preference> dataRepo)
+        public PreferenceController(IDataRepositoryWithPreference<Preference> dataRepo)
         {
             dataRepository = dataRepo;
         }
@@ -35,16 +35,16 @@ namespace data.Controllers
 
         // GET: api/Preference/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PreferenceDTO>> GetPreferenceById(int id)
+        public async Task<ActionResult<List<PreferenceDTO>>> GetPreferenceByUserId(int id)
         {
-            var preference = await dataRepository.GetByIdAsync(id);
+            var preference = await dataRepository.GetByUserIdAsync(id);
 
-            if (preference.Value == null)
+            if (preference == null)
             {
                 return NotFound();
             }
 
-            return new PreferenceDTO(preference.Value);
+            return Ok(preference);
         }
 
         // PUT: api/Preference/5
@@ -81,7 +81,7 @@ namespace data.Controllers
 
             await dataRepository.AddAsync(preference);
 
-            return CreatedAtAction("GetPreferenceById", new { id = preference.IdPreference }, new PreferenceDTO(preference));
+            return CreatedAtAction("GetPreferenceByUserId", new { id = preference.IdPreference }, new PreferenceDTO(preference));
         }
 
         // DELETE: api/Preference/5
