@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using data.Models.DTO;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -34,6 +35,13 @@ namespace data.Models.EntityFramework
             this.IdPreference = preference.IdPreference;
             this.IdUser = preference.IdUser;
             this.IdGenre = preference.IdGenre;
+        }
+
+        public Preference() { }
+        public Preference(PreferenceDTO preference)
+        {
+            this.IdGenre = preference.IdGenre;
+            this.IdUser = preference.IdUser;
         }
     }
 }

@@ -21,5 +21,6 @@ namespace data.Models.Repository
     public interface IDataRepositoryWithPreference<TEntity> : IDataRepository<TEntity>
     {
         Task<List<PreferenceDTO>> GetByUserIdAsync(int id);
+        Task<ActionResult<PreferenceDTO>> AddPreferenceAsync(PreferenceDTO entity);
     }
 }
