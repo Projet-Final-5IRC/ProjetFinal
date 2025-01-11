@@ -81,7 +81,24 @@ namespace data.Controllers
 
             await dataRepository.AddAsync(preference);
 
-            return CreatedAtAction("GetPreferenceByUserId", new { id = preference.IdPreference }, new PreferenceDTO(preference));
+            return CreatedAtAction("GetPreferenceByUserId", new { id = preference.IdUser }, new PreferenceDTO(preference));
+        }
+
+        // POST api/Preference
+        [HttpPost("PostUserPreference")]
+        public async Task<ActionResult<PreferenceDTO>> PostUserPreference(List<PreferenceDTO> preferences)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            foreach (PreferenceDTO preference in preferences)
+            {
+                await dataRepository.AddPreferenceAsync(preference);
+            }
+
+            return CreatedAtAction("GetPreferenceByUserId", new { id = preferences[0].IdUser }, preferences);
         }
 
         // DELETE: api/Preference/5
