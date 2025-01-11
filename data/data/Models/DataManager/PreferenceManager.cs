@@ -1,11 +1,12 @@
-﻿using data.Models.EntityFramework;
+﻿using data.Models.DTO;
+using data.Models.EntityFramework;
 using data.Models.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace data.Models.DataManager
 {
-    public class PreferenceManager : IDataRepository<Preference>
+    public class PreferenceManager : IDataRepositoryWithPreference<Preference>
     {
         readonly EventDBContext? eventDBContext;
 
@@ -30,9 +31,27 @@ namespace data.Models.DataManager
             {
                 throw new ArgumentNullException(nameof(eventDBContext));
             }
-            var preferenceEntity = await eventDBContext.Preference.FirstOrDefaultAsync(d => d.IdPreference == id);
+            var preferenceEntity = await eventDBContext.Preference.FirstOrDefaultAsync(d => d.IdUser == id);
 
             return preferenceEntity != null ? preferenceEntity : new NotFoundResult();
+        }
+
+        public async Task<List<PreferenceDTO>> GetByUserIdAsync(int id)
+        {
+            if (eventDBContext == null)
+            {
+                throw new ArgumentNullException(nameof(eventDBContext));
+            }
+            var listPreferences = await eventDBContext.Preference.Where(d => d.IdUser == id).ToListAsync();
+
+            List<PreferenceDTO> listPreferenceDTO = new List<PreferenceDTO>();
+
+            foreach (Preference preference in listPreferences)
+            {
+                listPreferenceDTO.Add(new PreferenceDTO(preference));
+            }
+
+            return listPreferenceDTO;
         }
 
         public async Task<ActionResult<Preference>> AddAsync(Preference newPreference)

@@ -1,4 +1,5 @@
-﻿using data.Models.EntityFramework;
+﻿using data.Models.DTO;
+using data.Models.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
 
 namespace data.Models.Repository
@@ -15,5 +16,10 @@ namespace data.Models.Repository
     public interface IDataRepositoryWithEmail<TEntity> : IDataRepository<TEntity>
     {
         Task<ActionResult<TEntity>> GetByEmailAsync(string email);
+    }
+
+    public interface IDataRepositoryWithPreference<TEntity> : IDataRepository<TEntity>
+    {
+        Task<List<PreferenceDTO>> GetByUserIdAsync(int id);
     }
 }

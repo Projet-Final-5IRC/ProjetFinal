@@ -1,4 +1,5 @@
 ﻿using ms_usr.Models.DTO;
+using Newtonsoft.Json;
 using System.Net;
 
 namespace ms_usr.Services
@@ -16,9 +17,10 @@ namespace ms_usr.Services
             _httpClient.BaseAddress = new Uri(apiBaseUrl);
         }
 
-        public async Task<List<PreferenceDTO>> GetAllPreferences(string endpoint, string idUser)
+        public async Task<List<PreferenceDTO>> GetAllUserPreferences(string endpoint, int idUser)
         {
-
+            var response = await _httpClient.GetStringAsync($"{endpoint}/{idUser}");
+            return JsonConvert.DeserializeObject<List<PreferenceDTO>>(response);
         }
     }
 }
