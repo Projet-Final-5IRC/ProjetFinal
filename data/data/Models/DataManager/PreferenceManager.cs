@@ -81,6 +81,33 @@ namespace data.Models.DataManager
             }
         }
 
+        public async Task<ActionResult<PreferenceDTO>> AddPreferenceAsync(PreferenceDTO newPreference)
+        {
+            if (eventDBContext == null)
+            {
+                throw new ArgumentNullException(nameof(eventDBContext));
+            }
+
+            if (newPreference == null)
+            {
+                return new BadRequestResult();
+            }
+
+            try
+            {
+                await eventDBContext.Preference.AddAsync(new Preference(newPreference));
+                await eventDBContext.SaveChangesAsync();
+                return newPreference;
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult($"An error occurred while adding the preference: {ex.Message}")
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
+        }
+
         public async Task<ActionResult> DeleteAsync(Preference preferenceToDelete)
         {
             if (eventDBContext == null)
