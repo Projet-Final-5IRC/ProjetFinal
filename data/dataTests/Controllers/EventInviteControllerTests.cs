@@ -52,8 +52,8 @@ namespace data.Controllers.Tests
         [TestMethod]
         public async Task GetInviteByID_SuccessGetInviteByID()
         {
-            var result = await _controller.GetInviteById(2);
-            var invitInDB = _context.EventInvite.Where(c => c.idEventsInvite == 2).FirstOrDefault();
+            var result = await _controller.GetInviteById(3);
+            var invitInDB = _context.EventInvite.Where(c => c.idEventsInvite == 3).FirstOrDefault();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(invitInDB.idEventsInvite, result.Value.IdEventsInvite);
