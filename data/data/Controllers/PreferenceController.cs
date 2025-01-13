@@ -69,6 +69,26 @@ namespace data.Controllers
             }
         }
 
+        [HttpPut("Update/{idUser}")]
+        public async Task<ActionResult<List<PreferenceDTO>>> PutUserPreference(int idUser, List<PreferenceDTO> preferenceUpdated)
+        {
+            if (idUser != preferenceUpdated[0].IdUser)
+            {
+                return BadRequest();
+            }
+
+            var preferenceToUpdate = await dataRepository.GetByUserIdAsync(idUser);
+            if (preferenceToUpdate == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var result = await dataRepository.UpdateUserPreferenceAsync(idUser, preferenceUpdated);
+                return result;
+            }
+        }
+
         // POST: api/Preference
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -112,6 +132,14 @@ namespace data.Controllers
             }
 
             await dataRepository.DeleteAsync(preference.Value);
+            return NoContent();
+        }
+
+        // DELETE: api/Preference/User/5
+        [HttpDelete("User/{id}")]
+        public async Task<IActionResult> DeletePreferenceByUser(int id)
+        {
+            await dataRepository.DeleteUserPreferenceAsync(id);
             return NoContent();
         }
     }

@@ -22,5 +22,7 @@ namespace data.Models.Repository
     {
         Task<List<PreferenceDTO>> GetByUserIdAsync(int id);
         Task<ActionResult<PreferenceDTO>> AddPreferenceAsync(PreferenceDTO entity);
+        Task<ActionResult<List<PreferenceDTO>>> UpdateUserPreferenceAsync(int IdUser, List<PreferenceDTO> listPreferences);
+        Task<ActionResult> DeleteUserPreferenceAsync(int IdUser);
     }
 }
