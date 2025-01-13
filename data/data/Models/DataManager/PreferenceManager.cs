@@ -1,6 +1,7 @@
 ﻿using data.Models.DTO;
 using data.Models.EntityFramework;
 using data.Models.Repository;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -135,6 +136,39 @@ namespace data.Models.DataManager
             }
         }
 
+        public async Task<ActionResult> DeleteUserPreferenceAsync(int IdUser)
+        {
+            if (eventDBContext == null)
+            {
+                throw new ArgumentNullException(nameof(eventDBContext));
+            }
+            var checkUserPresence = await eventDBContext.User.FirstOrDefaultAsync(d => d.IdUser == IdUser);
+
+            if (checkUserPresence == null)
+            {
+                return new BadRequestResult();
+            }
+
+            var valueToDelete = await eventDBContext.Preference.Where(d => d.IdUser == IdUser).ToListAsync();
+
+            try
+            {
+                foreach (Preference preferenceToDelete in valueToDelete)
+                {
+                    eventDBContext.Preference.Remove(preferenceToDelete);
+                }
+                await eventDBContext.SaveChangesAsync();
+                return new NoContentResult();
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult($"An error occurred while deleting the user preference: {ex.Message}")
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
+        }
+
         public async Task<ActionResult<Preference>> UpdateAsync(Preference preferenceToUpdate, Preference preferenceUpdated)
         {
             if (eventDBContext == null)
@@ -158,6 +192,44 @@ namespace data.Models.DataManager
             catch (Exception ex)
             {
                 return new ObjectResult($"An error occurred while updating the preference: {ex.Message}")
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
+        }
+
+        public async Task<ActionResult<List<PreferenceDTO>>> UpdateUserPreferenceAsync(int IdUser, List<PreferenceDTO> preferences)
+        {
+            if (eventDBContext == null)
+            {
+                throw new ArgumentNullException(nameof(eventDBContext));
+            }
+            var checkUserPresence = await eventDBContext.User.FirstOrDefaultAsync(d => d.IdUser == IdUser);
+
+            if (checkUserPresence == null)
+            {
+                return new BadRequestResult();
+            }
+
+            var valueToDelete = await eventDBContext.Preference.Where(d => d.IdUser == IdUser).ToListAsync();
+
+            try
+            {
+                foreach (Preference preferenceToDelete in valueToDelete)
+                {
+                    eventDBContext.Preference.Remove(preferenceToDelete);
+                }
+
+                foreach (PreferenceDTO preferenceToAdd in preferences)
+                {
+                    await eventDBContext.Preference.AddAsync(new Preference(preferenceToAdd));
+                }
+                await eventDBContext.SaveChangesAsync();
+                return preferences;
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult($"An error occurred while deleting the user preference: {ex.Message}")
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
