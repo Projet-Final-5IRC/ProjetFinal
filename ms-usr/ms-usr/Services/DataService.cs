@@ -50,5 +50,31 @@ namespace ms_usr.Services
                 };
             }
         }
+
+        public async Task<APIResponseDTO> UpdateUserPreference(string endpoint, List<PreferenceDTO> updatedPreferenceList)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(updatedPreferenceList), System.Text.Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync(endpoint, content);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var jsonResponse = JsonConvert.DeserializeObject<List<PreferenceDTO>>(responseContent);
+                return new APIResponseDTO
+                {
+                    StatusCode = response.StatusCode,
+                    Data = jsonResponse
+                };
+            }
+            else
+            {
+                return new APIResponseDTO
+                {
+                    StatusCode = response.StatusCode,
+                    ErrorMessage = responseContent
+                };
+            }
+        }
     }
 }
