@@ -1,6 +1,7 @@
 ﻿using ms_usr.Models.DTO;
 using Newtonsoft.Json;
 using System.Net;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ms_usr.Services
 {
@@ -21,6 +22,33 @@ namespace ms_usr.Services
         {
             var response = await _httpClient.GetStringAsync($"{endpoint}/{idUser}");
             return JsonConvert.DeserializeObject<List<PreferenceDTO>>(response);
+        }
+
+        public async Task<APIResponseDTO> PostUserPreferences(string endpoint, List<PreferenceDTO> preferenceDTOs)
+        {
+
+            var content = new StringContent(JsonConvert.SerializeObject(preferenceDTOs), System.Text.Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == HttpStatusCode.Created)
+            {
+                var jsonResponse = JsonConvert.DeserializeObject<List<PreferenceDTO>>(responseContent);
+                return new APIResponseDTO
+                {
+                    StatusCode = response.StatusCode,
+                    Data = jsonResponse
+                };
+            }
+            else
+            {
+                return new APIResponseDTO
+                {
+                    StatusCode = response.StatusCode,
+                    ErrorMessage = responseContent
+                };
+            }
         }
     }
 }
