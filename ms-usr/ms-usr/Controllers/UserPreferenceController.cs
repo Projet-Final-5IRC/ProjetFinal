@@ -57,5 +57,31 @@ namespace ms_usr.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("UpdateUserPreference")]
+        public async Task<IActionResult> UpdateUserPreference(int IdUser,List<PreferenceDTO> preferences)
+        {
+
+            if (preferences == null)
+            {
+                return BadRequest("No PreferenceDTO Input");
+            }
+            try
+            {
+                var data = await _dataService.UpdateUserPreference($"api/Preference/Update/{IdUser}", preferences);
+                if (data.StatusCode == HttpStatusCode.OK)
+                {
+                    return Ok(data.Data);
+                }
+                else
+                {
+                    return BadRequest(data.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
