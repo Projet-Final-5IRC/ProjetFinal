@@ -69,6 +69,7 @@ class _RegisterButton extends _$RegisterButton {
 
   Future<bool> register() async {
     try {
+      state = AsyncLoading();
       // Récupération du service AuthService via le provider
       final authService = ref.read(authRepositoryProvider);
       final registerForm = ref.read(registerFormProvider);
@@ -83,11 +84,14 @@ class _RegisterButton extends _$RegisterButton {
       );
 
       if (userInfo != null) {
+        state = AsyncValue.data(true);
         return true;
       }
+      state = AsyncValue.data(false);
       return false;
-    } catch (e) {
+    } catch (e, _) {
       print('Erreur lors de l\'enregistrement : $e');
+      state = AsyncValue.error(e, _);
       return false;
     }
   }
@@ -123,6 +127,18 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
   Widget build(BuildContext context) {
     final router = ref.watch(appRouterProvider);
     final registerStatus = ref.watch(registerFormProvider);
+    bool isLoading = false;
+    ref.watch(_registerButtonProvider).when(
+      data: (isRegistered) {
+        isLoading = false;
+      },
+      error: (error, stackTrace) {
+        isLoading = false;
+      },
+      loading: () {
+        isLoading = true;
+      },
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFF16213E),
@@ -154,9 +170,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               CineFouineInputField(
                 controller: _firstNameController,
                 onChanged: (value) {
-                  ref
-                      .read(registerFormProvider.notifier)
-                      .setFirstName(value);
+                  ref.read(registerFormProvider.notifier).setFirstName(value);
                 },
                 hintText: "First name",
               ),
@@ -164,9 +178,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               CineFouineInputField(
                 controller: _lastNameController,
                 onChanged: (value) {
-                  ref
-                      .read(registerFormProvider.notifier)
-                      .setLastName(value);
+                  ref.read(registerFormProvider.notifier).setLastName(value);
                 },
                 hintText: "Last name",
               ),
@@ -174,9 +186,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               CineFouineInputField(
                 controller: _emailController,
                 onChanged: (value) {
-                  ref
-                      .read(registerFormProvider.notifier)
-                      .setEmail(value);
+                  ref.read(registerFormProvider.notifier).setEmail(value);
                 },
                 hintText: "Email",
               ),
@@ -184,9 +194,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               CineFouineInputField(
                 controller: _passwordController,
                 onChanged: (value) {
-                  ref
-                      .read(registerFormProvider.notifier)
-                      .setPassword(value);
+                  ref.read(registerFormProvider.notifier).setPassword(value);
                 },
                 hintText: "Password",
                 isPassword: true,
@@ -207,6 +215,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                   style: TextStyle(color: Colors.red),
                 ),
               CineFouineHugeBoutton(
+                isLoading: isLoading,
                 onPressed: () async {
                   bool isRegistered = await ref
                       .read(_registerButtonProvider.notifier)

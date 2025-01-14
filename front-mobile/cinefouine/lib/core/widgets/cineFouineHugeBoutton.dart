@@ -16,7 +16,9 @@ class CineFouineHugeBoutton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: () {
+        if (!isLoading) onPressed();
+      },
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(double.infinity, 48),
         backgroundColor: const Color(0xFF0099CC),
