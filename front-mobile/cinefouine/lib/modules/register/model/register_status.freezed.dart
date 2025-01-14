@@ -21,8 +21,12 @@ mixin _$RegisterStatus {
   String get lastName => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
+  String get rewritePassword => throw _privateConstructorUsedError;
   String get dateCreation => throw _privateConstructorUsedError;
-  bool get isError => throw _privateConstructorUsedError;
+  bool get isErrorApi => throw _privateConstructorUsedError;
+  bool get isErrorEmpty => throw _privateConstructorUsedError;
+  bool get isErrorPassword => throw _privateConstructorUsedError;
+  bool get isErrorRewritePassword => throw _privateConstructorUsedError;
 
   /// Create a copy of RegisterStatus
   /// with the given fields replaced by the non-null parameter values.
@@ -43,8 +47,12 @@ abstract class $RegisterStatusCopyWith<$Res> {
       String lastName,
       String email,
       String password,
+      String rewritePassword,
       String dateCreation,
-      bool isError});
+      bool isErrorApi,
+      bool isErrorEmpty,
+      bool isErrorPassword,
+      bool isErrorRewritePassword});
 }
 
 /// @nodoc
@@ -67,8 +75,12 @@ class _$RegisterStatusCopyWithImpl<$Res, $Val extends RegisterStatus>
     Object? lastName = null,
     Object? email = null,
     Object? password = null,
+    Object? rewritePassword = null,
     Object? dateCreation = null,
-    Object? isError = null,
+    Object? isErrorApi = null,
+    Object? isErrorEmpty = null,
+    Object? isErrorPassword = null,
+    Object? isErrorRewritePassword = null,
   }) {
     return _then(_value.copyWith(
       userName: null == userName
@@ -91,13 +103,29 @@ class _$RegisterStatusCopyWithImpl<$Res, $Val extends RegisterStatus>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String,
+      rewritePassword: null == rewritePassword
+          ? _value.rewritePassword
+          : rewritePassword // ignore: cast_nullable_to_non_nullable
+              as String,
       dateCreation: null == dateCreation
           ? _value.dateCreation
           : dateCreation // ignore: cast_nullable_to_non_nullable
               as String,
-      isError: null == isError
-          ? _value.isError
-          : isError // ignore: cast_nullable_to_non_nullable
+      isErrorApi: null == isErrorApi
+          ? _value.isErrorApi
+          : isErrorApi // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isErrorEmpty: null == isErrorEmpty
+          ? _value.isErrorEmpty
+          : isErrorEmpty // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isErrorPassword: null == isErrorPassword
+          ? _value.isErrorPassword
+          : isErrorPassword // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isErrorRewritePassword: null == isErrorRewritePassword
+          ? _value.isErrorRewritePassword
+          : isErrorRewritePassword // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -117,8 +145,12 @@ abstract class _$$RegisterStatusImplCopyWith<$Res>
       String lastName,
       String email,
       String password,
+      String rewritePassword,
       String dateCreation,
-      bool isError});
+      bool isErrorApi,
+      bool isErrorEmpty,
+      bool isErrorPassword,
+      bool isErrorRewritePassword});
 }
 
 /// @nodoc
@@ -139,8 +171,12 @@ class __$$RegisterStatusImplCopyWithImpl<$Res>
     Object? lastName = null,
     Object? email = null,
     Object? password = null,
+    Object? rewritePassword = null,
     Object? dateCreation = null,
-    Object? isError = null,
+    Object? isErrorApi = null,
+    Object? isErrorEmpty = null,
+    Object? isErrorPassword = null,
+    Object? isErrorRewritePassword = null,
   }) {
     return _then(_$RegisterStatusImpl(
       userName: null == userName
@@ -163,13 +199,29 @@ class __$$RegisterStatusImplCopyWithImpl<$Res>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String,
+      rewritePassword: null == rewritePassword
+          ? _value.rewritePassword
+          : rewritePassword // ignore: cast_nullable_to_non_nullable
+              as String,
       dateCreation: null == dateCreation
           ? _value.dateCreation
           : dateCreation // ignore: cast_nullable_to_non_nullable
               as String,
-      isError: null == isError
-          ? _value.isError
-          : isError // ignore: cast_nullable_to_non_nullable
+      isErrorApi: null == isErrorApi
+          ? _value.isErrorApi
+          : isErrorApi // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isErrorEmpty: null == isErrorEmpty
+          ? _value.isErrorEmpty
+          : isErrorEmpty // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isErrorPassword: null == isErrorPassword
+          ? _value.isErrorPassword
+          : isErrorPassword // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isErrorRewritePassword: null == isErrorRewritePassword
+          ? _value.isErrorRewritePassword
+          : isErrorRewritePassword // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -184,8 +236,12 @@ class _$RegisterStatusImpl implements _RegisterStatus {
       this.lastName = '',
       this.email = '',
       this.password = '',
+      this.rewritePassword = '',
       this.dateCreation = '',
-      this.isError = false});
+      this.isErrorApi = false,
+      this.isErrorEmpty = false,
+      this.isErrorPassword = false,
+      this.isErrorRewritePassword = false});
 
   @override
   @JsonKey()
@@ -204,14 +260,26 @@ class _$RegisterStatusImpl implements _RegisterStatus {
   final String password;
   @override
   @JsonKey()
+  final String rewritePassword;
+  @override
+  @JsonKey()
   final String dateCreation;
   @override
   @JsonKey()
-  final bool isError;
+  final bool isErrorApi;
+  @override
+  @JsonKey()
+  final bool isErrorEmpty;
+  @override
+  @JsonKey()
+  final bool isErrorPassword;
+  @override
+  @JsonKey()
+  final bool isErrorRewritePassword;
 
   @override
   String toString() {
-    return 'RegisterStatus(userName: $userName, firstName: $firstName, lastName: $lastName, email: $email, password: $password, dateCreation: $dateCreation, isError: $isError)';
+    return 'RegisterStatus(userName: $userName, firstName: $firstName, lastName: $lastName, email: $email, password: $password, rewritePassword: $rewritePassword, dateCreation: $dateCreation, isErrorApi: $isErrorApi, isErrorEmpty: $isErrorEmpty, isErrorPassword: $isErrorPassword, isErrorRewritePassword: $isErrorRewritePassword)';
   }
 
   @override
@@ -228,14 +296,34 @@ class _$RegisterStatusImpl implements _RegisterStatus {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.password, password) ||
                 other.password == password) &&
+            (identical(other.rewritePassword, rewritePassword) ||
+                other.rewritePassword == rewritePassword) &&
             (identical(other.dateCreation, dateCreation) ||
                 other.dateCreation == dateCreation) &&
-            (identical(other.isError, isError) || other.isError == isError));
+            (identical(other.isErrorApi, isErrorApi) ||
+                other.isErrorApi == isErrorApi) &&
+            (identical(other.isErrorEmpty, isErrorEmpty) ||
+                other.isErrorEmpty == isErrorEmpty) &&
+            (identical(other.isErrorPassword, isErrorPassword) ||
+                other.isErrorPassword == isErrorPassword) &&
+            (identical(other.isErrorRewritePassword, isErrorRewritePassword) ||
+                other.isErrorRewritePassword == isErrorRewritePassword));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, userName, firstName, lastName,
-      email, password, dateCreation, isError);
+  int get hashCode => Object.hash(
+      runtimeType,
+      userName,
+      firstName,
+      lastName,
+      email,
+      password,
+      rewritePassword,
+      dateCreation,
+      isErrorApi,
+      isErrorEmpty,
+      isErrorPassword,
+      isErrorRewritePassword);
 
   /// Create a copy of RegisterStatus
   /// with the given fields replaced by the non-null parameter values.
@@ -254,8 +342,12 @@ abstract class _RegisterStatus implements RegisterStatus {
       final String lastName,
       final String email,
       final String password,
+      final String rewritePassword,
       final String dateCreation,
-      final bool isError}) = _$RegisterStatusImpl;
+      final bool isErrorApi,
+      final bool isErrorEmpty,
+      final bool isErrorPassword,
+      final bool isErrorRewritePassword}) = _$RegisterStatusImpl;
 
   @override
   String get userName;
@@ -268,9 +360,17 @@ abstract class _RegisterStatus implements RegisterStatus {
   @override
   String get password;
   @override
+  String get rewritePassword;
+  @override
   String get dateCreation;
   @override
-  bool get isError;
+  bool get isErrorApi;
+  @override
+  bool get isErrorEmpty;
+  @override
+  bool get isErrorPassword;
+  @override
+  bool get isErrorRewritePassword;
 
   /// Create a copy of RegisterStatus
   /// with the given fields replaced by the non-null parameter values.

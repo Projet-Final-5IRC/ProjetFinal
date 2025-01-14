@@ -38,16 +38,11 @@ class AuthService {
       "password": password,
       "dateCreation": dateCreation,
     };
-    try {
-      return await dioClient.post<UserInfo>(
-        endpoint,
-        data: data,
-        deserializer: (json) => UserInfo.fromJson(json as Map<String, dynamic>),
-      );
-    } catch (e) {
-      print('Erreur lors de l\'inscription : $e');
-      return null;
-    }
+    return await dioClient.post<UserInfo>(
+      endpoint,
+      data: data,
+      deserializer: (json) => UserInfo.fromJson(json as Map<String, dynamic>),
+    );
   }
 
   Future<UserInfo?> login({

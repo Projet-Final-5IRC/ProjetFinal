@@ -64,7 +64,6 @@ class DioClient {
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
-      print("la réponse : ${response}");
       if ((response.statusCode == 200 || response.statusCode == 201) &&
           deserializer != null) {
         final Object json = response.data as Object;
@@ -89,6 +88,7 @@ class DioClient {
     T Function(Object)? deserializer,
   }) async {
     try {
+      print("Test post !!");
       final response = await _client.post(
         url,
         data: data,
@@ -106,6 +106,8 @@ class DioClient {
         return null;
       }
     } on DioException catch (e) {
+      print(e.response?.data);
+      print(e.type);
       final errorMessage = AppDioExceptions.fromDioError(e);
       throw errorMessage;
     }
