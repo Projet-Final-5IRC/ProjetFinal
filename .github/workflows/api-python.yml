@@ -56,8 +56,8 @@ jobs:
         with:
           name: api-python
           path: |
-           back-python
-           !back-python/venv/
+           .
+           !venv/
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -70,7 +70,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: api-python
-          path: back-python/
+          path: .
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -78,4 +78,3 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_API_PYTHON_PUBLISH_PROFILE }}
-          verbose: true
