@@ -11,7 +11,7 @@ name: Build and deploy Python app to Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: api-python    # set this to your application's name
-  PYTHON_VERSION: '3.12'               # set this to the Python version to use
+  PYTHON_VERSION: '3.10'               # set this to the Python version to use
 
 on:
   push:
@@ -56,7 +56,7 @@ jobs:
         with:
           name: python-app
           path: |
-            .
+            ./back-python/
             venv/
   deploy:
     runs-on: ubuntu-latest
