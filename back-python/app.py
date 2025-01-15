@@ -16,10 +16,10 @@ from app import main
 # import json
 # import random
 
-appli = Flask(__name__)
+app = Flask(__name__)
 
 # Routes
-@appli.route('/recoUser', methods=['GET'])
+@app.route('/recoUser', methods=['GET'])
 def reco_user():
 
     try:
@@ -34,4 +34,4 @@ def reco_user():
 
 # Lancement de l'application
 if __name__ == '__main__':
-    appli.run(debug=True)
+    app.run(debug=True)
