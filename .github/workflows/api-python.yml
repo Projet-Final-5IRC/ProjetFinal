@@ -56,7 +56,7 @@ jobs:
         with:
           name: api-python
           path: |
-           back-python/     # Spécifiez le dossier contenant l'application
+           back-python
            !back-python/venv/
   deploy:
     runs-on: ubuntu-latest
