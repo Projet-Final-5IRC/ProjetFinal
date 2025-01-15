@@ -30,6 +30,11 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      - name: Install dependencies
+        run: |
+           cd back-python
+           pip install -r requirements.txt
+
       - name: Create and start virtual environment
         run: |
           cd back-python
@@ -42,11 +47,6 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-
-      - name: Install dependencies
-        run: |
-           cd back-python
-           pip install -r requirements.txt
 
       # Optional: Add a step to run tests here (PyTest, Django test suites, etc.)
 
