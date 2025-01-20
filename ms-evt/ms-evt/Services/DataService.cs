@@ -62,6 +62,12 @@ namespace ms_evt.Services
             return response.StatusCode;
         }
 
+        public async Task<HttpStatusCode> DeleteAsyncUsername(string endpoint)
+        {
+            var response = await _httpClient.DeleteAsync(endpoint);
+            return response.StatusCode;
+        }
+
         public async Task<HttpStatusCode> PutEventAsync(string endpoint, int id,EventDTO eventDTO)
         {
             var content = new StringContent(JsonConvert.SerializeObject(eventDTO), System.Text.Encoding.UTF8, "application/json");
