@@ -47,4 +47,11 @@ class EventRepository {
       idUser: idUser,
     );
   }
+
+    Future<void> inviteEvent({
+      required int IdEvent,
+      required int IdUser,
+    })async {
+      _appApiClient.inviteEvent(IdEvent: IdEvent, IdUser: IdUser);
+    }
 }

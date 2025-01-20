@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/data/repositories/event_repository.dart';
+import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:cinefouine/modules/createEvent/model/create_event_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,13 +62,14 @@ class _CreateEventButton extends _$CreateEventButton {
     final eventForm = ref.read(createEventFormProvider);
     try {
       state = const AsyncValue.loading();
+      final Preferences preferences = ref.read(preferencesProvider);
       print("creation event: eventName: ${eventForm.title}, "
           "eventDate: ${eventForm.date}, "
           "eventHour: ${eventForm.hours}, "
           "eventLocation: ${eventForm.location}, "
           "idGenre: 1, "
           "eventDescription: ${eventForm.description}, "
-          "idUser: 1");
+          "idUser: ${preferences.idUserPreferences.load()}");
       ref.read(eventRepositoryProvider).createEvent(
             eventName: eventForm.title,
             eventDate: eventForm.date,  // La date est formatée avant l'envoi
@@ -75,7 +77,7 @@ class _CreateEventButton extends _$CreateEventButton {
             eventLocation: eventForm.location,
             idGenre: 3,
             eventDescription: eventForm.description,
-            idUser: 1,
+            idUser: preferences.idUserPreferences.load() ?? 1
           );
       eventCreated = true;
     } on Exception catch (error, _) {

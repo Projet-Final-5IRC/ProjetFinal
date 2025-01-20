@@ -1,4 +1,5 @@
 import 'package:cinefouine/data/entities/genre/genre_info.dart';
+import 'package:cinefouine/data/entities/user/user_info.dart';
 import 'package:cinefouine/data/sources/remote/genre_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:meta/meta.dart';
@@ -25,5 +26,10 @@ class GenreRepository {
   Future<List<Genre>?> getGenres() async {
     final genres = await _genreService.getGenres();
     return genres;
+  }
+
+  Future<List<UserInfo>?> getAllUsers() async {
+    final users = await _genreService.getAllUsers();
+    return users;
   }
 }

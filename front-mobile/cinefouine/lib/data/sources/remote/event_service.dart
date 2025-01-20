@@ -75,4 +75,20 @@ class EventService {
       print("Erreur inconnue : $e");
     }
   }
+
+  Future<void> inviteEvent({
+    required int IdEvent,
+    required int IdUser,
+  }) async {
+    final endpoint = "/Event/InviteUser";
+    final eventInviteData = {
+      "IdEvent": IdEvent,
+      "IdUser": IdUser,
+      "IsPending": true,
+    };
+    final response = await dioClient.post(
+      endpoint,
+      data: eventInviteData,
+    );
+  }
 }

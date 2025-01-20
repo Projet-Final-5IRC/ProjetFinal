@@ -26,6 +26,7 @@ mixin _$UserInfo {
   String get lastName => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get dateCreation => throw _privateConstructorUsedError;
+  List<int>? get userInvitationId => throw _privateConstructorUsedError;
 
   /// Serializes this UserInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,7 +49,8 @@ abstract class $UserInfoCopyWith<$Res> {
       String firstName,
       String lastName,
       String email,
-      String dateCreation});
+      String dateCreation,
+      List<int>? userInvitationId});
 }
 
 /// @nodoc
@@ -72,6 +74,7 @@ class _$UserInfoCopyWithImpl<$Res, $Val extends UserInfo>
     Object? lastName = null,
     Object? email = null,
     Object? dateCreation = null,
+    Object? userInvitationId = freezed,
   }) {
     return _then(_value.copyWith(
       idUser: null == idUser
@@ -98,6 +101,10 @@ class _$UserInfoCopyWithImpl<$Res, $Val extends UserInfo>
           ? _value.dateCreation
           : dateCreation // ignore: cast_nullable_to_non_nullable
               as String,
+      userInvitationId: freezed == userInvitationId
+          ? _value.userInvitationId
+          : userInvitationId // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
     ) as $Val);
   }
 }
@@ -116,7 +123,8 @@ abstract class _$$UserInfoImplCopyWith<$Res>
       String firstName,
       String lastName,
       String email,
-      String dateCreation});
+      String dateCreation,
+      List<int>? userInvitationId});
 }
 
 /// @nodoc
@@ -138,6 +146,7 @@ class __$$UserInfoImplCopyWithImpl<$Res>
     Object? lastName = null,
     Object? email = null,
     Object? dateCreation = null,
+    Object? userInvitationId = freezed,
   }) {
     return _then(_$UserInfoImpl(
       idUser: null == idUser
@@ -164,6 +173,10 @@ class __$$UserInfoImplCopyWithImpl<$Res>
           ? _value.dateCreation
           : dateCreation // ignore: cast_nullable_to_non_nullable
               as String,
+      userInvitationId: freezed == userInvitationId
+          ? _value._userInvitationId
+          : userInvitationId // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
     ));
   }
 }
@@ -177,7 +190,9 @@ class _$UserInfoImpl implements _UserInfo {
       required this.firstName,
       required this.lastName,
       required this.email,
-      required this.dateCreation});
+      required this.dateCreation,
+      required final List<int>? userInvitationId})
+      : _userInvitationId = userInvitationId;
 
   factory _$UserInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserInfoImplFromJson(json);
@@ -194,10 +209,20 @@ class _$UserInfoImpl implements _UserInfo {
   final String email;
   @override
   final String dateCreation;
+  final List<int>? _userInvitationId;
+  @override
+  List<int>? get userInvitationId {
+    final value = _userInvitationId;
+    if (value == null) return null;
+    if (_userInvitationId is EqualUnmodifiableListView)
+      return _userInvitationId;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'UserInfo(idUser: $idUser, userName: $userName, firstName: $firstName, lastName: $lastName, email: $email, dateCreation: $dateCreation)';
+    return 'UserInfo(idUser: $idUser, userName: $userName, firstName: $firstName, lastName: $lastName, email: $email, dateCreation: $dateCreation, userInvitationId: $userInvitationId)';
   }
 
   @override
@@ -214,13 +239,22 @@ class _$UserInfoImpl implements _UserInfo {
                 other.lastName == lastName) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.dateCreation, dateCreation) ||
-                other.dateCreation == dateCreation));
+                other.dateCreation == dateCreation) &&
+            const DeepCollectionEquality()
+                .equals(other._userInvitationId, _userInvitationId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, idUser, userName, firstName, lastName, email, dateCreation);
+      runtimeType,
+      idUser,
+      userName,
+      firstName,
+      lastName,
+      email,
+      dateCreation,
+      const DeepCollectionEquality().hash(_userInvitationId));
 
   /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -245,7 +279,8 @@ abstract class _UserInfo implements UserInfo {
       required final String firstName,
       required final String lastName,
       required final String email,
-      required final String dateCreation}) = _$UserInfoImpl;
+      required final String dateCreation,
+      required final List<int>? userInvitationId}) = _$UserInfoImpl;
 
   factory _UserInfo.fromJson(Map<String, dynamic> json) =
       _$UserInfoImpl.fromJson;
@@ -262,6 +297,8 @@ abstract class _UserInfo implements UserInfo {
   String get email;
   @override
   String get dateCreation;
+  @override
+  List<int>? get userInvitationId;
 
   /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.

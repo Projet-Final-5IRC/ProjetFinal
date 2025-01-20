@@ -22,7 +22,7 @@ final createEventFormProvider =
 );
 
 typedef _$CreateEventForm = AutoDisposeNotifier<CreateEventStatus>;
-String _$createEventButtonHash() => r'20abb2cc7892d89ce7b3c08006c4d8aec315f706';
+String _$createEventButtonHash() => r'efa570368dc6dc6597263c8cee46b2a57aa741f3';
 
 /// See also [_CreateEventButton].
 @ProviderFor(_CreateEventButton)
