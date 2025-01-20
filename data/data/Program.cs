@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IDataRepositoryEventMore<Events>, EventsManager>();
 builder.Services.AddScoped<IDataRepository<Genres>, GenresManager>();
 builder.Services.AddScoped<IDataRepositoryWithEmail<Users>, UsersManager>();
-builder.Services.AddScoped<IDataRepository<EventsInvite>, EventsInviteManager>();
+builder.Services.AddScoped<IDataRepositoryEventInvite<EventsInvite>, EventsInviteManager>();
 builder.Services.AddScoped<IDataRepositoryWithPreference<Preference>, PreferenceManager>();
 
 builder.Services.AddControllers();

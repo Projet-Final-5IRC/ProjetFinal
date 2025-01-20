@@ -24,6 +24,11 @@ namespace data.Models.Repository
         Task<ActionResult<List<UserDTO>>> GetAllUsersByEvent(int id);
     }
 
+    public interface IDataRepositoryEventInvite<TEntity> : IDataRepository<TEntity>
+    {
+        Task<ActionResult<Users>> GetByUsernameAsync(string username);
+    }
+
     public interface IDataRepositoryWithPreference<TEntity> : IDataRepository<TEntity>
     {
         Task<List<PreferenceDTO>> GetByUserIdAsync(int id);
