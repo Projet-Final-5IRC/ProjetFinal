@@ -31,7 +31,7 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: LoginRoute.page),
+        AutoRoute(page: LoginRoute.page,initial: true),
         AutoRoute(page: RegisterRoute.page),
         AutoRoute(page: GenresSelectionRoute.page),
         AutoRoute(page: DetailsMovieRoute.page),
@@ -40,7 +40,7 @@ class AppRouter extends RootStackRouter {
           initial: true,
           guards: [AuthGuard(ref: ref)],
           children: [
-            AutoRoute(page: HomeRoute.page, initial: true),
+            AutoRoute(page: HomeRoute.page),
             AutoRoute(
               page: EventHomeRoute.page,
               children: [

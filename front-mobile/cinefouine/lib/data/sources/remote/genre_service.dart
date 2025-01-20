@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:cinefouine/data/entities/genre/genre_info.dart';
 import 'package:cinefouine/data/sources/dio_client.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,6 @@ class GenreService {
   // }
     Future<List<Genre>?> getGenres() async {
     final endpoint = CineFouineEndpoints.getGenres;
-        debugPrint("appppleelllll");
     final apiResult = await dioClient.get<List<Genre>>(
       endpoint,
       deserializer: (json) =>

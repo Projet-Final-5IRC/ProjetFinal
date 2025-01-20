@@ -328,7 +328,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Sign Up Successful!")),
                     );
-                    router.replaceAll([const LoginRoute()]);
+                    router.replaceAll([const GenresSelectionRoute()]);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Erreur register")),

@@ -1,5 +1,8 @@
 import 'dart:math';
 import 'package:auto_route/auto_route.dart';
+import 'package:cinefouine/data/repositories/genre_repository.dart';
+import 'package:cinefouine/data/repositories/user_preference_repository.dart';
+import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinefouine/data/entities/genre/genre_info.dart';
@@ -12,6 +15,7 @@ final genresProvider = FutureProvider<List<Genre>>((ref) async {
   final genreService = ref.read(genreServiceProvider);
   return await genreService.getGenres() ?? [];
 });
+
 
 // StateNotifier pour gérer les sélections
 class SelectedGenresNotifier extends StateNotifier<Set<int>> {
@@ -55,6 +59,7 @@ class GenresSelectionView extends ConsumerWidget {
       ),
       body: genresAsync.when(
         data: (genres) {
+          final Preferences preferences = ref.read(preferencesProvider);
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -106,16 +111,33 @@ class GenresSelectionView extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: CineFouineHugeBoutton(
-                    onPressed: () {
-                      // Action de confirmation : sauvegarde des genres sélectionnés
-                      debugPrint('Genres préférés confirmés : $selectedGenres');
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Vous avez sélectionné ${selectedGenres.length} genres',
-                          ),
-                        ),
-                      );
+                    onPressed: () async {
+                      final repository = ref.read(userPreferenceRepositoryProvider);
+                      final userId = preferences.idUserPreferences.load() ?? 1;
+                      print('userId: $userId'); 
+                      try {
+                        final success = await repository.updateUserPreferences(userId, selectedGenres);
+                        
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                success 
+                                  ? 'Préférences sauvegardées avec succès' 
+                                  : 'Erreur lors de la sauvegarde',
+                              ),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Erreur: ${e.toString()}'),
+                            ),
+                          );
+                        }
+                      }
                     },
                     text: "Confirmer",
                   ),
