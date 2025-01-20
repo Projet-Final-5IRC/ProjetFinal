@@ -21,10 +21,10 @@ namespace ms_evt.Services
             _httpClient.BaseAddress = new Uri(apiBaseUrl);
         }
 
-        public async Task<List<T>> GetAllAsync<T>(string endpoint)
+        public async Task<List<EventDTO>> GetAllAsync<T>(string endpoint)
         {
             var response = await _httpClient.GetStringAsync(endpoint);
-            return JsonConvert.DeserializeObject<List<T>>(response);
+            return JsonConvert.DeserializeObject<List<EventDTO>>(response);
         }
 
         public async Task<T> GetByIdAsync<T>(string endpoint,int id)
