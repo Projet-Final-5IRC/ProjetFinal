@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CineFouineHugeBoutton extends ConsumerWidget {
+  final bool isClicked;
+  final Color buttonColor;
   final String text;
   final VoidCallback onPressed;
   final bool isLoading;
@@ -11,6 +13,9 @@ class CineFouineHugeBoutton extends ConsumerWidget {
     required this.onPressed,
     required this.text,
     this.isLoading = false,
+    this.buttonColor = const Color(0xFF0099CC),
+    this.isClicked = false,
+
   });
 
   @override
@@ -21,7 +26,7 @@ class CineFouineHugeBoutton extends ConsumerWidget {
       },
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(double.infinity, 48),
-        backgroundColor: const Color(0xFF0099CC),
+        backgroundColor: buttonColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
