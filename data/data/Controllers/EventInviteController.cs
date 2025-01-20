@@ -78,6 +78,16 @@ namespace data.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            var existingInvite = await dataRepository
+                                        .GetAllAsync()
+                                        .ContinueWith(task => task.Result.Value.FirstOrDefault(e => e.IdEvent == invite.IdEvent && e.IdUser == invite.IdUser));
+
+            if (existingInvite != null)
+            {
+                return Conflict(new { message = "L'utilisateur est déjà invité à cet événement." });
+            }
+
             await dataRepository.AddAsync(invite);
 
             return CreatedAtAction("GetInviteById", new { id = invite.idEventsInvite }, new EventInviteDTO(invite));
