@@ -20,6 +20,9 @@ builder.Services.AddHttpClient("BaseApiClient", client =>
     client.BaseAddress = new Uri(baseUrl);
 });
 
+builder.Services.AddScoped<DataService>();
+builder.Services.AddSingleton<DataService>();
+
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
