@@ -23,9 +23,18 @@ class EventRepository {
 
   final EventService _appApiClient;
 
-  Future<List<EventInfo>?> getAllEvents() async {
+  Future<List<EventInfo>?> getAllEvents(int? idUser) async {
     final events = await _appApiClient.getAllEvents();
-    return events;
+    final allEventsExeptMine =
+        events?.where((event) => event.idUser != idUser).toList();
+    return allEventsExeptMine;
+  }
+
+  Future<List<EventInfo>?> getMyEvents(int idUser) async {
+    final events = await _appApiClient.getAllEvents();
+    final userEvents =
+        events?.where((event) => event.idUser == idUser).toList();
+    return userEvents;
   }
 
   Future<void> createEvent({

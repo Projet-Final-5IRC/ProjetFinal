@@ -6,7 +6,7 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$registerFormHash() => r'7a95c9305f04dc2080266561bd0b49546a42b7b4';
+String _$registerFormHash() => r'7dc40380367ddc1d6884250bd02d90e8d298ad49';
 
 /// See also [RegisterForm].
 @ProviderFor(RegisterForm)

@@ -28,7 +28,7 @@ mixin _$EventInfo {
   String? get eventDescription => throw _privateConstructorUsedError;
   int? get idGenre => throw _privateConstructorUsedError;
   String? get genreName => throw _privateConstructorUsedError;
-  int? get idOwner => throw _privateConstructorUsedError;
+  int get idUser => throw _privateConstructorUsedError;
   String? get ownerName => throw _privateConstructorUsedError;
   List<int> get eventInvitationId => throw _privateConstructorUsedError;
 
@@ -56,7 +56,7 @@ abstract class $EventInfoCopyWith<$Res> {
       String? eventDescription,
       int? idGenre,
       String? genreName,
-      int? idOwner,
+      int idUser,
       String? ownerName,
       List<int> eventInvitationId});
 }
@@ -84,7 +84,7 @@ class _$EventInfoCopyWithImpl<$Res, $Val extends EventInfo>
     Object? eventDescription = freezed,
     Object? idGenre = freezed,
     Object? genreName = freezed,
-    Object? idOwner = freezed,
+    Object? idUser = null,
     Object? ownerName = freezed,
     Object? eventInvitationId = null,
   }) {
@@ -121,10 +121,10 @@ class _$EventInfoCopyWithImpl<$Res, $Val extends EventInfo>
           ? _value.genreName
           : genreName // ignore: cast_nullable_to_non_nullable
               as String?,
-      idOwner: freezed == idOwner
-          ? _value.idOwner
-          : idOwner // ignore: cast_nullable_to_non_nullable
-              as int?,
+      idUser: null == idUser
+          ? _value.idUser
+          : idUser // ignore: cast_nullable_to_non_nullable
+              as int,
       ownerName: freezed == ownerName
           ? _value.ownerName
           : ownerName // ignore: cast_nullable_to_non_nullable
@@ -154,7 +154,7 @@ abstract class _$$EventInfoImplCopyWith<$Res>
       String? eventDescription,
       int? idGenre,
       String? genreName,
-      int? idOwner,
+      int idUser,
       String? ownerName,
       List<int> eventInvitationId});
 }
@@ -180,7 +180,7 @@ class __$$EventInfoImplCopyWithImpl<$Res>
     Object? eventDescription = freezed,
     Object? idGenre = freezed,
     Object? genreName = freezed,
-    Object? idOwner = freezed,
+    Object? idUser = null,
     Object? ownerName = freezed,
     Object? eventInvitationId = null,
   }) {
@@ -217,10 +217,10 @@ class __$$EventInfoImplCopyWithImpl<$Res>
           ? _value.genreName
           : genreName // ignore: cast_nullable_to_non_nullable
               as String?,
-      idOwner: freezed == idOwner
-          ? _value.idOwner
-          : idOwner // ignore: cast_nullable_to_non_nullable
-              as int?,
+      idUser: null == idUser
+          ? _value.idUser
+          : idUser // ignore: cast_nullable_to_non_nullable
+              as int,
       ownerName: freezed == ownerName
           ? _value.ownerName
           : ownerName // ignore: cast_nullable_to_non_nullable
@@ -245,7 +245,7 @@ class _$EventInfoImpl implements _EventInfo {
       required this.eventDescription,
       required this.idGenre,
       required this.genreName,
-      required this.idOwner,
+      required this.idUser,
       required this.ownerName,
       required final List<int> eventInvitationId})
       : _eventInvitationId = eventInvitationId;
@@ -270,7 +270,7 @@ class _$EventInfoImpl implements _EventInfo {
   @override
   final String? genreName;
   @override
-  final int? idOwner;
+  final int idUser;
   @override
   final String? ownerName;
   final List<int> _eventInvitationId;
@@ -284,7 +284,7 @@ class _$EventInfoImpl implements _EventInfo {
 
   @override
   String toString() {
-    return 'EventInfo(idEvent: $idEvent, eventName: $eventName, eventDate: $eventDate, eventHour: $eventHour, eventLocation: $eventLocation, eventDescription: $eventDescription, idGenre: $idGenre, genreName: $genreName, idOwner: $idOwner, ownerName: $ownerName, eventInvitationId: $eventInvitationId)';
+    return 'EventInfo(idEvent: $idEvent, eventName: $eventName, eventDate: $eventDate, eventHour: $eventHour, eventLocation: $eventLocation, eventDescription: $eventDescription, idGenre: $idGenre, genreName: $genreName, idUser: $idUser, ownerName: $ownerName, eventInvitationId: $eventInvitationId)';
   }
 
   @override
@@ -306,7 +306,7 @@ class _$EventInfoImpl implements _EventInfo {
             (identical(other.idGenre, idGenre) || other.idGenre == idGenre) &&
             (identical(other.genreName, genreName) ||
                 other.genreName == genreName) &&
-            (identical(other.idOwner, idOwner) || other.idOwner == idOwner) &&
+            (identical(other.idUser, idUser) || other.idUser == idUser) &&
             (identical(other.ownerName, ownerName) ||
                 other.ownerName == ownerName) &&
             const DeepCollectionEquality()
@@ -325,7 +325,7 @@ class _$EventInfoImpl implements _EventInfo {
       eventDescription,
       idGenre,
       genreName,
-      idOwner,
+      idUser,
       ownerName,
       const DeepCollectionEquality().hash(_eventInvitationId));
 
@@ -355,7 +355,7 @@ abstract class _EventInfo implements EventInfo {
       required final String? eventDescription,
       required final int? idGenre,
       required final String? genreName,
-      required final int? idOwner,
+      required final int idUser,
       required final String? ownerName,
       required final List<int> eventInvitationId}) = _$EventInfoImpl;
 
@@ -379,7 +379,7 @@ abstract class _EventInfo implements EventInfo {
   @override
   String? get genreName;
   @override
-  int? get idOwner;
+  int get idUser;
   @override
   String? get ownerName;
   @override

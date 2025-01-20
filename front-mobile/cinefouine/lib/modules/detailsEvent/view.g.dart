@@ -6,7 +6,7 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eventSeletedHash() => r'bef6111a8e1e64cfd31edac89d68fc4711d8c747';
+String _$eventSeletedHash() => r'763b4535cdcb9cd48fa722691a283b0af76f5ec9';
 
 /// See also [EventSeleted].
 @ProviderFor(EventSeleted)
@@ -22,7 +22,7 @@ final eventSeletedProvider =
 
 typedef _$EventSeleted = Notifier<EventInfo?>;
 String _$userInvitedToSelectedEventHash() =>
-    r'f644bcbcc8732b54946bfb6e4dfbaaa2c047b344';
+    r'0f8f616b8b808154a9a987ae80e01a024c4f9fa4';
 
 /// See also [UserInvitedToSelectedEvent].
 @ProviderFor(UserInvitedToSelectedEvent)

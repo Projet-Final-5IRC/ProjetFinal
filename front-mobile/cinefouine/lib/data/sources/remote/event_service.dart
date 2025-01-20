@@ -46,7 +46,7 @@ class EventService {
     int? idGenre,
     String? genreName,
     String? eventDescription,
-    int? idUser,
+    required int idUser,
   }) async {
     final endpoint = CineFouineEndpoints.createEvent;
     final eventData = {

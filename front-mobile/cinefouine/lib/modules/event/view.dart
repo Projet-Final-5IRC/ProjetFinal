@@ -3,6 +3,7 @@ import 'package:cinefouine/core/widgets/cineFouineBoutton.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
 import 'package:cinefouine/data/entities/event/event_info.dart';
 import 'package:cinefouine/data/repositories/event_repository.dart';
+import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:cinefouine/modules/detailsEvent/view.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:flutter/material.dart';
@@ -25,12 +26,44 @@ class _TabBarIndexNotifier extends _$TabBarIndexNotifier {
 class Events extends _$Events {
   @override
   Future<List<EventInfo>?> build() async {
-    return ref.watch(eventRepositoryProvider).getAllEvents();
+    final preferences = ref.read(preferencesProvider);
+    return ref.watch(eventRepositoryProvider).getAllEvents(preferences.idUserPreferences.load());
   }
 
   Future<void> updateEvents() async {
+    final preferences = ref.read(preferencesProvider);
     state = AsyncValue.data(
-        await ref.watch(eventRepositoryProvider).getAllEvents());
+        await ref.watch(eventRepositoryProvider).getAllEvents(preferences.idUserPreferences.load()));
+    ref.read(myEventsProvider.notifier).updateMyEvents();
+  }
+}
+
+@Riverpod(keepAlive: false)
+class MyEvents extends _$MyEvents {
+  @override
+  Future<List<EventInfo>?> build() async {
+    final preferences = ref.read(preferencesProvider);
+    if (preferences.idUserPreferences.load() != null) {
+      return ref
+          .watch(eventRepositoryProvider)
+          .getMyEvents(preferences.idUserPreferences.load()!);
+    } else {
+      return [];
+    }
+  }
+
+  Future<void> updateMyEvents() async {
+    state = AsyncLoading();
+    final preferences = ref.read(preferencesProvider);
+    if (preferences.idUserPreferences.load() != null) {
+      state = AsyncValue.data(
+        await ref
+            .read(eventRepositoryProvider)
+            .getMyEvents(preferences.idUserPreferences.load()!),
+      );
+    } else {
+      state = AsyncValue.data([]);
+    }
   }
 }
 
@@ -43,6 +76,8 @@ class EventView extends ConsumerWidget {
     final index = ref.watch(_tabBarIndexNotifierProvider);
     final router = ref.watch(appRouterProvider);
     final events = ref.watch(eventsProvider);
+    final myEvents = ref.watch(myEventsProvider);
+
     return Scaffold(
       backgroundColor: const Color(0xFF1A1F25),
       body: SafeArea(
@@ -97,48 +132,56 @@ class EventView extends ConsumerWidget {
                 ],
               ),
               Expanded(
-                child: events.when(
-                  data: (data) {
-                    if (data == null) {
-                      return const Placeholder();
-                    } else {
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          // Appelle la méthode updateEvents() du provider
-                          await ref
-                              .read(eventsProvider.notifier)
-                              .updateEvents();
-                        },
-                        child: ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            final event = data[index];
-                            return EventItem(
-                              event: event,
-                              avatarPath: "assets/images/default_avatar.jpg",
-                              isJoined: false,
-                              ref: ref,
+                child: index == 0
+                    ? events.when(
+                        data: (data) {
+                          if (data == null || data.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                "No events available",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             );
-                          },
-                        ),
-                      );
-                    }
-                  },
-                  error: (error, stackTrace) {
-                    return Center(
-                      child: Text(
-                        'Erreur: $error',
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
+                          } else {
+                            return _buildEventList(data, ref, false);
+                          }
+                        },
+                        error: (error, stackTrace) {
+                          return Center(
+                            child: Text(
+                              'Erreur: $error',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                      )
+                    : myEvents.when(
+                        data: (data) {
+                          if (data == null || data.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                "You don't have any events yet",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          } else {
+                            return _buildEventList(data, ref, true);
+                          }
+                        },
+                        error: (error, stackTrace) {
+                          return Center(
+                            child: Text(
+                              'Erreur: $error',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
                       ),
-                    );
-                  },
-                  loading: () {
-                    return const Center(child: CircularProgressIndicator());
-                  },
-                ),
-              )
+              ),
             ],
           ),
         ),
@@ -147,10 +190,36 @@ class EventView extends ConsumerWidget {
   }
 }
 
+Widget _buildEventList(List<EventInfo> events, WidgetRef ref, bool isMyEvent) {
+  return RefreshIndicator(
+    onRefresh: () async {
+      if (isMyEvent) {
+        await ref.read(myEventsProvider.notifier).updateMyEvents();
+      } else {
+        await ref.read(eventsProvider.notifier).updateEvents();
+      }
+    },
+    child: ListView.builder(
+      itemCount: events.length,
+      itemBuilder: (context, index) {
+        final event = events[index];
+        return EventItem(
+          event: event,
+          avatarPath: "assets/images/default_avatar.jpg",
+          isJoined: false,
+          isMyEvent: isMyEvent,
+          ref: ref,
+        );
+      },
+    ),
+  );
+}
+
 class EventItem extends StatelessWidget {
   final EventInfo event;
   final String avatarPath;
   final bool isJoined;
+  final bool isMyEvent;
   final WidgetRef ref;
 
   const EventItem({
@@ -159,6 +228,7 @@ class EventItem extends StatelessWidget {
     required this.isJoined,
     required this.ref,
     required this.event,
+    required this.isMyEvent,
   });
 
   @override
@@ -200,14 +270,15 @@ class EventItem extends StatelessWidget {
                 ],
               ),
             ),
-            Cinefouineboutton(
-              isClicked: isJoined,
-              onPressed: () {
-                print("join");
-              },
-              text: "Join",
-              text2: "Joined",
-            ),
+            if (!isMyEvent)
+              Cinefouineboutton(
+                isClicked: isJoined,
+                onPressed: () {
+                  print("join");
+                },
+                text: "Join",
+                text2: "Joined",
+              ),
           ],
         ),
       ),
