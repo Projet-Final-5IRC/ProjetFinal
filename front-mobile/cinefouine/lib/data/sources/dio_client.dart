@@ -195,6 +195,7 @@ class DioClient {
         options: options,
         cancelToken: cancelToken,
       );
+      print("DEBUG DioClient: delete response: $response");
       if ((response.statusCode == 200 || response.statusCode == 201) &&
           deserializer != null) {
         final Object json = response.data as Object;

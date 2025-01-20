@@ -4,6 +4,7 @@ import 'package:cinefouine/data/entities/event/event_info.dart';
 import 'package:cinefouine/data/sources/cine_fouine_endpoints.dart';
 import 'package:cinefouine/data/sources/dio_client.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'event_service.g.dart';
@@ -58,21 +59,53 @@ class EventService {
     };
 
     try {
-      final response = await dioClient.post(
+      await dioClient.post(
         endpoint,
         data: eventData,
       );
     } on DioException catch (e) {
+      // Handle Dio errors (e.g., server issues, no connection, etc.)
       if (e.response != null) {
-        // Une réponse a été reçue mais le serveur a retourné une erreur
-        print(
-            "Erreur Dio (status code : ${e.response?.statusCode}): ${e.response?.data}");
+        // Server returned an error
       } else {
-        // Pas de réponse reçue
-        print("Erreur de connexion : ${e.message}");
+        // No response received (network issues)
       }
     } catch (e) {
-      print("Erreur inconnue : $e");
+      // Handle unknown errors
     }
   }
+
+// Delete event function with IdEvent in body
+Future<void> deleteEvent(int eventId) async {
+
+  final endpoint = CineFouineEndpoints.deleteEvent;  // Assuming the DELETE endpoint doesn't need the eventId in the URL
+
+  final requestData = {
+    "IdEvent": eventId,
+  };
+
+  try {
+    final response = await dioClient.delete(
+      endpoint,
+      data: requestData, // Send the eventId in the body
+    );
+
+      debugPrint("DEBUG - Response: $response");
+
+    // You can add logic here to handle a successful response, if needed
+  } on DioException catch (e) {
+    // Handle Dio errors (e.g., server issues, no connection, etc.)
+    if (e.response != null) {
+      // Server returned an error
+      debugPrint("DEBUG - DioException (status code: ${e.response?.statusCode}): ${e.response?.data}");
+    } else {
+      // No response received (network issues)
+      debugPrint("DEBUG - DioException - No response received: ${e.message}");
+    }
+  } catch (e) {
+    // Handle unknown errors
+    debugPrint("DEBUG - Unknown error: $e");
+  }
+}
+
 }
