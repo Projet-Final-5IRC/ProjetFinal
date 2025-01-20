@@ -1,0 +1,113 @@
+[
+  {
+    "ContainingType": "ms_badge.Controllers.BadgeController",
+    "Method": "GetBadgeById",
+    "RelativePath": "{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ms_badge.Controllers.BadgeController",
+    "Method": "UpdateBadge",
+    "RelativePath": "{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updatedBadge",
+        "Type": "ms_badge.Models.Badge",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ms_badge.Controllers.BadgeController",
+    "Method": "DeleteBadge",
+    "RelativePath": "{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ms_badge.Controllers.BadgeController",
+    "Method": "CreateBadge",
+    "RelativePath": "create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "badge",
+        "Type": "ms_badge.Models.Badge",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ms_badge.Controllers.BadgeController",
+    "Method": "EvaluateAndAssignBadges",
+    "RelativePath": "evaluate-and-assign/{userId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ms_badge.Controllers.BadgeController",
+    "Method": "GetAllBadges",
+    "RelativePath": "list",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ms_badge.Controllers.BadgeController",
+    "Method": "GetUserBadges",
+    "RelativePath": "user/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
