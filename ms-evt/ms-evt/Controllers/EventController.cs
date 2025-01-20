@@ -117,6 +117,20 @@ namespace ms_evt.Controllers
             }
         }
 
+        [HttpDelete("DeleteInviteByUsername")]
+        public async Task<IActionResult> DeleteInviteByUsername(int id,string username)
+        {
+            try
+            {
+                var data = await _dataService.DeleteAsyncUsername($"/api/EventInvite/event/{id}/user/{username}");
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur : {ex.Message}");
+            }
+        }
+
         [HttpPut("EditEvent")]
         public async Task<IActionResult> EditEvent(int id, EventDTO eventDTO)
         {
