@@ -6,7 +6,7 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$registerFormHash() => r'2ed6fdbe91c8fa76b0343c5b7db890422a5f68e7';
+String _$registerFormHash() => r'459c823a07d7d29ab93ec7d0116f2a017a1d5450';
 
 /// See also [RegisterForm].
 @ProviderFor(RegisterForm)
@@ -21,7 +21,7 @@ final registerFormProvider =
 );
 
 typedef _$RegisterForm = AutoDisposeNotifier<RegisterStatus>;
-String _$registerButtonHash() => r'27707b8922e3d998cb9d217a90b91203c09d395a';
+String _$registerButtonHash() => r'6279a31f8458bd735cb8a0a66414ecc9fe299cfb';
 
 /// See also [_RegisterButton].
 @ProviderFor(_RegisterButton)

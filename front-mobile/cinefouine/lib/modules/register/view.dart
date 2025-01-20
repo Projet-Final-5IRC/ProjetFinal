@@ -47,16 +47,100 @@ class RegisterForm extends _$RegisterForm {
     );
   }
 
+  void setRewritePassword(String rewritePassword) {
+    state = state.copyWith(
+      rewritePassword: rewritePassword,
+    );
+  }
+
   void setDateCreation(String dateCreation) {
     state = state.copyWith(
       dateCreation: dateCreation,
     );
   }
 
-  void setIsError(bool isError) {
+  void setIsErrorApi(bool isError) {
     state = state.copyWith(
-      isError: isError,
+      isErrorApi: isError,
     );
+  }
+
+  void setIsErrorPasword(bool isError) {
+    state = state.copyWith(
+      isErrorPassword: isError,
+    );
+  }
+
+  void setIsErrorEmpty(bool isError) {
+    state = state.copyWith(
+      isErrorEmpty: isError,
+    );
+  }
+
+  void setIsErrorRewritePassword(bool isError) {
+    state = state.copyWith(
+      isErrorRewritePassword: isError,
+    );
+  }
+
+  bool fieldIsNotEmpty() {
+    if (state.firstName.isEmpty ||
+        state.lastName.isEmpty ||
+        state.email.isEmpty ||
+        state.password.isEmpty ||
+        state.rewritePassword.isEmpty) {
+      setIsErrorEmpty(true);
+      return false;
+    } else {
+      setIsErrorEmpty(false);
+      return true;
+    }
+  }
+
+  bool isPasswordValid(String password) {
+    // Vérifier la longueur minimale
+    if (password.length < 6) {
+      return false;
+    }
+
+    // Vérifier au moins une lettre majuscule
+    if (!password.contains(RegExp(r'[A-Z]'))) {
+      return false;
+    }
+
+    // Vérifier au moins un chiffre
+    if (!password.contains(RegExp(r'[0-9]'))) {
+      return false;
+    }
+
+    // Vérifier au moins un caractère spécial
+    if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      return false;
+    }
+
+    return true; // Tous les critères sont respectés
+  }
+
+  bool fieldIsValid() {
+    if (fieldIsNotEmpty()) {
+      // Vérifier si les mots de passe ne correspondent pas
+      if (state.password != state.rewritePassword) {
+        setIsErrorRewritePassword(true);
+        return false;
+      } else {
+        setIsErrorRewritePassword(false);
+      }
+
+      if (!isPasswordValid(state.password)) {
+        setIsErrorPasword(true);
+        return false;
+      } else {
+        setIsErrorPasword(false);
+      }
+
+      return true;
+    }
+    return false; // Un ou plusieurs champs sont vides
   }
 }
 
@@ -68,11 +152,13 @@ class _RegisterButton extends _$RegisterButton {
   }
 
   Future<bool> register() async {
-    try {
-      // Récupération du service AuthService via le provider
-      final authService = ref.read(authRepositoryProvider);
-      final registerForm = ref.read(registerFormProvider);
+    if (!ref.read(registerFormProvider.notifier).fieldIsValid()) return false;
+    state = AsyncLoading();
+    // Récupération du service AuthService via le provider
+    final authService = ref.read(authRepositoryProvider);
+    final registerForm = ref.read(registerFormProvider);
 
+    try {
       // Appel de la méthode register avec les paramètres nécessaires
       final userInfo = await authService.register(
         userName: registerForm.firstName,
@@ -83,11 +169,16 @@ class _RegisterButton extends _$RegisterButton {
       );
 
       if (userInfo != null) {
+        state = AsyncValue.data(true);
+        ref.read(registerFormProvider.notifier).setIsErrorApi(false);
         return true;
       }
+      state = AsyncValue.data(false);
       return false;
-    } catch (e) {
+    } catch (e, _) {
       print('Erreur lors de l\'enregistrement : $e');
+      ref.read(registerFormProvider.notifier).setIsErrorApi(true);
+      state = AsyncValue.error(e, _);
       return false;
     }
   }
@@ -123,6 +214,18 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
   Widget build(BuildContext context) {
     final router = ref.watch(appRouterProvider);
     final registerStatus = ref.watch(registerFormProvider);
+    bool isLoading = false;
+    ref.watch(_registerButtonProvider).when(
+      data: (isRegistered) {
+        isLoading = false;
+      },
+      error: (error, stackTrace) {
+        isLoading = false;
+      },
+      loading: () {
+        isLoading = true;
+      },
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFF16213E),
@@ -154,9 +257,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               CineFouineInputField(
                 controller: _firstNameController,
                 onChanged: (value) {
-                  ref
-                      .read(registerFormProvider.notifier)
-                      .setFirstName(value);
+                  ref.read(registerFormProvider.notifier).setFirstName(value);
                 },
                 hintText: "First name",
               ),
@@ -164,9 +265,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               CineFouineInputField(
                 controller: _lastNameController,
                 onChanged: (value) {
-                  ref
-                      .read(registerFormProvider.notifier)
-                      .setLastName(value);
+                  ref.read(registerFormProvider.notifier).setLastName(value);
                 },
                 hintText: "Last name",
               ),
@@ -174,9 +273,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               CineFouineInputField(
                 controller: _emailController,
                 onChanged: (value) {
-                  ref
-                      .read(registerFormProvider.notifier)
-                      .setEmail(value);
+                  ref.read(registerFormProvider.notifier).setEmail(value);
                 },
                 hintText: "Email",
               ),
@@ -184,29 +281,45 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               CineFouineInputField(
                 controller: _passwordController,
                 onChanged: (value) {
-                  ref
-                      .read(registerFormProvider.notifier)
-                      .setPassword(value);
+                  ref.read(registerFormProvider.notifier).setPassword(value);
                 },
                 hintText: "Password",
                 isPassword: true,
               ),
+              if (registerStatus.isErrorPassword)
+                const Text(
+                  "Le mot de passe doit contenir au moins 6 caractères avec 1 lettre en majuscule, 1 chiffre et 1 caractère spécial",
+                  style: TextStyle(color: Colors.red),
+                ),
               const SizedBox(height: 16),
               CineFouineInputField(
                 controller: _confirmPasswordController,
                 onChanged: (value) {
-                  // Optionnel : Validation pour mot de passe
+                  ref
+                      .read(registerFormProvider.notifier)
+                      .setRewritePassword(value);
                 },
                 hintText: "Confirm Password",
                 isPassword: true,
               ),
-              const SizedBox(height: 32),
-              if (registerStatus.isError)
+              if (registerStatus.isErrorRewritePassword)
                 const Text(
-                  "Erreur dans la création",
+                  "Les mots de passe ne correspondent pas",
+                  style: TextStyle(color: Colors.red),
+                ),
+              const SizedBox(height: 32),
+              if (registerStatus.isErrorApi)
+                const Text(
+                  "Erreur dans la création de compte, essayer un autre email",
+                  style: TextStyle(color: Colors.red),
+                ),
+              if (registerStatus.isErrorEmpty)
+                const Text(
+                  "Tout les champs sont obligatoire",
                   style: TextStyle(color: Colors.red),
                 ),
               CineFouineHugeBoutton(
+                isLoading: isLoading,
                 onPressed: () async {
                   bool isRegistered = await ref
                       .read(_registerButtonProvider.notifier)

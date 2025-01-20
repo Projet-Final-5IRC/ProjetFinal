@@ -10,7 +10,11 @@ class RegisterStatus with _$RegisterStatus {
     @Default('') String lastName,
     @Default('') String email,
     @Default('') String password,
+    @Default('') String rewritePassword,
     @Default('') String dateCreation,
-    @Default(false) bool isError,
+    @Default(false) bool isErrorApi,
+    @Default(false) bool isErrorEmpty,
+    @Default(false) bool isErrorPassword,
+    @Default(false) bool isErrorRewritePassword,
   }) = _RegisterStatus;
 }

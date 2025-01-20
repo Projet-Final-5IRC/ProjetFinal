@@ -10,7 +10,8 @@ part 'auth_service.g.dart';
 @Riverpod(keepAlive: true)
 AuthService authService(AuthServiceRef ref) {
   final dioClient = ref.watch(dioClientProvider(
-    url: "https://ms-auth-hdcfgcawgcfngaas.francecentral-01.azurewebsites.net/api",
+    url:
+        "https://ms-auth-hdcfgcawgcfngaas.francecentral-01.azurewebsites.net/api",
   ));
   return AuthService(dioClient: dioClient);
 }
@@ -37,14 +38,24 @@ class AuthService {
       "password": password,
       "dateCreation": dateCreation,
     };
+    return await dioClient.post<UserInfo>(
+      endpoint,
+      data: data,
+      deserializer: (json) => UserInfo.fromJson(json as Map<String, dynamic>),
+    );
+  }
+
+  Future<UserInfo?> login({
+    required String email,
+    required String password,
+  }) async {
     try {
-      return await dioClient.post(
-        endpoint,
-        data: data,
+      return await dioClient.get<UserInfo>(
+        "/Auth/login?email=$email&password=$password",
         deserializer: (json) => UserInfo.fromJson(json as Map<String, dynamic>),
       );
     } catch (e) {
-      print('Erreur lors de l\'inscription : $e');
+      print('Erreur lors du login : $e');
       return null;
     }
   }
