@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using data.Models.DTO;
+using Microsoft.AspNetCore.Mvc;
 using ms_evt.Models.DTO;
 using Newtonsoft.Json;
 using System;
@@ -31,6 +32,12 @@ namespace ms_evt.Services
         {
             var response = await _httpClient.GetStringAsync($"{endpoint}/{id}");
             return JsonConvert.DeserializeObject<T>(response);
+        }
+
+        public async Task<List<UserDTO>> GetAllUserByEvent(string endpoint,int id)
+        {
+            var response = await _httpClient.GetStringAsync($"{endpoint}/{id}");
+            return JsonConvert.DeserializeObject<List<UserDTO>>(response);
         }
 
         public async Task<HttpStatusCode> PostEventAsync(string endpoint, EventDTO data)
