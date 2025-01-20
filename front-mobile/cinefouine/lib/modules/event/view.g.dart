@@ -23,7 +23,7 @@ final _tabBarIndexNotifierProvider =
 );
 
 typedef _$TabBarIndexNotifier = AutoDisposeNotifier<int>;
-String _$eventsHash() => r'3e1ab98fac69bdb22b4e1ff6f45b78c2b4fd03d3';
+String _$eventsHash() => r'8d66de3e0c85fc6c7ca26f1086c225fca73ee5eb';
 
 /// See also [Events].
 @ProviderFor(Events)

@@ -8,5 +8,6 @@ class CineFouineEndpoints {
   static const String getUserPreference = '/UserPreference/GetPrefereneceByUserId'; 
   static const String postPreferenceToUser = '/UserPreference/PostPreferenceToUser';
   static const String updatePreferenceToUser = '/UserPreference/UpdateUserPreference';
+  static const String getQuizz = '/quizz/getQuizz';
 
 }

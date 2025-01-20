@@ -21,18 +21,6 @@ class GenreService {
   GenreService({required this.dioClient});
   final DioClient dioClient;
 
-  // Fonction pour récupérer les genres
-  // Future<List<Genre>?> getGenres() async {
-  //   final response = await dioClient.get<List<dynamic>>(
-  //     '/Genres', // Remplace ce chemin par celui de ton API pour obtenir les genres
-  //   );
-
-  //   // Désérialisation de la réponse JSON en une liste de Genre
-  //   if (response != null) {
-  //     return genreFromJson(jsonEncode(response));
-  //   }
-  //   return null;
-  // }
   Future<List<Genre>?> getGenres() async {
     final endpoint = CineFouineEndpoints.getGenres;
     final apiResult = await dioClient.get<List<Genre>>(
