@@ -75,15 +75,15 @@ namespace data.Controllers
         // POST: api/Events
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<EventDTO>> PostEvents(Events events)
+        public async Task<ActionResult<EventDTO>> PostEvents(Events eventDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            await dataRepository.AddAsync(events);
+            await dataRepository.AddAsync(eventDTO);
 
-            return CreatedAtAction("GetEventById", new { id = events.IdEvent }, new EventDTO(events));
+            return CreatedAtAction("GetEventById", new { id = eventDTO.IdEvent }, eventDTO);
         }
 
         // DELETE: api/Events/5
