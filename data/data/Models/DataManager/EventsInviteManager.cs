@@ -37,14 +37,14 @@ namespace data.Models.DataManager
             return eventInviteEntity != null ? eventInviteEntity : new NotFoundResult();
         }
 
-        public async Task<ActionResult<Users>> GetByUsernameAsync(string username)
+        public async Task<ActionResult<Users>> GetByUserIdAsync(int idUser)
         {
             if (eventDBContext == null)
             {
                 throw new ArgumentNullException(nameof(eventDBContext));
             }
 
-            var userEntity = await eventDBContext.User.FirstOrDefaultAsync(e => e.UserName == username);
+            var userEntity = await eventDBContext.User.FirstOrDefaultAsync(e => e.IdUser == idUser);
 
             return userEntity != null ? userEntity : new NotFoundResult();
         }

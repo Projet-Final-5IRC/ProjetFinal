@@ -109,13 +109,13 @@ namespace data.Controllers
             return NoContent();
         }
 
-        [HttpDelete("event/{idEvent}/user/{username}")]
-        public async Task<IActionResult> DeleteInviteByEventAndUser(int idEvent, string username)
+        [HttpDelete("event/{idEvent}/user/{idUser}")]
+        public async Task<IActionResult> DeleteInviteByEventAndUser(int idEvent, int idUser)
         {
-            var user = await dataRepository.GetByUsernameAsync(username);
+            var user = await dataRepository.GetByUserIdAsync(idUser);
             if (user.Value == null)
             {
-                return NotFound($"Utilisateur avec le nom '{username}' introuvable.");
+                return NotFound($"Utilisateur avec l'id '{idUser}' introuvable.");
             }
 
             var invite = await dataRepository
