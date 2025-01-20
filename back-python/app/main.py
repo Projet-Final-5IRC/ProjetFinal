@@ -1,5 +1,8 @@
 from app.ressources import function as fct
 
+import os
+from dotenv import load_dotenv
+import requests
 import pandas as pd
 import json
 from unittest import result
@@ -9,7 +12,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
-
+### Test avec les json en local ###
 def JsonInput(pathUser, pathMovie):
     #### Data ####
     # User
@@ -21,6 +24,9 @@ def JsonInput(pathUser, pathMovie):
     with open(pathMovie, 'r') as file:
         entry_data = json.load(file)
     return entry_json, entry_data
+###################################
+# def CallMoviePerGender():
+#     return 0
 
 def TraitementMain(entry_json, entry_data):
     exitDataUserSeen = []
