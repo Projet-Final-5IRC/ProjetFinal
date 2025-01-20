@@ -23,10 +23,10 @@ namespace data.Controllers.Tests
     {
         private EventController _controller;
         private readonly EventDBContext _context;
-        private IDataRepository<Events> dataRepository;
+        private IDataRepositoryEventMore<Events> dataRepository;
 
         private EventController _controller_Moq;
-        private Mock<IDataRepository<Events>> _mockRepo;
+        private Mock<IDataRepositoryEventMore<Events>> _mockRepo;
 
         public EventControllerTests()
         { 
@@ -75,7 +75,7 @@ namespace data.Controllers.Tests
         [TestInitialize]
         public void Setup()
         {
-            _mockRepo = new Mock<IDataRepository<Events>>();
+            _mockRepo = new Mock<IDataRepositoryEventMore<Events>>();
             _controller_Moq = new EventController(_mockRepo.Object);
         }
 
