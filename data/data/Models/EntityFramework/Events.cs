@@ -4,6 +4,8 @@ using data.Models.EntityFramework.Complexity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using data.Models.DTO;
+using Microsoft.Extensions.Logging;
 
 namespace data.Models.EntityFramework
 {

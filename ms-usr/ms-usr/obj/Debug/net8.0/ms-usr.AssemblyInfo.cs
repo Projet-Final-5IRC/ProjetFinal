@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ms-usr")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+87c8b7ed33f3158b3a4299c3dcfc0657f05097dd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+494072e3f2ef413fa4bf28537fecc9380340a9f8")]
 [assembly: System.Reflection.AssemblyProductAttribute("ms-usr")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ms-usr")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

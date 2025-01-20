@@ -15,7 +15,7 @@ namespace data.Models.DTO
         public string? EventDescription { get; set; }
         public int? IdGenre { get; set; }
         public string GenreName { get; set; }
-        public int IdOwner { get; set; }
+        public int IdUser { get; set; }
         public string? OwnerName { get; set; }
         public List<int> EventInvitationId { get; set; }
 
@@ -29,7 +29,7 @@ namespace data.Models.DTO
             this.EventDescription = events.EventDescription;
             this.IdGenre = events.IdGenre;
             this.GenreName = events.GenreEvent?.GenreName;
-            this.IdOwner = events.IdUser;
+            this.IdUser = events.IdUser;
             this.OwnerName = events.UserOwner?.UserName;
             this.EventInvitationId = events.EventInvitation
                                         .Select(invite => invite.idEventsInvite)
