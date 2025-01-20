@@ -74,7 +74,12 @@ class DetailsMovieView extends ConsumerWidget {
                 const SizedBox(height: 16),
                 _buildActorsSection(data),
                 const SizedBox(height: 16),
-                CineFouineHugeBoutton(onPressed: () {}, text: "Quiz"),
+                CineFouineHugeBoutton(
+                  onPressed: () {
+                    router.push(QuizRoute());
+                  },
+                  text: "Quiz",
+                ),
                 const SizedBox(height: 16),
                 _buildRatingSection(),
                 const SizedBox(height: 16),
