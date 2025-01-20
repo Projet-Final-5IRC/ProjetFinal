@@ -80,4 +80,14 @@ class EventRepository {
       idEvent: idEvent,
     );
   }
+
+  Future<void> deleteInvite({
+    required int idEvent,
+    required int idUser,
+  }) async {
+    await _appApiClient.deleteInvite(
+      idEvent: idEvent,
+      idUser: idUser,
+    );
+  }
 }

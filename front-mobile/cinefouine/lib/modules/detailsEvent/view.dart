@@ -204,23 +204,37 @@ class DetailsEventView extends ConsumerWidget {
               users.when(
                 data: (userList) {
                   if (userList == null || userList.isEmpty) {
-                    return const Text(
-                      "Aucun membre trouvé.",
+                    return Text(
+                      "Aucun utilisateur dans l'événement",
                       style: TextStyle(color: Colors.white),
                     );
                   }
-                  return Column(
-                    children: userList.map((user) {
-                      return Column(
-                        children: [
-                          _buildMemberItem(
-                            "${user.firstName} ${user.lastName}",
-                            "Film proposé", // Vous pouvez ajuster selon vos besoins
-                          ),
-                          const Divider(color: Colors.grey),
-                        ],
-                      );
-                    }).toList(),
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      ref
+                          .read(userInvitedToSelectedEventProvider.notifier)
+                          .updateUsers();
+                    },
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      shrinkWrap:
+                          true, // Permet à la liste de fonctionner dans un `ScrollView`
+                      itemCount: userList.length,
+                      itemBuilder: (context, index) {
+                        final user = userList[index];
+                        return Column(
+                          children: [
+                            _buildMemberItem(
+                              "${user.firstName} ${user.lastName}",
+                              "Film proposé",
+                              user,
+                              ref,
+                            ),
+                            const Divider(color: Colors.grey),
+                          ],
+                        );
+                      },
+                    ),
                   );
                 },
                 loading: () => const Center(
@@ -238,50 +252,71 @@ class DetailsEventView extends ConsumerWidget {
     );
   }
 
-  Widget _buildMemberItem(String name, String status) {
-    return Row(
-      children: [
-        const CircleAvatar(
-          backgroundImage: AssetImage("assets/images/default_avatar.jpg"),
-          radius: 20,
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+  Widget _buildMemberItem(
+      String name, String status, UserInfo user, WidgetRef ref) {
+    return Dismissible(
+      key: ValueKey(user.idUser),
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        print(
+            'Utilisateur ${user.idUser} supprimé de l’événement numéro ${ref.read(eventSeletedProvider)}');
+
+        ref.read(eventRepositoryProvider).deleteInvite(
+              idEvent: ref.read(eventSeletedProvider)?.idEvent ?? 0,
+              idUser: user.idUser,
+            );
+        ref.read(userInvitedToSelectedEventProvider.notifier).updateUsers();
+      },
+      background: Container(
+        color: Colors.red,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 16),
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      child: Row(
+        children: [
+          const CircleAvatar(
+            backgroundImage: AssetImage("assets/images/default_avatar.jpg"),
+            radius: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(
-                status,
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
+                Text(
+                  status,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const SizedBox(width: 8),
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: const Color(0xFF243040),
-            borderRadius: BorderRadius.circular(8),
+          const SizedBox(width: 8),
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: const Color(0xFF243040),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(
+              Icons.image,
+              color: Colors.grey,
+            ),
           ),
-          child: const Icon(
-            Icons.image,
-            color: Colors.grey,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

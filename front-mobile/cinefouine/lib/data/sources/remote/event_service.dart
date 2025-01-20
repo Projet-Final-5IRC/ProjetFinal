@@ -124,8 +124,19 @@ class EventService {
 
     final apiResult = await dioClient.get<List<UserInfo>>(
       endpoint,
-      deserializer: (json) =>
-          UserListExtension.userFromJson(jsonEncode(json)),
+      deserializer: (json) => UserListExtension.userFromJson(jsonEncode(json)),
+    );
+    return apiResult;
+  }
+
+  Future<void> deleteInvite({
+    required int idEvent,
+    required int idUser,
+  }) async {
+    final endpoint = "/Event/DeleteInviteByUsername?id=$idEvent&idUser=$idUser";
+
+    final apiResult = await dioClient.delete(
+      endpoint,
     );
     return apiResult;
   }
