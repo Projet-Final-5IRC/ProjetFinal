@@ -21,5 +21,37 @@ final usersProvider =
 );
 
 typedef _$Users = AutoDisposeAsyncNotifier<List<UserInfo>?>;
+String _$inviteUserButtonHash() => r'73085a8823a68467c0a1209e525e340641fdd353';
+
+/// See also [InviteUserButton].
+@ProviderFor(InviteUserButton)
+final inviteUserButtonProvider =
+    AutoDisposeAsyncNotifierProvider<InviteUserButton, bool>.internal(
+  InviteUserButton.new,
+  name: r'inviteUserButtonProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$inviteUserButtonHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$InviteUserButton = AutoDisposeAsyncNotifier<bool>;
+String _$isUserInvitedHash() => r'39a46e2ea29d2927055443ceedfb47ce7ac83a21';
+
+/// See also [IsUserInvited].
+@ProviderFor(IsUserInvited)
+final isUserInvitedProvider =
+    AutoDisposeAsyncNotifierProvider<IsUserInvited, bool>.internal(
+  IsUserInvited.new,
+  name: r'isUserInvitedProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$isUserInvitedHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$IsUserInvited = AutoDisposeAsyncNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

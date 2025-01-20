@@ -148,6 +148,7 @@ class DetailsEventView extends ConsumerWidget {
                         await ref
                             .read(eventRepositoryProvider)
                             .deleteEvent(eventSelected.idEvent);
+                            router.replaceAll([EventRoute()]);
                         // Optionnellement, naviguer ou afficher un message de confirmation après la suppression
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Event Deleted")),
