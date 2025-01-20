@@ -45,31 +45,31 @@ Future<bool> postUserPreferences(int userId, Set<int> genreIds) async {
 }
 
 
-Future<bool> updateUserPreferences(int userId, Set<int> genreIds) async {
-  final endpoint = CineFouineEndpoints.updatePreferenceToUser;
+Future<bool> updateUserPreferences(int userId, List<int> genreIds) async {
+  final endpoint = "${CineFouineEndpoints.updatePreferenceToUser}?IdUser=$userId";
   
   final List<Map<String, int>> body = genreIds.map((genreId) => {
     "idUser": userId,
     "idGenre": genreId
   }).toList();
   debugPrint("Error posting preferences: ");
+  print(body);
 
 
   try {
-    final apiResult = await dioClient.put(
+    await dioClient.put(
       endpoint,
       data: body,
     );
-    debugPrint("apiResult: $apiResult");
-    return apiResult != null;
+    return true;
   } catch (e) {
     debugPrint("Error posting preferences: $e");
     return false;
   }
 }
 
-    Future<List<UserPreference>?> getUserPreferences() async {
-    final endpoint = CineFouineEndpoints.getUserPreference;
+    Future<List<UserPreference>?> getUserPreferences(int userId) async {
+    final endpoint = "${CineFouineEndpoints.getUserPreference}?id=$userId";
     final apiResult = await dioClient.get<List<UserPreference>>(
       endpoint,
       deserializer: (json) =>

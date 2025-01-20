@@ -29,12 +29,12 @@ class UserPreferenceRepository {
     return await _userPreferenceService.postUserPreferences(userId, selectedGenres);
   }
 
-    Future<bool> updateUserPreferences(int userId, Set<int> selectedGenres) async {
+    Future<bool> updateUserPreferences(int userId, List<int> selectedGenres) async {
     return await _userPreferenceService.updateUserPreferences(userId, selectedGenres);
   }
 
-    Future<List<UserPreference>?> getGenres() async {
-    final userPreferences = await _userPreferenceService.getUserPreferences();
+    Future<List<UserPreference>?> getUserGenres(int userId) async {
+    final userPreferences = await _userPreferenceService.getUserPreferences(userId);
     return userPreferences;
   }
 }

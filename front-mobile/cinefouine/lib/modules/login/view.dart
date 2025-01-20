@@ -157,7 +157,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     const SnackBar(content: Text("Sign In Successful!")),
                   );
                   ref.read(loginFormProvider.notifier).setIsError(false);
-                  router.replaceAll([const HomeRoute()]);
+                  router.replaceAll([const GenresSelectionRoute()]);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Wrong login!")),
