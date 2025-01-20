@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using ms_badge.Db;
 using ms_badge.Models;
+using ms_badge.Services;
 using System;
 
 namespace ms_badge.Controllers
@@ -90,27 +91,38 @@ namespace ms_badge.Controllers
             }
 
             [HttpPost]
-            [Route("assign")] // Assign a badge to a user
-            public async Task<IActionResult> AssignBadge([FromBody] AssignBadgeRequest request, [FromServices] BadgeContext context)
+            [Route("evaluate-and-assign")] // Evaluate and assign badges
+            public async Task<IActionResult> EvaluateAndAssignBadges(int userId, [FromServices] BadgeContext context, [FromServices] BadgeEvaluatorService evaluator)
             {
-                var badge = await context.Badges.FindAsync(request.BadgeId);
-                if (badge == null)
+                var userActivity = await GetUserActivity(userId); // Assume method to fetch user activity
+                var badges = await context.Badges.ToListAsync();
+
+                foreach (var badge in badges)
                 {
-                    return NotFound("Badge not found.");
+                    if (evaluator.EvaluateCriteria(badge, userActivity))
+                    {
+                        // Check if the badge is already assigned
+                        var alreadyAssigned = await context.UserBadges
+                            .AnyAsync(ub => ub.UserId == userId && ub.BadgeId == badge.Id);
+
+                        if (!alreadyAssigned)
+                        {
+                            var userBadge = new UserBadge
+                            {
+                                UserId = userId,
+                                BadgeId = badge.Id,
+                                AssignedDate = DateTime.UtcNow
+                            };
+
+                            await context.UserBadges.AddAsync(userBadge);
+                        }
+                    }
                 }
 
-                var userBadge = new UserBadge
-                {
-                    UserId = request.UserId,
-                    BadgeId = request.BadgeId,
-                    AssignedDate = System.DateTime.UtcNow
-                };
-
-                await context.UserBadges.AddAsync(userBadge);
                 await context.SaveChangesAsync();
-
-                return Ok("Badge assigned successfully.");
+                return Ok("Badges evaluated and assigned successfully.");
             }
+
 
             [HttpGet]
             [Route("user/{userId}")] // Get all badges for a user
