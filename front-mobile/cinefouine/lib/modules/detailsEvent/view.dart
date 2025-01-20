@@ -6,6 +6,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/cineFouineBoutton.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:cinefouine/data/repositories/event_repository.dart'; // Import du service
 
 part 'view.g.dart';
 
@@ -137,6 +138,26 @@ class DetailsEventView extends ConsumerWidget {
                     },
                     text: "Invite",
                     text2: "Joined",
+                  ),
+                  const SizedBox(width: 16),
+                  Cinefouineboutton(
+                    isClicked: false,
+                    onPressed: () async {
+                      if (eventSelected != null) {
+                        // Appeler la méthode deleteEvent avec l'ID de l'événement
+                        await ref
+                            .read(eventRepositoryProvider)
+                            .deleteEvent(eventSelected.idEvent);
+                        // Optionnellement, naviguer ou afficher un message de confirmation après la suppression
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Event Deleted")),
+                        );
+                      }
+                    },
+                    text: "Delete",
+                    text2: "Deleted",
+                    buttonColor:
+                        Colors.red, // Définir la couleur du bouton en rouge
                   ),
                 ],
               ),

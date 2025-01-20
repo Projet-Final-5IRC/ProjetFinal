@@ -1,4 +1,5 @@
 import 'package:cinefouine/data/entities/event/event_info.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:cinefouine/data/sources/remote/event_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -48,10 +49,17 @@ class EventRepository {
     );
   }
 
-    Future<void> inviteEvent({
-      required int IdEvent,
-      required int IdUser,
-    })async {
-      _appApiClient.inviteEvent(IdEvent: IdEvent, IdUser: IdUser);
-    }
+  Future<void> inviteEvent({
+    required int IdEvent,
+    required int IdUser,
+  }) async {
+    _appApiClient.inviteEvent(IdEvent: IdEvent, IdUser: IdUser);
+  }
+
+  // Delete event function
+  Future<void> deleteEvent(int eventId) async {
+    debugPrint('DEBUG EventRepository: deleteEvent');
+    await _appApiClient.deleteEvent(
+        eventId); // Call the deleteEvent function from EventService
+  }
 }
