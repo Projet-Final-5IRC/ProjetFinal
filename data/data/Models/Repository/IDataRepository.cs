@@ -16,6 +16,7 @@ namespace data.Models.Repository
     public interface IDataRepositoryWithEmail<TEntity> : IDataRepository<TEntity>
     {
         Task<ActionResult<TEntity>> GetByEmailAsync(string email);
+        Task<ActionResult<TEntity>> GetByUsernameAsync(string username);
     }
 
     public interface IDataRepositoryWithPreference<TEntity> : IDataRepository<TEntity>

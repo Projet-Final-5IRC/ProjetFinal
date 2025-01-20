@@ -61,6 +61,20 @@ namespace data.Controllers
             return user.Value;
         }
 
+        //GET: api/Users/username/{username}
+        [HttpGet("username/{username}")]
+        public async Task<ActionResult<Users>> GetUserByUsername(string username)
+        {
+            var user = await dataRepository.GetByUsernameAsync(username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user.Value;
+        }
+
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
