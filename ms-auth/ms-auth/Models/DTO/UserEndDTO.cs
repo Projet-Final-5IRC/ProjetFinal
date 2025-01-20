@@ -2,7 +2,7 @@
 {
     public class UserEndDTO
     {
-        public int IdUser { get; set; }
+        public int idUser { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -11,7 +11,7 @@
 
         public UserEndDTO(UserDTO userDTO)
         {
-            IdUser = userDTO.IdUser;
+            idUser = userDTO.IdUser;
             UserName = userDTO.UserName;
             FirstName = userDTO.FirstName;
             LastName = userDTO.LastName;
