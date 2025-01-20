@@ -1,4 +1,5 @@
 import 'package:cinefouine/data/entities/event/event_info.dart';
+import 'package:cinefouine/data/entities/user/user_info.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,36 @@ class EventSeleted extends _$EventSeleted {
 
   void setEvent(EventInfo value) {
     state = value;
+    ref.read(userInvitedToSelectedEventProvider.notifier).updateUsers();
+  }
+}
+
+@Riverpod(keepAlive: true)
+class UserInvitedToSelectedEvent extends _$UserInvitedToSelectedEvent {
+  @override
+  Future<List<UserInfo>?> build() async {
+    final selectedEvent = ref.read(eventSeletedProvider);
+    if (selectedEvent != null) {
+      return await ref
+          .read(eventRepositoryProvider)
+          .getInvitedUserByEvent(idEvent: selectedEvent.idEvent);
+    } else {
+      return [];
+    }
+  }
+
+  void updateUsers() async {
+    state = AsyncLoading();
+    final selectedEvent = ref.read(eventSeletedProvider);
+    if (selectedEvent != null) {
+      state = AsyncData(
+        await ref
+            .read(eventRepositoryProvider)
+            .getInvitedUserByEvent(idEvent: selectedEvent.idEvent),
+      );
+    } else {
+      state = AsyncData([]);
+    }
   }
 }
 
@@ -28,6 +59,7 @@ class DetailsEventView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final eventSelected = ref.watch(eventSeletedProvider);
     final router = ref.watch(appRouterProvider);
+    final users = ref.watch(userInvitedToSelectedEventProvider);
 
     return Scaffold(
       backgroundColor: AppColors.secondary,
@@ -144,12 +176,10 @@ class DetailsEventView extends ConsumerWidget {
                     isClicked: false,
                     onPressed: () async {
                       if (eventSelected != null) {
-                        // Appeler la méthode deleteEvent avec l'ID de l'événement
                         await ref
                             .read(eventRepositoryProvider)
                             .deleteEvent(eventSelected.idEvent);
-                            router.replaceAll([EventRoute()]);
-                        // Optionnellement, naviguer ou afficher un message de confirmation après la suppression
+                        router.replaceAll([EventRoute()]);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Event Deleted")),
                         );
@@ -157,8 +187,7 @@ class DetailsEventView extends ConsumerWidget {
                     },
                     text: "Delete",
                     text2: "Deleted",
-                    buttonColor:
-                        Colors.red, // Définir la couleur du bouton en rouge
+                    buttonColor: Colors.red,
                   ),
                 ],
               ),
@@ -172,13 +201,36 @@ class DetailsEventView extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildMemberItem("Sarah (creator)", "Film proposé"),
-              const Divider(color: Colors.grey),
-              _buildMemberItem("Rémi", "Proposer un film"),
-              const Divider(color: Colors.grey),
-              _buildMemberItem("Noé", "Film proposé"),
-              const Divider(color: Colors.grey),
-              _buildMemberItem("Camille", "Aucun film proposé"),
+              users.when(
+                data: (userList) {
+                  if (userList == null || userList.isEmpty) {
+                    return const Text(
+                      "Aucun membre trouvé.",
+                      style: TextStyle(color: Colors.white),
+                    );
+                  }
+                  return Column(
+                    children: userList.map((user) {
+                      return Column(
+                        children: [
+                          _buildMemberItem(
+                            "${user.firstName} ${user.lastName}",
+                            "Film proposé", // Vous pouvez ajuster selon vos besoins
+                          ),
+                          const Divider(color: Colors.grey),
+                        ],
+                      );
+                    }).toList(),
+                  );
+                },
+                loading: () => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                error: (error, stack) => Text(
+                  "Erreur : $error",
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
             ],
           ),
         ),

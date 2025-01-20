@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cinefouine/data/entities/event/event_info.dart';
+import 'package:cinefouine/data/entities/user/user_info.dart';
 import 'package:cinefouine/data/sources/cine_fouine_endpoints.dart';
 import 'package:cinefouine/data/sources/dio_client.dart';
 import 'package:dio/dio.dart';
@@ -90,29 +91,42 @@ class EventService {
       data: eventInviteData,
     );
   }
+
 // Delete event function with IdEvent in body
-Future<void> deleteEvent(int eventId) async {
+  Future<void> deleteEvent(int eventId) async {
+    final endpoint = '/Event/DeleteEvent?id=$eventId';
+    try {
+      final response = await dioClient.delete(
+        endpoint,
+      );
 
-  final endpoint = '/Event/DeleteEvent?id=$eventId';
-  try {
-    final response = await dioClient.delete(
-      endpoint,
-    );
-
-    // You can add logic here to handle a successful response, if needed
-  } on DioException catch (e) {
-    // Handle Dio errors (e.g., server issues, no connection, etc.)
-    if (e.response != null) {
-      // Server returned an error
-      debugPrint("DEBUG - DioException (status code: ${e.response?.statusCode}): ${e.response?.data}");
-    } else {
-      // No response received (network issues)
-      debugPrint("DEBUG - DioException - No response received: ${e.message}");
+      // You can add logic here to handle a successful response, if needed
+    } on DioException catch (e) {
+      // Handle Dio errors (e.g., server issues, no connection, etc.)
+      if (e.response != null) {
+        // Server returned an error
+        debugPrint(
+            "DEBUG - DioException (status code: ${e.response?.statusCode}): ${e.response?.data}");
+      } else {
+        // No response received (network issues)
+        debugPrint("DEBUG - DioException - No response received: ${e.message}");
+      }
+    } catch (e) {
+      // Handle unknown errors
+      debugPrint("DEBUG - Unknown error: $e");
     }
-  } catch (e) {
-    // Handle unknown errors
-    debugPrint("DEBUG - Unknown error: $e");
   }
-}
 
+  Future<List<UserInfo>?> getInvitedUserByEvent({
+    required int idEvent,
+  }) async {
+    final endpoint = "/Event/GetInvitedUserByEvent?id=$idEvent";
+
+    final apiResult = await dioClient.get<List<UserInfo>>(
+      endpoint,
+      deserializer: (json) =>
+          UserListExtension.userFromJson(jsonEncode(json)),
+    );
+    return apiResult;
+  }
 }

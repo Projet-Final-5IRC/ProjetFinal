@@ -21,7 +21,7 @@ final genresProvider =
 );
 
 typedef _$Genres = AutoDisposeAsyncNotifier<List<Genre>?>;
-String _$userGenresHash() => r'a9c05845ebc1b1da9bcd9640fed6cf71556bcd44';
+String _$userGenresHash() => r'9ef0d288b7dd3935a5c3d075d37217473aaf91e5';
 
 /// See also [UserGenres].
 @ProviderFor(UserGenres)

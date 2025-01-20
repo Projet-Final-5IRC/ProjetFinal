@@ -42,6 +42,7 @@ class InviteUserButton extends _$InviteUserButton {
         IdEvent: currentEvent!.idEvent,
         IdUser: idUser,
       );
+      ref.read(userInvitedToSelectedEventProvider.notifier).updateUsers();
     }
   }
 }
@@ -71,17 +72,6 @@ class EventInviteView extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFF1A1F25),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF16213E),
-        title: const Text("Invite Friends"),
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.tune, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
-      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -133,8 +123,7 @@ class EventInviteView extends ConsumerWidget {
               Center(
                 child: CineFouineHugeBoutton(
                   onPressed: () {
-                    print("Invitation confirmed");
-                    // Logique de confirmation de l'invitation
+                    router.back();
                   },
                   text: "Confirmer",
                 ),
