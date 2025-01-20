@@ -52,9 +52,7 @@ Future<bool> updateUserPreferences(int userId, List<int> genreIds) async {
     "idUser": userId,
     "idGenre": genreId
   }).toList();
-  debugPrint("Error posting preferences: ");
   print(body);
-
 
   try {
     await dioClient.put(
@@ -75,7 +73,6 @@ Future<bool> updateUserPreferences(int userId, List<int> genreIds) async {
       deserializer: (json) =>
           UserPreferenceListExtension.userPreferenceFromJson(jsonEncode(json)),
     );
-    debugPrint("apiResult: $apiResult");
     return apiResult;
   }
 

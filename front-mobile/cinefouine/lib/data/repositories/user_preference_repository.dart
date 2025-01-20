@@ -35,6 +35,7 @@ class UserPreferenceRepository {
 
     Future<List<UserPreference>?> getUserGenres(int userId) async {
     final userPreferences = await _userPreferenceService.getUserPreferences(userId);
+    print(userPreferences);
     return userPreferences;
   }
 }

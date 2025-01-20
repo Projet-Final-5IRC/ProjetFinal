@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/data/entities/user_preferences/user_preferences_info.dart';
 import 'package:cinefouine/data/repositories/user_preference_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
+import 'package:cinefouine/modules/event/view.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +17,9 @@ part 'view.g.dart';
 class Genres extends _$Genres {
   @override
   Future<List<Genre>?> build() async {
-    return ref.watch(genreServiceProvider).getGenres();
+    final genres = ref.read(genreServiceProvider).getGenres();
+    ref.read(userGenresProvider.notifier).updateMyGenre();
+    return genres;
   }
 
   Future<void> updateUsers() async {
@@ -33,14 +36,34 @@ class UserGenres extends _$UserGenres {
 
     if (preferences.idUserPreferences.load() != null) {
       int idUser = preferences.idUserPreferences.load()!;
-      final userGenre = await ref.read(userPreferenceRepositoryProvider).getUserGenres(idUser);
+
+      final userGenres = await ref.read(userPreferenceRepositoryProvider).getUserGenres(idUser);
       final selectedGenresNotifier = ref.read(selectedGenresProvider.notifier);
-      userGenre?.forEach((genre) {
+      userGenres?.forEach((genre) {
         selectedGenresNotifier.toggleGenre(genre.idGenre);
       });
-      return userGenre;
+      return userGenres;
     } else {
       return [];
+    }
+  }
+
+  Future<void> updateMyGenre() async {
+    AsyncValue.loading();
+    final preferences = ref.read(preferencesProvider);
+
+    if (preferences.idUserPreferences.load() != null) {
+      int idUser = preferences.idUserPreferences.load()!;
+      state = AsyncData(
+        await ref.read(userPreferenceRepositoryProvider).getUserGenres(idUser),
+      );
+      final selectedGenresNotifier = ref.read(selectedGenresProvider.notifier);
+      state.value?.forEach((genre) {
+        selectedGenresNotifier.toggleGenre(genre.idGenre);
+      });
+      print("Mes genre updated");
+    } else {
+      state = AsyncData([]);
     }
   }
 }
@@ -174,6 +197,12 @@ class GenresSelectionView extends ConsumerWidget {
                     },
                     text: "Confirmer",
                   ),
+                ),
+                TextButton(
+                  child: Text("Skip"),
+                  onPressed: () {
+                    router.replaceAll([const HomeRoute()]);
+                  },
                 ),
               ],
             ),

@@ -109,7 +109,14 @@ class ProfilView extends ConsumerWidget {
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+              CineFouineHugeBoutton(
+                onPressed: () {
+                  router.replaceAll([const GenresSelectionRoute()]);
+                },
+                text: "choose favorite genre",
+              ),
+              const SizedBox(height: 16),
               Text(
                 "Mes films",
                 style: TextStyle(
