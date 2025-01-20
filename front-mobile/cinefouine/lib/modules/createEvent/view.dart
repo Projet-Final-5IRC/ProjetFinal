@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/data/repositories/event_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:cinefouine/modules/createEvent/model/create_event_status.dart';
+import 'package:cinefouine/modules/event/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinefouine/core/widgets/cinefouineInputField.dart';
@@ -60,7 +61,7 @@ class _CreateEventButton extends _$CreateEventButton {
   Future<bool> createEvent(BuildContext context) async {
     bool eventCreated = false;
     final eventForm = ref.read(createEventFormProvider);
-      // Vérification que la date et l'heure sont dans le futur
+    // Vérification que la date et l'heure sont dans le futur
     try {
       final selectedDateTime = DateFormat('dd:MM:yyyy HH:mm').parse(
         '${eventForm.date} ${eventForm.hours}',
@@ -89,14 +90,15 @@ class _CreateEventButton extends _$CreateEventButton {
           "eventDescription: ${eventForm.description}, "
           "idUser: ${preferences.idUserPreferences.load()}");
       ref.read(eventRepositoryProvider).createEvent(
-            eventName: eventForm.title,
-            eventDate: eventForm.date,  // La date est formatée avant l'envoi
-            eventHour: eventForm.hours, // L'heure est également formatée avant l'envoi
-            eventLocation: eventForm.location,
-            idGenre: 3,
-            eventDescription: eventForm.description,
-            idUser: preferences.idUserPreferences.load() ?? 1
-          );
+          eventName: eventForm.title,
+          eventDate: eventForm.date, // La date est formatée avant l'envoi
+          eventHour:
+              eventForm.hours, // L'heure est également formatée avant l'envoi
+          eventLocation: eventForm.location,
+          idGenre: 3,
+          eventDescription: eventForm.description,
+          idUser: preferences.idUserPreferences.load() ?? 1);
+      ref.read(eventsProvider.notifier).updateEvents();
       eventCreated = true;
     } on Exception catch (error, _) {
       state = AsyncValue.error(error, _);
@@ -153,11 +155,14 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
     if (pickedTime != null) {
       // Crée un objet DateTime avec l'heure et les minutes
       final now = DateTime.now();
-      final time = DateTime(now.year, now.month, now.day, pickedTime.hour, pickedTime.minute);
+      final time = DateTime(
+          now.year, now.month, now.day, pickedTime.hour, pickedTime.minute);
 
       // Utilisation de 'HH:mm' pour formater l'heure en format 24 heures
       _hoursController.text = DateFormat('HH:mm').format(time);
-      ref.read(createEventFormProvider.notifier).setHours(_hoursController.text);
+      ref
+          .read(createEventFormProvider.notifier)
+          .setHours(_hoursController.text);
     }
   }
 
@@ -215,7 +220,7 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
               child: AbsorbPointer(
                 child: CineFouineInputField(
                   controller: _dateController,
-                  onChanged: (value) {},  // Fonction vide pour éviter l'erreur
+                  onChanged: (value) {}, // Fonction vide pour éviter l'erreur
                   hintText: "Date (dd:MM:yyyy)",
                 ),
               ),
@@ -226,7 +231,7 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
               child: AbsorbPointer(
                 child: CineFouineInputField(
                   controller: _hoursController,
-                  onChanged: (value) {},  // Fonction vide pour éviter l'erreur
+                  onChanged: (value) {}, // Fonction vide pour éviter l'erreur
                   hintText: "Time (HH:mm)",
                 ),
               ),
@@ -242,8 +247,7 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
               hintText: "Location",
             ),
             const SizedBox(height: 32),
-            if (createEventForm.isError)
-              Text("Erreur dans la création"),
+            if (createEventForm.isError) Text("Erreur dans la création"),
             if (isLoading) const CircularProgressIndicator(),
             CineFouineHugeBoutton(
               onPressed: () async {

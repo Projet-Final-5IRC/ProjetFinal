@@ -99,7 +99,7 @@ class RegisterForm extends _$RegisterForm {
 
   bool isPasswordValid(String password) {
     // Vérifier la longueur minimale
-    if (password.length < 6) {
+    if (password.length < 8) {
       return false;
     }
 

@@ -23,7 +23,7 @@ final _tabBarIndexNotifierProvider =
 );
 
 typedef _$TabBarIndexNotifier = AutoDisposeNotifier<int>;
-String _$eventsHash() => r'53c15c3e95beb48df0b3d3aa515c2518d2bd59d2';
+String _$eventsHash() => r'3e1ab98fac69bdb22b4e1ff6f45b78c2b4fd03d3';
 
 /// See also [Events].
 @ProviderFor(Events)
@@ -38,5 +38,20 @@ final eventsProvider =
 );
 
 typedef _$Events = AutoDisposeAsyncNotifier<List<EventInfo>?>;
+String _$myEventsHash() => r'335678bf69655cabc624ed6c1753a33dfededf29';
+
+/// See also [MyEvents].
+@ProviderFor(MyEvents)
+final myEventsProvider =
+    AutoDisposeAsyncNotifierProvider<MyEvents, List<EventInfo>?>.internal(
+  MyEvents.new,
+  name: r'myEventsProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$myEventsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MyEvents = AutoDisposeAsyncNotifier<List<EventInfo>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

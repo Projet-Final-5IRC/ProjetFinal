@@ -1,4 +1,5 @@
 import 'package:cinefouine/data/entities/event/event_info.dart';
+import 'package:cinefouine/data/entities/user/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:cinefouine/data/sources/remote/event_service.dart';
@@ -22,9 +23,18 @@ class EventRepository {
 
   final EventService _appApiClient;
 
-  Future<List<EventInfo>?> getAllEvents() async {
+  Future<List<EventInfo>?> getAllEvents(int? idUser) async {
     final events = await _appApiClient.getAllEvents();
-    return events;
+    final allEventsExeptMine =
+        events?.where((event) => event.idUser != idUser).toList();
+    return allEventsExeptMine;
+  }
+
+  Future<List<EventInfo>?> getMyEvents(int idUser) async {
+    final events = await _appApiClient.getAllEvents();
+    final userEvents =
+        events?.where((event) => event.idUser == idUser).toList();
+    return userEvents;
   }
 
   Future<void> createEvent({
@@ -61,5 +71,13 @@ class EventRepository {
     debugPrint('DEBUG EventRepository: deleteEvent');
     await _appApiClient.deleteEvent(
         eventId); // Call the deleteEvent function from EventService
+  }
+
+  Future<List<UserInfo>?> getInvitedUserByEvent({
+    required int idEvent,
+  }) async {
+    return await _appApiClient.getInvitedUserByEvent(
+      idEvent: idEvent,
+    );
   }
 }
