@@ -108,11 +108,17 @@ namespace data.Controllers.Tests
             // Arrange
             var newInvite = new EventsInvite
             {
-                IdEvent = 1,
-                IdUser = 1
+                IdEvent = 64,
+                IdUser = 8
             };
 
             _mockRepo.Setup(repo => repo.AddAsync(newInvite)).ReturnsAsync(new ActionResult<EventsInvite>(newInvite));
+            _mockRepo.Setup(repo => repo.GetAllAsync())
+                .ReturnsAsync(new ActionResult<IEnumerable<EventsInvite>>(new List<EventsInvite>
+                {
+                    new EventsInvite { IdEvent = 1, IdUser = 2 },
+                    new EventsInvite { IdEvent = 3, IdUser = 4 }
+                }));
 
             // Act
             var result = await _controller_Moq.PostInvite(newInvite);
