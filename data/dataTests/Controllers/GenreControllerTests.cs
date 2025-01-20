@@ -32,15 +32,8 @@ namespace data.Controllers.Tests
 
         public GenreControllerTests()
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            var connectionString = configuration.GetConnectionString("EventDB");
-
             var builder = new DbContextOptionsBuilder<EventDBContext>()
-                .UseNpgsql(connectionString);
+                .UseNpgsql("Server=projet-final.postgres.database.azure.com; port=5432; Database=EventsDB; uid=projectAdmin; password=5IRCCPELyon");
 
             _context = new EventDBContext(builder.Options);
             dataRepository = new GenresManager(_context);
@@ -65,8 +58,8 @@ namespace data.Controllers.Tests
         [TestMethod]
         public async Task GetGenreByID_SuccessGetGenreByID()
         {
-            var result = await _controller.GetGenreById(1);
-            var genreInDB = _context.Genre.Where(c => c.IdGenre == 1).FirstOrDefault();
+            var result = await _controller.GetGenreById(3);
+            var genreInDB = _context.Genre.Where(c => c.IdGenre == 3).FirstOrDefault();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(genreInDB.GenreName, result.Value.GenreName);
@@ -111,9 +104,9 @@ namespace data.Controllers.Tests
 
             //Assert
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.Value, typeof(List<Genres>));
+            Assert.IsInstanceOfType(result.Value, typeof(List<GenreDTO>));
             Assert.AreEqual(2, okResult.Count());
-            Assert.AreEqual("Horreur", okResult.First().GenreName);
+            Assert.AreEqual("Action", okResult.First().GenreName);
         }
 
         [TestMethod]

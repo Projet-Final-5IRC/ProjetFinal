@@ -3,6 +3,7 @@ using data.Models.EntityFramework;
 using data.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 
 namespace data.Controllers
@@ -11,9 +12,9 @@ namespace data.Controllers
     [ApiController]
     public class EventController : ControllerBase
     {
-        private readonly IDataRepository<Events> dataRepository;
+        private readonly IDataRepositoryEventMore<Events> dataRepository;
 
-        public EventController(IDataRepository<Events> dataRepo)
+        public EventController(IDataRepositoryEventMore<Events> dataRepo)
         {
             dataRepository = dataRepo;
         }
@@ -48,6 +49,19 @@ namespace data.Controllers
             return new EventDTO(events.Value);
         }
 
+        [HttpGet("invite/{id}")]
+        public async Task<ActionResult<List<UserDTO>>> GetInvitedUserByEvent(int id)
+        {
+            var invitedUser = await dataRepository.GetAllUsersByEvent(id);
+
+            if (invitedUser.Value == null)
+            {
+                return NotFound();
+            }
+
+            return invitedUser;
+        }
+
         // PUT: api/Events/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -75,15 +89,15 @@ namespace data.Controllers
         // POST: api/Events
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<EventDTO>> PostEvents(Events events)
+        public async Task<ActionResult<EventDTO>> PostEvents(Events eventDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            await dataRepository.AddAsync(events);
+            await dataRepository.AddAsync(eventDTO);
 
-            return CreatedAtAction("GetEventById", new { id = events.IdEvent }, new EventDTO(events));
+            return CreatedAtAction("GetEventById", new { id = eventDTO.IdEvent }, eventDTO);
         }
 
         // DELETE: api/Events/5

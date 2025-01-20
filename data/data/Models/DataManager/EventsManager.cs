@@ -1,4 +1,5 @@
-﻿using data.Models.EntityFramework;
+﻿using data.Models.DTO;
+using data.Models.EntityFramework;
 using data.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -9,7 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace data.Models.DataManager
 {
-    public class EventsManager : IDataRepository<Events>
+    public class EventsManager : IDataRepositoryEventMore<Events>
     {
         readonly EventDBContext? eventDBContext;
         public EventsManager() { }
@@ -35,8 +36,48 @@ namespace data.Models.DataManager
             }
 
             var eventEntity = await eventDBContext.Event.FirstOrDefaultAsync(e => e.IdEvent == id);
+            Console.WriteLine(eventEntity);
 
             return eventEntity != null ? eventEntity : new NotFoundResult();
+        }
+
+        public async Task<ActionResult<List<UserDTO>>> GetAllUsersByEvent(int id)
+        {
+            if (eventDBContext == null)
+            {
+                throw new ArgumentNullException(nameof(eventDBContext));
+            }
+
+            var searchedEvent = await eventDBContext.Event
+                .Include(e => e.EventInvitation) 
+                .ThenInclude(inv => inv.UserReference) 
+                .FirstOrDefaultAsync(e => e.IdEvent == id);
+
+            if (searchedEvent == null)
+            {
+                return new NotFoundResult();
+            }
+
+            var userNamesId = searchedEvent.EventInvitation
+                .Where(inv => inv.idEventsInvite != null)
+                .Select(inv => inv.UserReference.IdUser)
+                .ToList();
+
+            var listUser = new List<UserDTO>();
+
+            foreach (int userId in userNamesId)
+            {
+                // Recherche de l'utilisateur dans la base de données
+                var user = await eventDBContext.User.FirstOrDefaultAsync(u => u.IdUser == userId);
+
+                if (user != null)
+                {
+                    var userDTO = new UserDTO(user);
+
+                    listUser.Add(userDTO);
+                }
+            }
+            return listUser;
         }
 
         public async Task<ActionResult<Events>> AddAsync(Events newEvent)

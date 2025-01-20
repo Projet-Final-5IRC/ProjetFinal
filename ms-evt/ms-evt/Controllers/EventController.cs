@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using data.Models.DTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ms_evt.Models.DTO;
 using ms_evt.Services;
@@ -42,7 +43,21 @@ namespace ms_evt.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erreur : {ex.Message}");
+                return StatusCode(404, $"Event not found : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetInvitedUserByEvent")]
+        public async Task<ActionResult<List<UserDTO>>> GetInvitedUserByEvent(int id)
+        {
+            try
+            {
+                var data = await _dataService.GetAllUserByEvent("api/Event/invite", id);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(404, $"Event not found : {ex.Message}");
             }
         }
 
