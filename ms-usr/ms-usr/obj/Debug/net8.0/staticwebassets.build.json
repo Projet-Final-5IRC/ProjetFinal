@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "0Y9ezUEsoMgQGoxJHSmAbeve4LLzXPvTko/wDkfBnwM=",
+  "Source": "ms-usr",
+  "BasePath": "_content/ms-usr",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
