@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
-import config  # Assurez-vous que config est importé correctement
+import config 
 from app import main
-#packages
+# packages
 # import pandas as pd
 # import json
 # from unittest import result
@@ -34,4 +34,5 @@ def reco_user():
 
 # Lancement de l'application
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    ssl_context = ('cert.pem', 'key.pem')
+    app.run(debug=True, port=5001, ssl_context=ssl_context)
