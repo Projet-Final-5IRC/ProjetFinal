@@ -57,9 +57,27 @@ class _CreateEventButton extends _$CreateEventButton {
     return false;
   }
 
-  Future<bool> createEvent() async {
+  Future<bool> createEvent(BuildContext context) async {
     bool eventCreated = false;
     final eventForm = ref.read(createEventFormProvider);
+      // Vérification que la date et l'heure sont dans le futur
+    try {
+      final selectedDateTime = DateFormat('dd:MM:yyyy HH:mm').parse(
+        '${eventForm.date} ${eventForm.hours}',
+      );
+      if (selectedDateTime.isBefore(DateTime.now())) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('La date et l\'heure doivent être dans le futur.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return false;
+      }
+    } catch (e) {
+      // state = AsyncValue.error(e);
+      return false;
+    }
     try {
       state = const AsyncValue.loading();
       final Preferences preferences = ref.read(preferencesProvider);
@@ -232,7 +250,7 @@ class _CreateEventViewState extends ConsumerState<CreateEventView> {
                 if (!isLoading) {
                   bool isEventCreated = await ref
                       .read(_createEventButtonProvider.notifier)
-                      .createEvent();
+                      .createEvent(context);
                   if (isEventCreated) router.replaceAll([const EventRoute()]);
                 }
               },
