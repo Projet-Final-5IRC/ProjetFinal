@@ -14,6 +14,9 @@ _$UserInfoImpl _$$UserInfoImplFromJson(Map<String, dynamic> json) =>
       lastName: json['lastName'] as String,
       email: json['email'] as String,
       dateCreation: json['dateCreation'] as String,
+      userInvitationId: (json['userInvitationId'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList(),
     );
 
 Map<String, dynamic> _$$UserInfoImplToJson(_$UserInfoImpl instance) =>
@@ -24,4 +27,5 @@ Map<String, dynamic> _$$UserInfoImplToJson(_$UserInfoImpl instance) =>
       'lastName': instance.lastName,
       'email': instance.email,
       'dateCreation': instance.dateCreation,
+      'userInvitationId': instance.userInvitationId,
     };

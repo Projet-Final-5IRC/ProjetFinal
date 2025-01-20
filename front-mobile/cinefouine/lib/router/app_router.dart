@@ -46,6 +46,7 @@ class AppRouter extends RootStackRouter {
               children: [
                 AutoRoute(page: EventRoute.page, initial: true),
                 AutoRoute(page: CreateEventRoute.page),
+                AutoRoute(page: EventInviteRoute.page),
                 AutoRoute(page: DetailsEventRoute.page),
                 AutoRoute(page: EventInviteRoute.page),
               ],

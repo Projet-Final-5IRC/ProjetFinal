@@ -49,9 +49,17 @@ class EventRepository {
     );
   }
 
+  Future<void> inviteEvent({
+    required int IdEvent,
+    required int IdUser,
+  }) async {
+    _appApiClient.inviteEvent(IdEvent: IdEvent, IdUser: IdUser);
+  }
+
   // Delete event function
   Future<void> deleteEvent(int eventId) async {
     debugPrint('DEBUG EventRepository: deleteEvent');
-    await _appApiClient.deleteEvent(eventId);  // Call the deleteEvent function from EventService
+    await _appApiClient.deleteEvent(
+        eventId); // Call the deleteEvent function from EventService
   }
 }

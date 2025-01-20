@@ -75,22 +75,29 @@ class EventService {
     }
   }
 
+  Future<void> inviteEvent({
+    required int IdEvent,
+    required int IdUser,
+  }) async {
+    final endpoint = "/Event/InviteUser";
+    final eventInviteData = {
+      "IdEvent": IdEvent,
+      "IdUser": IdUser,
+      "IsPending": true,
+    };
+    final response = await dioClient.post(
+      endpoint,
+      data: eventInviteData,
+    );
+  }
 // Delete event function with IdEvent in body
 Future<void> deleteEvent(int eventId) async {
 
-  final endpoint = CineFouineEndpoints.deleteEvent;  // Assuming the DELETE endpoint doesn't need the eventId in the URL
-
-  final requestData = {
-    "IdEvent": eventId,
-  };
-
+  final endpoint = '/Event/DeleteEvent?id=$eventId';
   try {
     final response = await dioClient.delete(
       endpoint,
-      data: requestData, // Send the eventId in the body
     );
-
-      debugPrint("DEBUG - Response: $response");
 
     // You can add logic here to handle a successful response, if needed
   } on DioException catch (e) {

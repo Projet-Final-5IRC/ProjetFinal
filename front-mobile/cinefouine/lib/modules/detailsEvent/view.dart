@@ -1,4 +1,5 @@
 import 'package:cinefouine/data/entities/event/event_info.dart';
+import 'package:cinefouine/router/app_router.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
@@ -26,6 +27,7 @@ class DetailsEventView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eventSelected = ref.watch(eventSeletedProvider);
+    final router = ref.watch(appRouterProvider);
 
     return Scaffold(
       backgroundColor: AppColors.secondary,
@@ -43,7 +45,7 @@ class DetailsEventView extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Created by ${eventSelected?.idOwner}",
+                "Created by ${eventSelected?.ownerName}",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -128,22 +130,35 @@ class DetailsEventView extends ConsumerWidget {
                     text: "Join",
                     text2: "Joined",
                   ),
+                  const SizedBox(width: 24),
+                  Cinefouineboutton(
+                    isClicked: false,
+                    onPressed: () {
+                      router.push(EventInviteRoute());
+                    },
+                    text: "Invite",
+                    text2: "Joined",
+                  ),
                   const SizedBox(width: 16),
                   Cinefouineboutton(
                     isClicked: false,
                     onPressed: () async {
-                        if (eventSelected != null) {
-                          // Appeler la méthode deleteEvent avec l'ID de l'événement
-                          await ref.read(eventRepositoryProvider).deleteEvent(eventSelected.idEvent);
-                          // Optionnellement, naviguer ou afficher un message de confirmation après la suppression
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Event Deleted")),
-                          );
-                        }
-                      },
+                      if (eventSelected != null) {
+                        // Appeler la méthode deleteEvent avec l'ID de l'événement
+                        await ref
+                            .read(eventRepositoryProvider)
+                            .deleteEvent(eventSelected.idEvent);
+                            router.replaceAll([EventRoute()]);
+                        // Optionnellement, naviguer ou afficher un message de confirmation après la suppression
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Event Deleted")),
+                        );
+                      }
+                    },
                     text: "Delete",
                     text2: "Deleted",
-                    buttonColor: Colors.red, // Définir la couleur du bouton en rouge
+                    buttonColor:
+                        Colors.red, // Définir la couleur du bouton en rouge
                   ),
                 ],
               ),
