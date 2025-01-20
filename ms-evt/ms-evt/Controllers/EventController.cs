@@ -118,11 +118,11 @@ namespace ms_evt.Controllers
         }
 
         [HttpDelete("DeleteInviteByUsername")]
-        public async Task<IActionResult> DeleteInviteByUsername(int id,string username)
+        public async Task<IActionResult> DeleteInviteByUsername(int id,int idUser)
         {
             try
             {
-                var data = await _dataService.DeleteAsyncUsername($"/api/EventInvite/event/{id}/user/{username}");
+                var data = await _dataService.DeleteAsyncUsername($"/api/EventInvite/event/{id}/user/{idUser}");
                 return Ok(data);
             }
             catch (Exception ex)

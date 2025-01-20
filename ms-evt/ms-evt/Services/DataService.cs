@@ -17,7 +17,7 @@ namespace ms_evt.Services
         {
             _httpClient = httpClient;
 
-            var apiBaseUrl = configuration.GetValue<string>("ConnectionStrings:BaseUrl");
+            var apiBaseUrl = configuration.GetValue<string>("ConnectionStrings:BaseURL");
 
             _httpClient.BaseAddress = new Uri(apiBaseUrl);
         }

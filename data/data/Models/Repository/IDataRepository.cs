@@ -26,7 +26,7 @@ namespace data.Models.Repository
 
     public interface IDataRepositoryEventInvite<TEntity> : IDataRepository<TEntity>
     {
-        Task<ActionResult<Users>> GetByUsernameAsync(string username);
+        Task<ActionResult<Users>> GetByUserIdAsync(int idUser);
     }
 
     public interface IDataRepositoryWithPreference<TEntity> : IDataRepository<TEntity>
