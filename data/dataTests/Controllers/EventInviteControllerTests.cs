@@ -21,10 +21,10 @@ namespace data.Controllers.Tests
     {
         private EventInviteController _controller;
         private readonly EventDBContext _context;
-        private IDataRepository<EventsInvite> dataRepository;
+        private IDataRepositoryEventInvite<EventsInvite> dataRepository;
 
         private EventInviteController _controller_Moq;
-        private Mock<IDataRepository<EventsInvite>> _mockRepo;
+        private Mock<IDataRepositoryEventInvite<EventsInvite>> _mockRepo;
 
         public EventInviteControllerTests()
         {
@@ -75,7 +75,7 @@ namespace data.Controllers.Tests
         [TestInitialize]
         public void Setup()
         {
-            _mockRepo = new Mock<IDataRepository<EventsInvite>>();
+            _mockRepo = new Mock<IDataRepositoryEventInvite<EventsInvite>>();
             _controller_Moq = new EventInviteController(_mockRepo.Object);
         }
 

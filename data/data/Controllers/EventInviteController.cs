@@ -10,9 +10,9 @@ namespace data.Controllers
     [ApiController]
     public class EventInviteController : ControllerBase
     {
-        private readonly IDataRepository<EventsInvite> dataRepository;
+        private readonly IDataRepositoryEventInvite<EventsInvite> dataRepository;
 
-        public EventInviteController(IDataRepository<EventsInvite> dataRepo)
+        public EventInviteController(IDataRepositoryEventInvite<EventsInvite> dataRepo)
         {
             dataRepository = dataRepo;
         }
@@ -97,6 +97,7 @@ namespace data.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInvite(int id)
         {
+
             var invite = await dataRepository.GetByIdAsync(id);
             if (invite.Value == null)
             {
@@ -104,6 +105,30 @@ namespace data.Controllers
             }
 
             await dataRepository.DeleteAsync(invite.Value);
+
+            return NoContent();
+        }
+
+        [HttpDelete("event/{idEvent}/user/{username}")]
+        public async Task<IActionResult> DeleteInviteByEventAndUser(int idEvent, string username)
+        {
+            var user = await dataRepository.GetByUsernameAsync(username);
+            if (user.Value == null)
+            {
+                return NotFound($"Utilisateur avec le nom '{username}' introuvable.");
+            }
+
+            var invite = await dataRepository
+                .GetAllAsync()
+                .ContinueWith(task => task.Result.Value
+                    .FirstOrDefault(e => e.IdEvent == idEvent && e.IdUser == user.Value.IdUser));
+
+            if (invite == null)
+            {
+                return NotFound("Invitation non trouvée pour cet événement et cet utilisateur.");
+            }
+
+            await dataRepository.DeleteAsync(invite);
 
             return NoContent();
         }
