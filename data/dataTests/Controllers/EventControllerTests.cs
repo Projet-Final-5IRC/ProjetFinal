@@ -55,8 +55,8 @@ namespace data.Controllers.Tests
         [TestMethod]
         public async Task GetEventByID_SuccessGetEventByID()
         {
-            var result = await _controller.GetEventById(64);
-            var eventInDB = _context.Event.Where(c => c.IdEvent == 64).FirstOrDefault();
+            var result = await _controller.GetEventById(105);
+            var eventInDB = _context.Event.Where(c => c.IdEvent == 105).FirstOrDefault();
 
             Assert.AreEqual(eventInDB.EventName, result.Value.EventName);
         }
