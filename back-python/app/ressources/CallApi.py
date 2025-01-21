@@ -5,17 +5,16 @@ import json
 import random
 
 ### Trouver les ids par genre après ca marchera
-#def CallFounIdPerGender(inputJson):
 def CallFounIdPerGender(input_json):
     def clean_genre_name(name):
         return name.replace(" Movies", "").replace(" Comedies", "")
-    
+
     chemin_genres = 'data/Movies/gender.json'
     with open(chemin_genres, 'r') as fichier:
         genres_data = json.load(fichier)
 
-    genres_list = genres_data['gender']
-    genre_names_list = input_json['gender']
+    genres_list = genres_data['Genre']
+    genre_names_list = input_json['Genre']
     genre_id_map = {genre['name']: genre['id'] for genre in genres_list}
     ids_list = [genre_id_map[clean_genre_name(name)] for name in genre_names_list if clean_genre_name(name) in genre_id_map]
 

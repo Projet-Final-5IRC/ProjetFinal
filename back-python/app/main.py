@@ -20,11 +20,10 @@ def JsonInput(input, pathMovie):
     # with open(pathUser, 'r') as json_file:
     #     entry_json = json.load(json_file)
     entry_json = input
-    
     # Movies
     entry_data = {}
-    with open(pathMovie, 'r') as file:
-        entry_data = json.load(file)
+    # with open(pathMovie, 'r') as file:
+    #     entry_data = json.load(file)
     return entry_json, entry_data
 ###################################
 # def CallMoviePerGender():
