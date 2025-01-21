@@ -2,6 +2,27 @@ import os
 import pandas as pd
 import json
 import random
+import requests
+from dotenv import load_dotenv
+
+### Call api film #################
+def CallApiMovieRandom():
+    
+    try:  
+        load_dotenv()
+        api_key = os.getenv("API_KEY")
+
+        url = f"https://api.themoviedb.org/3/movie/changes?page=1&api_key={api_key}"
+        headers = {"accept": "application/json"}  # En-tête approprié
+
+        response = requests.get(url, headers=headers)
+
+        print("Call Api Movie Ok")  
+        return response
+    
+    except Exception as e:
+        print("Call Api Movie Ko") 
+        return jsonify({'error': str(e)}), 507 # En cas d'erreur, retourne un message d'erreur avec le statut 500
 
 # Traitement des données
 def mef_like_user(entry_data, search_id) :

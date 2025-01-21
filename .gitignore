@@ -9,3 +9,10 @@
 /data/obj/Debug/net8.0
 /data/obj/Release/net8.0
 /data/obj
+
+back-python/venv/
+back-python/__pycache__/
+back-python/app/__pycache__/
+/back-python/data/Plus/
+/back-python/data/DataMovies/
+/back-python/data/Rawdata/
