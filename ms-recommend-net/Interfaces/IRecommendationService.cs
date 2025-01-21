@@ -9,14 +9,14 @@ namespace ms_recommend_net.Interfaces
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>A collection of recommended films.</returns>
-        void GetRecommendationsAsync(int userId);
+        Task<List<string>> GetRecommendationsAsync(int userId);
 
         /// <summary>
         /// Retrieves user preferences grouped by type (e.g., Genre, Actor).
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>A dictionary where the key is the preference type, and the value is a list of preferences.</returns>
-        Task<Dictionary<string, List<string>>> GetPreferencesAsync(int userId);
+        Task<Dictionary<string, List<string>>> GetGenresAsync(int userId);
 
         /// <summary>
         /// Updates the preferences of a user.
