@@ -124,7 +124,7 @@ namespace data.Controllers.Tests
 
             // Assert
             Assert.IsNotNull(createdResult);
-            Assert.AreEqual(201, createdResult.StatusCode); // HTTP 201 Created
+            Assert.AreEqual(201, createdResult.StatusCode);
             Assert.AreEqual("GetEventById", createdResult.ActionName);
         }
 
@@ -132,7 +132,7 @@ namespace data.Controllers.Tests
         public async Task PostEvents_ModelStateInvalid()
         {
             // Arrange
-            var invalidEvent = new Events(); // Missing required fields
+            var invalidEvent = new Events();
             _controller_Moq.ModelState.AddModelError("EventName", "The EventName field is required.");
 
             // Act
@@ -141,7 +141,7 @@ namespace data.Controllers.Tests
 
             // Assert
             Assert.IsNotNull(badRequestResult);
-            Assert.AreEqual(400, badRequestResult.StatusCode); // HTTP 400 Bad Request
+            Assert.AreEqual(400, badRequestResult.StatusCode); 
             Assert.IsTrue(badRequestResult.Value is SerializableError);
         }
 
