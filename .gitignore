@@ -9,9 +9,9 @@
 back-python/venv/
 back-python/__pycache__/
 back-python/app/__pycache__/
-/back-python/data/Plus
-/back-python/data/DataMovies
-/back-python/data/Rawdata
+/back-python/data/Plus/
+/back-python/data/DataMovies/
+/back-python/data/Rawdata/
 
 data/obj/
 data/bin/
