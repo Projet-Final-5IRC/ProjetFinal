@@ -13,15 +13,15 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
 
-def mainGender(): 
+def mainGender(data): 
     
-    #### TEST ####
-    chemin_genre_names = 'data/Movies/MovieGender.json'
-    # Lire le deuxième fichier JSON contenant uniquement les noms des genres
-    with open(chemin_genre_names, 'r') as fichier:
-        input_json = json.load(fichier)
+    # #### TEST ####
+    # chemin_genre_names = 'data/Movies/MovieGender.json'
+    # # Lire le deuxième fichier JSON contenant uniquement les noms des genres
+    # with open(chemin_genre_names, 'r') as fichier:
+    #     input_json = json.load(fichier)
     
-    result = cap.CallApiMoviePerGender(input_json)
+    result = cap.CallApiMoviePerGender(data)
     
     return result
 
