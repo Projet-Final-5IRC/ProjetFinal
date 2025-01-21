@@ -8,6 +8,7 @@
 back-python/venv/
 back-python/__pycache__/
 back-python/app/__pycache__/
+back-python/app/ressources/__pycache__/
 
 data/obj/
 data/bin/
