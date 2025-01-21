@@ -25,7 +25,35 @@ class UserActionStat extends _$UserActionStat {
     }
   }
 
-  Future<void> updateAction() async {}
+  Future<void> updateAction() async {
+    final Preferences preferences = ref.read(preferencesProvider);
+    try {
+      state = AsyncData(
+        await ref
+            .read(userPreferenceRepositoryProvider)
+            .getUserActivity(preferences.idUserPreferences.load()!),
+      );
+    } catch (e) {
+      return;
+    }
+  }
+
+  Future<void> postUserAction({
+    required int idUser,
+    required int value,
+    required String action,
+  }) async {
+    try {
+      await ref.read(userPreferenceRepositoryProvider).postUserAction(
+            userId: idUser,
+            value: value,
+            actionType: action,
+          );
+      await updateAction();
+    } catch (e) {
+      return;
+    }
+  }
 }
 
 @RoutePage()
@@ -36,8 +64,7 @@ class ProfilView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Preferences preferences = ref.watch(preferencesProvider);
     final router = ref.watch(appRouterProvider);
-    final userActionAsync = ref.watch(
-        userActionStatProvider); // Observer l'état des actions utilisateur
+    final userActionAsync = ref.watch(userActionStatProvider);
 
     return Scaffold(
       backgroundColor: AppColors.secondary,
@@ -141,7 +168,7 @@ class ProfilView extends ConsumerWidget {
                 text: "choose favorite genre",
               ),
               const SizedBox(height: 16),
-                            Text(
+              Text(
                 "Mes badges",
                 style: TextStyle(
                   fontSize: 20.0,

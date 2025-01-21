@@ -53,7 +53,7 @@ final myEventsProvider =
 );
 
 typedef _$MyEvents = AutoDisposeAsyncNotifier<List<EventInfo>?>;
-String _$eventsJoinedHash() => r'b07e4643955a92d12e98f8aafbf59bb8a112efe4';
+String _$eventsJoinedHash() => r'22e2ccc87a59426f79e02415f1495f9e96dba551';
 
 /// See also [EventsJoined].
 @ProviderFor(EventsJoined)

@@ -2,7 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/mainAppBar.dart';
 import 'package:cinefouine/data/entities/movie/movie_info.dart';
 import 'package:cinefouine/data/entities/movie/movie_info_detail.dart';
+import 'package:cinefouine/data/entities/platforme/platforme.dart';
 import 'package:cinefouine/data/repositories/movie_repository.dart';
+import 'package:cinefouine/data/repositories/user_preference_repository.dart';
+import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
+import 'package:cinefouine/modules/profil/view.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +34,15 @@ class MovieSeleted extends _$MovieSeleted {
       state = AsyncValue.data(null);
     }
     return true;
+  }
+
+  Future<List<Platforme>?> getPlatforme(int? movieId) async {
+    AsyncValue.loading();
+    final repoMovie = ref.read(movieRepositoryProvider);
+    if (movieId != null) {
+      return await repoMovie.getPlatformeMovie(movieId);
+    }
+    return null;
   }
 }
 
@@ -62,7 +75,7 @@ class DetailsMovieView extends ConsumerWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildMovieHeader(data),
+                _buildMovieHeader(data, context, ref),
                 const SizedBox(height: 16),
                 Text(
                   data.details?.overview ?? "Aucune description disponible.",
@@ -105,7 +118,11 @@ class DetailsMovieView extends ConsumerWidget {
     );
   }
 
-  Widget _buildMovieHeader(MovieInfoDetail movie) {
+  Widget _buildMovieHeader(
+    MovieInfoDetail movie,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -140,7 +157,15 @@ class DetailsMovieView extends ConsumerWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Cinefouineboutton(onPressed: () {}, text: "Regarder"),
+                  Cinefouineboutton(
+                    onPressed: () async {
+                      final platforme = await ref
+                          .read(movieSeletedProvider.notifier)
+                          .getPlatforme(75780);
+                      print(platforme.toString());
+                    },
+                    text: "Regarder",
+                  ),
                   const SizedBox(width: 8),
                   Container(
                     width: 40, // Taille du cercle
@@ -177,6 +202,57 @@ class DetailsMovieView extends ConsumerWidget {
                     ),
                   ),
                 ],
+              ),
+              Cinefouineboutton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor: Colors.grey[900],
+                        title: const Text(
+                          "Confirmation",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        content: const Text(
+                          "Êtes-vous sûr d'avoir regardé ce film ?",
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              "Non",
+                              style: TextStyle(color: Colors.redAccent),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                              final preference = ref.read(preferencesProvider);
+                              await ref
+                                  .read(userActionStatProvider.notifier)
+                                  .postUserAction(
+                                    action: "movieswatched",
+                                    idUser:
+                                        preference.idUserPreferences.load() ??
+                                            0,
+                                    value: 1,
+                                  );
+                            },
+                            child: const Text(
+                              "Oui",
+                              style: TextStyle(color: Colors.greenAccent),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                text: "J'ai regardé ce film",
               ),
             ],
           ),

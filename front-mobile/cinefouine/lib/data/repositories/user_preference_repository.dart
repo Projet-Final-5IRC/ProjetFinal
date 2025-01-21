@@ -49,12 +49,12 @@ class UserPreferenceRepository {
     return _userPreferenceService.getUserActivity(userId);
   }
 
-  Future<void> logUserAction({
+  Future<void> postUserAction({
     required int userId,
     required String actionType,
     required int value,
   }) async {    
-    return _userPreferenceService.logUserAction(
+    return _userPreferenceService.postUserAction(
       actionType: actionType,
       userId: userId,
       value: value,

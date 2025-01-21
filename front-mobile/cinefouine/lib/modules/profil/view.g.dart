@@ -6,7 +6,7 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$userActionStatHash() => r'e098af7c56a5932431cd1cd96a017771b2efdaff';
+String _$userActionStatHash() => r'25f6caae564c4a9e169159550c0d13d741aaa5dd';
 
 /// See also [UserActionStat].
 @ProviderFor(UserActionStat)

@@ -26,6 +26,7 @@ Map<String, dynamic> _$$MovieInfoDetailImplToJson(
 
 _$DetailsImpl _$$DetailsImplFromJson(Map<String, dynamic> json) =>
     _$DetailsImpl(
+      id: (json['id'] as num?)?.toInt(),
       title: json['title'] as String?,
       overview: json['overview'] as String?,
       posterPath: json['poster_path'] as String?,
@@ -40,6 +41,7 @@ _$DetailsImpl _$$DetailsImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$DetailsImplToJson(_$DetailsImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'title': instance.title,
       'overview': instance.overview,
       'poster_path': instance.posterPath,

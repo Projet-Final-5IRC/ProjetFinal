@@ -232,7 +232,7 @@ class DetailsEventView extends ConsumerWidget {
                       }
                     },
                     text: "Choose a film",
-                    text2: "Deleted",
+                    text2: "Choose a film",
                   ),
                 ],
               ),

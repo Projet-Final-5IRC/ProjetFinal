@@ -75,7 +75,7 @@ class UserPreferenceService {
     return apiResult;
   }
 
-  Future<void> logUserAction({
+  Future<void> postUserAction({
     required int userId,
     required String actionType,
     required int value,

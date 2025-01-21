@@ -35,6 +35,7 @@ extension MovieDetailListExtension on List<MovieInfoDetail> {
 @freezed
 class Details with _$Details {
     const factory Details({
+        required int? id,
         required String? title,
         required String? overview,
         @JsonKey(name: 'poster_path') required String? posterPath,
