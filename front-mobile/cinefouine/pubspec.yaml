@@ -5,9 +5,11 @@ version: 1.0.0+1
 environment:
   sdk: ^3.6.0
 
+
 dependencies:
   flutter:
     sdk: flutter
+  http: ^1.2.0 
   auto_route: ^9.2.2
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.6.1
@@ -19,8 +21,12 @@ dependencies:
   json_annotation: ^4.9.0
   dio: ^5.7.0
   meta: ^1.15.0
-  intl: ^0.20.1
   shared_preferences: ^2.3.5
+  intl: ^0.17.0
+  signalr_netcore: ^1.4.0
+  
+dependency_overrides:
+  web: ^0.5.0
 
 dev_dependencies:
   flutter_test:

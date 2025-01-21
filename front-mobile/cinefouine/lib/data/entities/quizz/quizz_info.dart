@@ -15,8 +15,11 @@ String quizzToJson(Quizz data) => json.encode(data.toJson());
 @freezed
 class Quizz with _$Quizz {
     const factory Quizz({
-        required String titreDuQuizz,
-        required String descriptionDuQuizz,
+        required int quizId,
+        required String titreDuQuiz,
+        required String descriptionDuQuiz,
+        required String titreDuFilm,
+        required String filmId,
         required List<ListeDeQuestion> listeDeQuestions,
     }) = _Quizz;
 
@@ -26,13 +29,28 @@ class Quizz with _$Quizz {
 @freezed
 class ListeDeQuestion with _$ListeDeQuestion {
     const factory ListeDeQuestion({
+        required int questionId,
         required String texteDeLaQuestion,
-        required List<String> listeDesOptionsDeReponse,
         required String reponseCorrecte,
+        required int quizId,
+        required List<Option> options,
     }) = _ListeDeQuestion;
 
     factory ListeDeQuestion.fromJson(Map<String, dynamic> json) => _$ListeDeQuestionFromJson(json);
 }
+
+@freezed
+class Option with _$Option {
+    const factory Option({
+        required int optionId,
+        required String texte,
+        required bool estCorrecte,
+        required int questionId,
+    }) = _Option;
+
+    factory Option.fromJson(Map<String, dynamic> json) => _$OptionFromJson(json);
+}
+
 
 extension QuizzListExtension on List<Quizz> {
   String quizzToJson() =>

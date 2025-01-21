@@ -1,9 +1,14 @@
+import 'dart:ffi';
+
 import 'package:cinefouine/core/widgets/cineFouineBoutton.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
+import 'package:cinefouine/data/repositories/quizz_repository.dart';
+import 'package:cinefouine/data/sources/remote/quizz_signalr_service.dart';
 import 'package:cinefouine/modules/detailsMovie/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
+import 'dart:async';
 
 @RoutePage()
 class QuizView extends ConsumerStatefulWidget {
@@ -18,8 +23,9 @@ class _QuizViewState extends ConsumerState<QuizView> {
   int _score = 0;
   bool _isAnswered = false;
   String _selectedAnswer = "";
+  StreamSubscription? _quizReadySubscription;
 
-  final Map<String, dynamic> _quizData = {
+  Map<String, dynamic> _quizData = {
     "titre_du_quizz": "Quizz sur le film Inception",
     "description_du_quizz": "Testez vos connaissances sur le film 'Inception' de Christopher Nolan. Répondez aux questions suivantes pour voir si vous êtes un véritable expert de ce chef-d'œuvre cinématographique.",
     "liste_de_questions": [
@@ -45,6 +51,96 @@ class _QuizViewState extends ConsumerState<QuizView> {
       }
     ]
   };
+
+  @override
+  void initState() {
+    super.initState();
+    _setupSignalRListener();
+    _loadNewQuiz("299535"); // Call _loadNewQuiz with a default filmId
+  }
+
+  void _setupSignalRListener() {
+    final signalRService = ref.read(quizSignalRServiceProvider);
+    _quizReadySubscription = signalRService.quizReadyStream.listen((quizData) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Nouveau quiz disponible pour: ${quizData['titreDuFilm']}'),
+            action: SnackBarAction(
+              label: 'Voir',
+              onPressed: () {
+                _loadNewQuiz(quizData['filmId']!);
+              },
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  Future<void> _loadNewQuiz(String filmId) async {
+    try {
+      print("DEBUG Loading new quiz for film $filmId");
+      final newQuizzes = await ref.read(quizzRepositoryProvider).getQuizzForFilm(int.parse(filmId));
+      
+      if (newQuizzes == null || newQuizzes.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Aucun quiz disponible pour ce film'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        return;
+      }
+
+      // On prend le premier quiz de la liste
+      final newQuiz = newQuizzes.first;
+      
+      setState(() {
+        _currentQuestionIndex = 0;
+        _score = 0;
+        _isAnswered = false;
+        _selectedAnswer = "";
+        _quizData = {
+          "titre_du_quizz": newQuiz.titreDuQuiz,
+          "description_du_quizz": newQuiz.descriptionDuQuiz,
+          "liste_de_questions": newQuiz.listeDeQuestions.map((question) => {
+            "texte_de_la_question": question.texteDeLaQuestion,
+            "liste_des_options_de_reponse": question.options.map((option) => option.texte).toList(),
+            "reponse_correcte": question.reponseCorrecte,
+          }).toList(),
+        };
+      });
+      
+      // Notification de succès optionnelle
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Quiz "${newQuiz.titreDuQuiz}" chargé avec succès'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+      
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erreur lors du chargement du quiz: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+            action: SnackBarAction(
+              label: 'Réessayer',
+              textColor: Colors.white,
+              onPressed: () => _loadNewQuiz(filmId),
+            ),
+          ),
+        );
+      }
+    }
+  }
 
   void _submitAnswer() {
     if (_isAnswered || _selectedAnswer.isEmpty) return;
@@ -74,6 +170,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
   void _showQuizResult() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
           title: const Text("Résultats du Quiz"),
@@ -95,6 +192,12 @@ class _QuizViewState extends ConsumerState<QuizView> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _quizReadySubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -138,7 +241,6 @@ class _QuizViewState extends ConsumerState<QuizView> {
               ],
             ),
             const SizedBox(height: 24),
-            // Ajout de l'indicateur "x/n" centré
             Center(
               child: Text(
                 "${_currentQuestionIndex + 1}/${_quizData['liste_de_questions'].length}",

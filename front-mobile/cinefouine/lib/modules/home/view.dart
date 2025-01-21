@@ -27,6 +27,7 @@ class ListMovieSearched extends _$ListMovieSearched {
   }
 }
 
+
 @RoutePage()
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
