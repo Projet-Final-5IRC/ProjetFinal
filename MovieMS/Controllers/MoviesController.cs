@@ -91,11 +91,18 @@ public class MoviesController : ControllerBase
 
             await Task.WhenAll(movieDetailsTask, movieActorsTask);
 
+            // Récupérer les résultats
+            var movieDetails = movieDetailsTask.Result;
+            var actors = movieActorsTask.Result;
+
+            // Inclure l'ID dans les détails
+            movieDetails.Id = movieId;
+
             // Combiner les résultats
             var fullDetails = new MovieFullDetails
             {
-                Details = movieDetailsTask.Result,
-                Actors = movieActorsTask.Result
+                Details = movieDetails,
+                Actors = actors
             };
 
             return Ok(fullDetails);
