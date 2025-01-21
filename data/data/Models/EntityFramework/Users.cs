@@ -43,6 +43,9 @@ namespace data.Models.EntityFramework
         [JsonIgnore]
         public virtual ICollection<EventsInvite> UserInvitation { get; set; } = new List<EventsInvite>();
 
+        [JsonIgnore]
+        public virtual ICollection<Events> EventOwned { get; set; } = new List<Events>();
+
         public void UpdateUserValues(Users updatedUser)
         {
             if (!string.IsNullOrEmpty(updatedUser.Email))

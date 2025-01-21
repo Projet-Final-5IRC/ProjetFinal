@@ -12,8 +12,8 @@ using data.Models.EntityFramework;
 namespace data.Migrations
 {
     [DbContext(typeof(EventDBContext))]
-    [Migration("20250106180715_CreationDBEvent")]
-    partial class CreationDBEvent
+    [Migration("20250108100143_CreationBDEvents")]
+    partial class CreationBDEvents
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,11 +65,17 @@ namespace data.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("gen_id");
 
+                    b.Property<int>("IdUser")
+                        .HasColumnType("integer")
+                        .HasColumnName("usr_id");
+
                     b.HasKey("IdEvent");
 
                     b.HasIndex("IdEvent");
 
                     b.HasIndex("IdGenre");
+
+                    b.HasIndex("IdUser");
 
                     b.ToTable("t_e_events_utl", "public");
                 });
@@ -179,7 +185,16 @@ namespace data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_genre_events");
 
+                    b.HasOne("data.Models.EntityFramework.Users", "UserOwner")
+                        .WithMany("EventOwned")
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_owner_events");
+
                     b.Navigation("GenreEvent");
+
+                    b.Navigation("UserOwner");
                 });
 
             modelBuilder.Entity("data.Models.EntityFramework.EventsInvite", b =>
@@ -215,6 +230,8 @@ namespace data.Migrations
 
             modelBuilder.Entity("data.Models.EntityFramework.Users", b =>
                 {
+                    b.Navigation("EventOwned");
+
                     b.Navigation("UserInvitation");
                 });
 #pragma warning restore 612, 618
