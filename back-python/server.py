@@ -2,20 +2,8 @@ from flask import Flask, request, jsonify
 import config 
 from app import main
 from app import mainGender as mg
-# packages
-# import pandas as pd
-# import json
-# from unittest import result
-# import random
-# import numpy as np
-# from sklearn.preprocessing import LabelEncoder
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.metrics import accuracy_score
 
-# import os
-# import pandas as pd
-# import json
-# import random
+## Ptn de merge de merde
 
 app = Flask(__name__)
 
