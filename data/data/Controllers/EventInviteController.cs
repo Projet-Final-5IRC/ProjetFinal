@@ -10,9 +10,9 @@ namespace data.Controllers
     [ApiController]
     public class EventInviteController : ControllerBase
     {
-        private readonly IDataRepository<EventsInvite> dataRepository;
+        private readonly IDataRepositoryEventInvite<EventsInvite> dataRepository;
 
-        public EventInviteController(IDataRepository<EventsInvite> dataRepo)
+        public EventInviteController(IDataRepositoryEventInvite<EventsInvite> dataRepo)
         {
             dataRepository = dataRepo;
         }
@@ -78,6 +78,16 @@ namespace data.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            var existingInvite = await dataRepository
+                                        .GetAllAsync()
+                                        .ContinueWith(task => task.Result.Value.FirstOrDefault(e => e.IdEvent == invite.IdEvent && e.IdUser == invite.IdUser));
+
+            if (existingInvite != null)
+            {
+                return Conflict(new { message = "L'utilisateur est déjà invité à cet événement." });
+            }
+
             await dataRepository.AddAsync(invite);
 
             return CreatedAtAction("GetInviteById", new { id = invite.idEventsInvite }, new EventInviteDTO(invite));
@@ -87,6 +97,7 @@ namespace data.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInvite(int id)
         {
+
             var invite = await dataRepository.GetByIdAsync(id);
             if (invite.Value == null)
             {
@@ -94,6 +105,30 @@ namespace data.Controllers
             }
 
             await dataRepository.DeleteAsync(invite.Value);
+
+            return NoContent();
+        }
+
+        [HttpDelete("event/{idEvent}/user/{idUser}")]
+        public async Task<IActionResult> DeleteInviteByEventAndUser(int idEvent, int idUser)
+        {
+            var user = await dataRepository.GetByUserIdAsync(idUser);
+            if (user.Value == null)
+            {
+                return NotFound($"Utilisateur avec l'id '{idUser}' introuvable.");
+            }
+
+            var invite = await dataRepository
+                .GetAllAsync()
+                .ContinueWith(task => task.Result.Value
+                    .FirstOrDefault(e => e.IdEvent == idEvent && e.IdUser == user.Value.IdUser));
+
+            if (invite == null)
+            {
+                return NotFound("Invitation non trouvée pour cet événement et cet utilisateur.");
+            }
+
+            await dataRepository.DeleteAsync(invite);
 
             return NoContent();
         }

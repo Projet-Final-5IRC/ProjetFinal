@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using data.Models.DTO;
+using Microsoft.AspNetCore.Mvc;
 using ms_evt.Models.DTO;
 using Newtonsoft.Json;
 using System;
@@ -16,7 +17,7 @@ namespace ms_evt.Services
         {
             _httpClient = httpClient;
 
-            var apiBaseUrl = configuration.GetValue<string>("ConnectionStrings:BaseUrl");
+            var apiBaseUrl = configuration.GetValue<string>("ConnectionStrings:BaseURL");
 
             _httpClient.BaseAddress = new Uri(apiBaseUrl);
         }
@@ -31,6 +32,12 @@ namespace ms_evt.Services
         {
             var response = await _httpClient.GetStringAsync($"{endpoint}/{id}");
             return JsonConvert.DeserializeObject<T>(response);
+        }
+
+        public async Task<List<UserDTO>> GetAllUserByEvent(string endpoint,int id)
+        {
+            var response = await _httpClient.GetStringAsync($"{endpoint}/{id}");
+            return JsonConvert.DeserializeObject<List<UserDTO>>(response);
         }
 
         public async Task<HttpStatusCode> PostEventAsync(string endpoint, EventDTO data)
@@ -52,6 +59,12 @@ namespace ms_evt.Services
         public async Task<HttpStatusCode> DeleteAsync(string endpoint, int id)
         {
             var response = await _httpClient.DeleteAsync($"{endpoint}/{id}");
+            return response.StatusCode;
+        }
+
+        public async Task<HttpStatusCode> DeleteAsyncUsername(string endpoint)
+        {
+            var response = await _httpClient.DeleteAsync(endpoint);
             return response.StatusCode;
         }
 

@@ -3,6 +3,7 @@ using data.Models.EntityFramework;
 using data.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 
 namespace data.Controllers
@@ -11,9 +12,9 @@ namespace data.Controllers
     [ApiController]
     public class EventController : ControllerBase
     {
-        private readonly IDataRepository<Events> dataRepository;
+        private readonly IDataRepositoryEventMore<Events> dataRepository;
 
-        public EventController(IDataRepository<Events> dataRepo)
+        public EventController(IDataRepositoryEventMore<Events> dataRepo)
         {
             dataRepository = dataRepo;
         }
@@ -46,6 +47,19 @@ namespace data.Controllers
                 return NotFound();
             }
             return new EventDTO(events.Value);
+        }
+
+        [HttpGet("invite/{id}")]
+        public async Task<ActionResult<List<UserDTO>>> GetInvitedUserByEvent(int id)
+        {
+            var invitedUser = await dataRepository.GetAllUsersByEvent(id);
+
+            if (invitedUser.Value == null)
+            {
+                return NotFound();
+            }
+
+            return invitedUser;
         }
 
         // PUT: api/Events/5

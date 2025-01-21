@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace data.Models.DataManager
 {
-    public class EventsInviteManager : IDataRepository<EventsInvite>
+    public class EventsInviteManager : IDataRepositoryEventInvite<EventsInvite>
     {
         readonly EventDBContext? eventDBContext;
 
@@ -35,6 +35,18 @@ namespace data.Models.DataManager
                                             .FirstOrDefaultAsync(e => e.idEventsInvite == id);
 
             return eventInviteEntity != null ? eventInviteEntity : new NotFoundResult();
+        }
+
+        public async Task<ActionResult<Users>> GetByUserIdAsync(int idUser)
+        {
+            if (eventDBContext == null)
+            {
+                throw new ArgumentNullException(nameof(eventDBContext));
+            }
+
+            var userEntity = await eventDBContext.User.FirstOrDefaultAsync(e => e.IdUser == idUser);
+
+            return userEntity != null ? userEntity : new NotFoundResult();
         }
 
         public async Task<ActionResult<EventsInvite>> AddAsync(EventsInvite newInvite)

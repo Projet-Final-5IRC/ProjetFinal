@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using data.Models.DTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ms_evt.Models.DTO;
 using ms_evt.Services;
@@ -38,6 +39,20 @@ namespace ms_evt.Controllers
             try
             {
                 var data = await _dataService.GetByIdAsync<EventDTO>("api/Event", id);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(404, $"Event not found : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetInvitedUserByEvent")]
+        public async Task<ActionResult<List<UserDTO>>> GetInvitedUserByEvent(int id)
+        {
+            try
+            {
+                var data = await _dataService.GetAllUserByEvent("api/Event/invite", id);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -94,6 +109,20 @@ namespace ms_evt.Controllers
             try
             {
                 var data = await _dataService.DeleteAsync("api/EventInvite", id);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur : {ex.Message}");
+            }
+        }
+
+        [HttpDelete("DeleteInviteByUsername")]
+        public async Task<IActionResult> DeleteInviteByUsername(int id,int idUser)
+        {
+            try
+            {
+                var data = await _dataService.DeleteAsyncUsername($"/api/EventInvite/event/{id}/user/{idUser}");
                 return Ok(data);
             }
             catch (Exception ex)
