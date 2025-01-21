@@ -88,7 +88,6 @@ def traitement_seen(entry_data, entry_json, exitData):
                             # print(f"{topic} ajouté depuis entry_data")
                     
                     # Ajouter les données formatées à la liste des données
-                    new_entry_data = {"year": str(row['Year'].values[i]), "make": str(row['Year'].values[i])}
                     exitData.append(new_entry_data)
                     #print(f"new_entry_data à la fin de la boucle: {new_entry_data}")
                     # print("-----------------------------------")
@@ -96,11 +95,7 @@ def traitement_seen(entry_data, entry_json, exitData):
                 else:
                     print(f"Le film {numberSeen} n'existe plus.")
         else:
-            print("Pas de like de cet utilisateur, recommandation aléatoire.")
-            # Mettre un résultat aléatoire
-            movie_size_len = len(entry_data['idMovie'])
-            random_float_range = random.uniform(0, movie_size_len)
-            # Retourner les données d'un film au hasard qu'on proposera
+            print("La liste des numéros aléatoires est vide.")
         return exitData
 
     # print(f"likes_str : {likes_str}")
@@ -167,7 +162,7 @@ def traitement_movie(entry_data, exitData) :
 
     return exitData
 
-### Lire un json###
+# ### Lire un json###
 def lire_json(chemin_fichier):
     try:
         with open(chemin_fichier, "r", encoding="utf-8") as fichier:
@@ -179,7 +174,7 @@ def lire_json(chemin_fichier):
         print(f"Une erreur inattendue s'est produite, lors de la lecture du fichier json:\n {e}")
         return None
     
-### Lire plusieurs csv ###
+# ### Lire plusieurs csv ###
 def lire_dossier_csv(dossier):
     # Liste pour stocker les DataFrames
     dataframes = []
@@ -192,17 +187,6 @@ def lire_dossier_csv(dossier):
             dataframes.append(df)
 
     return dataframes
-
-# # Exemple d'utilisation
-# dossier = '../../data/Movies'
-# dataframes = lire_fichiers_csv(dossier)
-
-# # Afficher les DataFrames lus
-# for i, df in enumerate(dataframes):
-#     print(f"DataFrame {i+1}:")
-#     print(df.head())
-#     print("\n")
-
 # Ne lire que 1 fichier
 def lire_fichier_csv(chemin_fichier):
     # Lire le fichier CSV

@@ -1,7 +1,11 @@
 # from flask import Blueprint, jsonify, request
 # from .recommender.get_recommendations_by_genre import get_recommendations_by_genre
 # from .recommender.get_recommendations_by_films import get_recommendations_by_films
+# from flask import Blueprint, jsonify, request
+# from .recommender.get_recommendations_by_genre import get_recommendations_by_genre
+# from .recommender.get_recommendations_by_films import get_recommendations_by_films
 
+# api = Blueprint('api', __name__)
 # api = Blueprint('api', __name__)
 
 # # Endpoint pour les recommandations basées sur les genres
