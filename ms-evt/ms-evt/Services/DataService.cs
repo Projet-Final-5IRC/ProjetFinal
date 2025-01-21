@@ -74,5 +74,11 @@ namespace ms_evt.Services
             var response = await _httpClient.PutAsync($"{endpoint}/{id}",content);
             return response.StatusCode;
         }
+
+        public async Task<HttpStatusCode> PutStateOfEvent(string endpoint)
+        {
+            var response = await _httpClient.GetAsync(endpoint);
+            return response.StatusCode;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using data.Models.DTO;
 using data.Models.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace data.Models.Repository
 {
@@ -27,6 +28,8 @@ namespace data.Models.Repository
     public interface IDataRepositoryEventInvite<TEntity> : IDataRepository<TEntity>
     {
         Task<ActionResult<Users>> GetByUserIdAsync(int idUser);
+        Task<ActionResult<EventsInvite>> JoinEvent(int idEvent, int idUser);
+        Task<ActionResult<List<Events>>> GetEventJoinByUser(int idUser);
     }
 
     public interface IDataRepositoryWithPreference<TEntity> : IDataRepository<TEntity>
