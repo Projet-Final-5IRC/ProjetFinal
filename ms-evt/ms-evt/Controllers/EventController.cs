@@ -144,5 +144,33 @@ namespace ms_evt.Controllers
                 return StatusCode(500, $"Erreur : {ex.Message}");
             }
         }
+
+        [HttpPut("JoinEvent")]
+        public async Task<IActionResult> JoinEvent(int idUser, int idEvent)
+        {
+            try
+            {
+                var data = await _dataService.PutStateOfEvent($"api/EventInvite/update/{idEvent}/user/{idUser}");
+                return Ok(data);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, $"Erreur : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetEventJoinedByUser")]
+        public async Task<IActionResult> GetEventJoinedByUser (int idUser)
+        {
+            try
+            {
+                var data = await _dataService.GetAllAsync<EventDTO>($"api/EventInvite/invited/{idUser}");
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur : {ex.Message}");
+            }
+        }
     }
 }
