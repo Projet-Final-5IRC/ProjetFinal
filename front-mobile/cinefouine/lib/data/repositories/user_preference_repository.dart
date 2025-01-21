@@ -1,4 +1,5 @@
 import 'package:cinefouine/data/entities/genre/genre_info.dart';
+import 'package:cinefouine/data/entities/userAction/user_action.dart';
 import 'package:cinefouine/data/entities/user_preferences/user_preferences_info.dart';
 import 'package:cinefouine/data/repositories/user_repository.dart';
 import 'package:cinefouine/data/sources/remote/genre_service.dart';
@@ -10,8 +11,10 @@ import 'package:meta/meta.dart';
 part 'user_preference_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-UserPreferenceRepository userPreferenceRepository(UserPreferenceRepositoryRef ref) {
-  final UserPreferenceService userPreferenceService = ref.watch(userPreferenceServiceProvider);
+UserPreferenceRepository userPreferenceRepository(
+    UserPreferenceRepositoryRef ref) {
+  final UserPreferenceService userPreferenceService =
+      ref.watch(userPreferenceServiceProvider);
   return UserPreferenceRepository(
     userPreferenceService: userPreferenceService,
   );
@@ -26,16 +29,35 @@ class UserPreferenceRepository {
   final UserPreferenceService _userPreferenceService;
 
   Future<bool> postUserPreferences(int userId, Set<int> selectedGenres) async {
-    return await _userPreferenceService.postUserPreferences(userId, selectedGenres);
+    return await _userPreferenceService.postUserPreferences(
+        userId, selectedGenres);
   }
 
-    Future<bool> updateUserPreferences(int userId, List<int> selectedGenres) async {
-    return await _userPreferenceService.updateUserPreferences(userId, selectedGenres);
+  Future<bool> updateUserPreferences(
+      int userId, List<int> selectedGenres) async {
+    return await _userPreferenceService.updateUserPreferences(
+        userId, selectedGenres);
   }
 
-    Future<List<UserPreference>?> getUserGenres(int userId) async {
-    final userPreferences = await _userPreferenceService.getUserPreferences(userId);
-    print(userPreferences);
+  Future<List<UserPreference>?> getUserGenres(int userId) async {
+    final userPreferences =
+        await _userPreferenceService.getUserPreferences(userId);
     return userPreferences;
+  }
+
+  Future<UserAction?> getUserActivity(int userId) async {
+    return _userPreferenceService.getUserActivity(userId);
+  }
+
+  Future<void> logUserAction({
+    required int userId,
+    required String actionType,
+    required int value,
+  }) async {    
+    return _userPreferenceService.logUserAction(
+      actionType: actionType,
+      userId: userId,
+      value: value,
+    );
   }
 }

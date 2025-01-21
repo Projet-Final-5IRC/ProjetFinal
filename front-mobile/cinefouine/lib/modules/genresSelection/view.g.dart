@@ -6,7 +6,7 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$genresHash() => r'1a2edb13dacd04dee18d4b9cac79d268883fac43';
+String _$genresHash() => r'6ee397ec9e7026de0b529a9153485d3fe89d47ea';
 
 /// See also [Genres].
 @ProviderFor(Genres)
@@ -21,7 +21,7 @@ final genresProvider =
 );
 
 typedef _$Genres = AutoDisposeAsyncNotifier<List<Genre>?>;
-String _$userGenresHash() => r'9ef0d288b7dd3935a5c3d075d37217473aaf91e5';
+String _$userGenresHash() => r'b389195ce9f7f046c1814d4a9bd54adf08f0b4fb';
 
 /// See also [UserGenres].
 @ProviderFor(UserGenres)
