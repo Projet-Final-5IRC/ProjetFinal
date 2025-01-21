@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/cineFouineBoutton.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
+import 'package:cinefouine/data/entities/repositories/event_repository.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,7 +57,10 @@ class EventView extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               CineFouineHugeBoutton(
-                onPressed: () => router.push(const CreateEventRoute()),
+                onPressed: () async {
+                  await ref.read(eventRepositoryProvider).getAllEvents();
+                  //router.push(const CreateEventRoute());
+                },
                 text: "Create",
               ),
               const SizedBox(height: 16),

@@ -29,16 +29,9 @@ namespace data.Controllers.Tests
         private Mock<IDataRepository<Events>> _mockRepo;
 
         public EventControllerTests()
-        {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            var connectionString = configuration.GetConnectionString("EventDB");
-
+        { 
             var builder = new DbContextOptionsBuilder<EventDBContext>()
-                .UseNpgsql(connectionString);
+                .UseNpgsql("Server=projet-final.postgres.database.azure.com; port=5432; Database=EventsDB; uid=projectAdmin; password=5IRCCPELyon");
 
             _context = new EventDBContext(builder.Options);
             dataRepository = new EventsManager(_context);
