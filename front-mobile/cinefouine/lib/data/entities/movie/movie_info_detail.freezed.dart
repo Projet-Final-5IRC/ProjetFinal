@@ -217,6 +217,7 @@ Details _$DetailsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Details {
+  int? get id => throw _privateConstructorUsedError;
   String? get title => throw _privateConstructorUsedError;
   String? get overview => throw _privateConstructorUsedError;
   @JsonKey(name: 'poster_path')
@@ -241,7 +242,8 @@ abstract class $DetailsCopyWith<$Res> {
       _$DetailsCopyWithImpl<$Res, Details>;
   @useResult
   $Res call(
-      {String? title,
+      {int? id,
+      String? title,
       String? overview,
       @JsonKey(name: 'poster_path') String? posterPath,
       int? runtime,
@@ -264,6 +266,7 @@ class _$DetailsCopyWithImpl<$Res, $Val extends Details>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? title = freezed,
     Object? overview = freezed,
     Object? posterPath = freezed,
@@ -272,6 +275,10 @@ class _$DetailsCopyWithImpl<$Res, $Val extends Details>
     Object? genres = freezed,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       title: freezed == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -308,7 +315,8 @@ abstract class _$$DetailsImplCopyWith<$Res> implements $DetailsCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String? title,
+      {int? id,
+      String? title,
       String? overview,
       @JsonKey(name: 'poster_path') String? posterPath,
       int? runtime,
@@ -329,6 +337,7 @@ class __$$DetailsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? title = freezed,
     Object? overview = freezed,
     Object? posterPath = freezed,
@@ -337,6 +346,10 @@ class __$$DetailsImplCopyWithImpl<$Res>
     Object? genres = freezed,
   }) {
     return _then(_$DetailsImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       title: freezed == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -369,7 +382,8 @@ class __$$DetailsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DetailsImpl implements _Details {
   const _$DetailsImpl(
-      {required this.title,
+      {required this.id,
+      required this.title,
       required this.overview,
       @JsonKey(name: 'poster_path') required this.posterPath,
       required this.runtime,
@@ -380,6 +394,8 @@ class _$DetailsImpl implements _Details {
   factory _$DetailsImpl.fromJson(Map<String, dynamic> json) =>
       _$$DetailsImplFromJson(json);
 
+  @override
+  final int? id;
   @override
   final String? title;
   @override
@@ -404,7 +420,7 @@ class _$DetailsImpl implements _Details {
 
   @override
   String toString() {
-    return 'Details(title: $title, overview: $overview, posterPath: $posterPath, runtime: $runtime, releaseDate: $releaseDate, genres: $genres)';
+    return 'Details(id: $id, title: $title, overview: $overview, posterPath: $posterPath, runtime: $runtime, releaseDate: $releaseDate, genres: $genres)';
   }
 
   @override
@@ -412,6 +428,7 @@ class _$DetailsImpl implements _Details {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DetailsImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.overview, overview) ||
                 other.overview == overview) &&
@@ -425,7 +442,7 @@ class _$DetailsImpl implements _Details {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, title, overview, posterPath,
+  int get hashCode => Object.hash(runtimeType, id, title, overview, posterPath,
       runtime, releaseDate, const DeepCollectionEquality().hash(_genres));
 
   /// Create a copy of Details
@@ -446,7 +463,8 @@ class _$DetailsImpl implements _Details {
 
 abstract class _Details implements Details {
   const factory _Details(
-      {required final String? title,
+      {required final int? id,
+      required final String? title,
       required final String? overview,
       @JsonKey(name: 'poster_path') required final String? posterPath,
       required final int? runtime,
@@ -455,6 +473,8 @@ abstract class _Details implements Details {
 
   factory _Details.fromJson(Map<String, dynamic> json) = _$DetailsImpl.fromJson;
 
+  @override
+  int? get id;
   @override
   String? get title;
   @override

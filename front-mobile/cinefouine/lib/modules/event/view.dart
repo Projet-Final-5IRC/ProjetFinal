@@ -27,13 +27,16 @@ class Events extends _$Events {
   @override
   Future<List<EventInfo>?> build() async {
     final preferences = ref.read(preferencesProvider);
-    return ref.watch(eventRepositoryProvider).getAllEvents(preferences.idUserPreferences.load());
+    return ref
+        .watch(eventRepositoryProvider)
+        .getAllEvents(preferences.idUserPreferences.load());
   }
 
   Future<void> updateEvents() async {
     final preferences = ref.read(preferencesProvider);
-    state = AsyncValue.data(
-        await ref.watch(eventRepositoryProvider).getAllEvents(preferences.idUserPreferences.load()));
+    state = AsyncValue.data(await ref
+        .watch(eventRepositoryProvider)
+        .getAllEvents(preferences.idUserPreferences.load()));
     ref.read(myEventsProvider.notifier).updateMyEvents();
   }
 }
@@ -64,6 +67,52 @@ class MyEvents extends _$MyEvents {
     } else {
       state = AsyncValue.data([]);
     }
+  }
+}
+
+@Riverpod(keepAlive: false)
+class EventsJoined extends _$EventsJoined {
+  @override
+  Future<List<int>?> build() async {
+    final preferences = ref.read(preferencesProvider);
+    if (preferences.idUserPreferences.load() != null) {
+      final events = await ref
+          .watch(eventRepositoryProvider)
+          .getEventsJoined(preferences.idUserPreferences.load()!);
+      return events?.map((event) => event.idEvent).toList();
+    } else {
+      return [];
+    }
+  }
+
+  void toggleEvent(int eventId) async {
+    final currentEvents = state.value ?? [];
+
+    if (currentEvents.contains(eventId)) {
+      state = AsyncValue.data(
+        currentEvents.where((id) => id != eventId).toList(),
+      );
+    } else {
+      state = AsyncValue.data([...currentEvents, eventId]);
+    }
+  }
+}
+
+@Riverpod(keepAlive: false)
+class JoinEventButton extends _$JoinEventButton {
+  @override
+  Future<bool> build() async {
+    return false;
+  }
+
+  Future<void> joinEvent(int idUser, int idEvent) async {
+    final eventRepo = ref.read(eventRepositoryProvider);
+    eventRepo.inviteEvent(
+      idEvent: idEvent,
+      idUser: idUser,
+      isPending: false,
+    );
+    ref.read(userInvitedToSelectedEventProvider.notifier).updateUsers();
   }
 }
 
@@ -191,6 +240,8 @@ class EventView extends ConsumerWidget {
 }
 
 Widget _buildEventList(List<EventInfo> events, WidgetRef ref, bool isMyEvent) {
+  final eventsJoined = ref.watch(eventsJoinedProvider);
+
   return RefreshIndicator(
     onRefresh: () async {
       if (isMyEvent) {
@@ -206,7 +257,7 @@ Widget _buildEventList(List<EventInfo> events, WidgetRef ref, bool isMyEvent) {
         return EventItem(
           event: event,
           avatarPath: "assets/images/default_avatar.jpg",
-          isJoined: false,
+          isJoined: eventsJoined.value?.contains(event.idEvent),
           isMyEvent: isMyEvent,
           ref: ref,
         );
@@ -218,7 +269,7 @@ Widget _buildEventList(List<EventInfo> events, WidgetRef ref, bool isMyEvent) {
 class EventItem extends StatelessWidget {
   final EventInfo event;
   final String avatarPath;
-  final bool isJoined;
+  final bool? isJoined;
   final bool isMyEvent;
   final WidgetRef ref;
 
@@ -272,9 +323,24 @@ class EventItem extends StatelessWidget {
             ),
             if (!isMyEvent)
               Cinefouineboutton(
-                isClicked: isJoined,
+                isClicked: isJoined ?? false,
                 onPressed: () {
-                  print("join");
+                  final preferences = ref.read(preferencesProvider);
+
+                  if (preferences.idUserPreferences.load() != null) {
+                    if (isJoined ?? false) {
+                      ref.read(eventRepositoryProvider).deleteInvite(
+                            idEvent: event.idEvent,
+                            idUser: preferences.idUserPreferences.load()!,
+                          );
+                    } else {
+                      ref.read(joinEventButtonProvider.notifier).joinEvent(
+                            preferences.idUserPreferences.load()!,
+                            event.idEvent,
+                          );
+                    }
+                    ref.read(eventsJoinedProvider.notifier).toggleEvent(event.idEvent);
+                  }
                 },
                 text: "Join",
                 text2: "Joined",

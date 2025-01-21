@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cinefouine/modules/chosseMovie/view.dart';
 import 'package:cinefouine/modules/eventInvite/view.dart';
 import 'package:cinefouine/router/auth_guard.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,6 +49,7 @@ class AppRouter extends RootStackRouter {
               children: [
                 AutoRoute(page: EventRoute.page, initial: true),
                 AutoRoute(page: CreateEventRoute.page),
+                AutoRoute(page: ChooseMovieRoute.page),
                 AutoRoute(page: EventInviteRoute.page),
                 AutoRoute(page: DetailsEventRoute.page),
                 AutoRoute(page: EventInviteRoute.page),

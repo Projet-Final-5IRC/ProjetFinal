@@ -53,5 +53,36 @@ final myEventsProvider =
 );
 
 typedef _$MyEvents = AutoDisposeAsyncNotifier<List<EventInfo>?>;
+String _$eventsJoinedHash() => r'22e2ccc87a59426f79e02415f1495f9e96dba551';
+
+/// See also [EventsJoined].
+@ProviderFor(EventsJoined)
+final eventsJoinedProvider =
+    AutoDisposeAsyncNotifierProvider<EventsJoined, List<int>?>.internal(
+  EventsJoined.new,
+  name: r'eventsJoinedProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$eventsJoinedHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$EventsJoined = AutoDisposeAsyncNotifier<List<int>?>;
+String _$joinEventButtonHash() => r'b7c003770916fb355520844c42f6160c61dbcc7c';
+
+/// See also [JoinEventButton].
+@ProviderFor(JoinEventButton)
+final joinEventButtonProvider =
+    AutoDisposeAsyncNotifierProvider<JoinEventButton, bool>.internal(
+  JoinEventButton.new,
+  name: r'joinEventButtonProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$joinEventButtonHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$JoinEventButton = AutoDisposeAsyncNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

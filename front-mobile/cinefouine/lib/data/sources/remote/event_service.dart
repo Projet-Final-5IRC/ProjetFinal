@@ -38,6 +38,16 @@ class EventService {
     return apiResult;
   }
 
+  Future<List<EventInfo>?> getEventsJoined(int idUser) async {
+    final endpoint = "/Event/GetEventJoinedByUser?idUser=$idUser";
+    final apiResult = await dioClient.get<List<EventInfo>>(
+      endpoint,
+      deserializer: (json) =>
+          EventListExtension.eventFromJson(jsonEncode(json)),
+    );
+    return apiResult;
+  }
+
   Future<void> createEvent({
     required String eventName,
     required String eventDate,
@@ -77,16 +87,17 @@ class EventService {
   }
 
   Future<void> inviteEvent({
-    required int IdEvent,
-    required int IdUser,
+    required int idEvent,
+    required int idUser,
+    required bool isPending,
   }) async {
     final endpoint = "/Event/InviteUser";
     final eventInviteData = {
-      "IdEvent": IdEvent,
-      "IdUser": IdUser,
-      "IsPending": true,
+      "IdEvent": idEvent,
+      "IdUser": idUser,
+      "IsPending": isPending,
     };
-    final response = await dioClient.post(
+    return await dioClient.post(
       endpoint,
       data: eventInviteData,
     );
@@ -124,9 +135,32 @@ class EventService {
 
     final apiResult = await dioClient.get<List<UserInfo>>(
       endpoint,
-      deserializer: (json) =>
-          UserListExtension.userFromJson(jsonEncode(json)),
+      deserializer: (json) => UserListExtension.userFromJson(jsonEncode(json)),
     );
     return apiResult;
+  }
+
+  Future<void> deleteInvite({
+    required int idEvent,
+    required int idUser,
+  }) async {
+    final endpoint = "/Event/DeleteInviteByUsername?id=$idEvent&idUser=$idUser";
+
+    final apiResult = await dioClient.delete(
+      endpoint,
+    );
+    return apiResult;
+  }
+
+  Future<void> joinEvent({
+    required int idEvent,
+    required int idUser,
+  }) async {
+    print("idUser=$idUser&idEvent=$idEvent");
+    final endpoint = "/Event/joinEvent?idUser=$idUser&idEvent=$idEvent";
+
+    return await dioClient.put(
+      endpoint,
+    );
   }
 }

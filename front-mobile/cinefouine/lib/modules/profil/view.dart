@@ -1,10 +1,60 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
+import 'package:cinefouine/data/entities/userAction/user_action.dart';
+import 'package:cinefouine/data/repositories/user_preference_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'view.g.dart';
+
+@Riverpod(keepAlive: false)
+class UserActionStat extends _$UserActionStat {
+  @override
+  Future<UserAction?> build() async {
+    final Preferences preferences = ref.read(preferencesProvider);
+    try {
+      return await ref
+          .read(userPreferenceRepositoryProvider)
+          .getUserActivity(preferences.idUserPreferences.load()!);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> updateAction() async {
+    final Preferences preferences = ref.read(preferencesProvider);
+    try {
+      state = AsyncData(
+        await ref
+            .read(userPreferenceRepositoryProvider)
+            .getUserActivity(preferences.idUserPreferences.load()!),
+      );
+    } catch (e) {
+      return;
+    }
+  }
+
+  Future<void> postUserAction({
+    required int idUser,
+    required int value,
+    required String action,
+  }) async {
+    try {
+      await ref.read(userPreferenceRepositoryProvider).postUserAction(
+            userId: idUser,
+            value: value,
+            actionType: action,
+          );
+      await updateAction();
+    } catch (e) {
+      return;
+    }
+  }
+}
 
 @RoutePage()
 class ProfilView extends ConsumerWidget {
@@ -14,6 +64,7 @@ class ProfilView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Preferences preferences = ref.watch(preferencesProvider);
     final router = ref.watch(appRouterProvider);
+    final userActionAsync = ref.watch(userActionStatProvider);
 
     return Scaffold(
       backgroundColor: AppColors.secondary,
@@ -109,7 +160,74 @@ class ProfilView extends ConsumerWidget {
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+              CineFouineHugeBoutton(
+                onPressed: () {
+                  router.replaceAll([const GenresSelectionRoute()]);
+                },
+                text: "choose favorite genre",
+              ),
+              const SizedBox(height: 16),
+              Text(
+                "Mes badges",
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              userActionAsync.when(
+                data: (userAction) {
+                  if (userAction == null) {
+                    return Text(
+                      "Aucune action enregistrée.",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    );
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Nombre de connexions : ${userAction.loginCount}",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      Text(
+                        "Score au quiz : ${userAction.quizScore}",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      Text(
+                        "Films regardés ce mois-ci : ${userAction.moviesWatchedInMonth}",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      Text(
+                        "Événements assistés : ${userAction.eventsAttended}",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      Text(
+                        "Jours actifs : ${userAction.daysActive}",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      Text(
+                        "Critiques écrites : ${userAction.reviewsWritten}",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      Text(
+                        "Genres uniques regardés : ${userAction.uniqueGenresWatched}",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ],
+                  );
+                },
+                loading: () => Center(
+                  child: CircularProgressIndicator(),
+                ),
+                error: (err, stack) => Text(
+                  "Erreur lors du chargement des actions utilisateur : $err",
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+              SizedBox(height: 16),
               Text(
                 "Mes films",
                 style: TextStyle(
@@ -159,7 +277,10 @@ class ProfilView extends ConsumerWidget {
     );
   }
 
-  Widget _buildSection(String title, List<String> items) {
+  Widget _buildSection(
+    String title,
+    List<String> items,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -30,6 +30,10 @@ class EventRepository {
     return allEventsExeptMine;
   }
 
+  Future<List<EventInfo>?> getEventsJoined(int idUser) async {
+    return await _appApiClient.getEventsJoined(idUser);
+  }
+
   Future<List<EventInfo>?> getMyEvents(int idUser) async {
     final events = await _appApiClient.getAllEvents();
     final userEvents =
@@ -60,10 +64,15 @@ class EventRepository {
   }
 
   Future<void> inviteEvent({
-    required int IdEvent,
-    required int IdUser,
+    required int idEvent,
+    required int idUser,
+    bool isPending = true,
   }) async {
-    _appApiClient.inviteEvent(IdEvent: IdEvent, IdUser: IdUser);
+    _appApiClient.inviteEvent(
+      idEvent: idEvent,
+      idUser: idUser,
+      isPending: isPending,
+    );
   }
 
   // Delete event function
@@ -79,5 +88,22 @@ class EventRepository {
     return await _appApiClient.getInvitedUserByEvent(
       idEvent: idEvent,
     );
+  }
+
+  Future<void> deleteInvite({
+    required int idEvent,
+    required int idUser,
+  }) async {
+    await _appApiClient.deleteInvite(
+      idEvent: idEvent,
+      idUser: idUser,
+    );
+  }
+
+  Future<void> joinEvent({
+    required int idEvent,
+    required int idUser,
+  }) async {
+    _appApiClient.joinEvent(idEvent: idEvent, idUser: idUser);
   }
 }

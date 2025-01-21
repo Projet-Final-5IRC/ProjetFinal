@@ -26,6 +26,26 @@ class Users extends _$Users {
 }
 
 @Riverpod(keepAlive: false)
+class UsersInEvent extends _$UsersInEvent {
+  @override
+  List<int> build() {
+    final users = ref.read(userInvitedToSelectedEventProvider).value;
+    if (users == null) {
+      return [];
+    }
+    return users.map((user) => user.idUser).toList();
+  }
+
+  void toggleUser(int userId) {
+    if (state.contains(userId)) {
+      state = state.where((id) => id != userId).toList();
+    } else {
+      state = [...state, userId];
+    }
+  }
+}
+
+@Riverpod(keepAlive: false)
 class InviteUserButton extends _$InviteUserButton {
   @override
   Future<bool> build() async {
@@ -37,11 +57,22 @@ class InviteUserButton extends _$InviteUserButton {
   ) async {
     final eventRepo = ref.read(eventRepositoryProvider);
     final currentEvent = ref.read(eventSeletedProvider);
+    final userInevent = ref.read(usersInEventProvider);
+
     if (currentEvent?.idEvent != null) {
-      eventRepo.inviteEvent(
-        IdEvent: currentEvent!.idEvent,
-        IdUser: idUser,
-      );
+      if (userInevent.contains(idUser)) {
+        ref.read(eventRepositoryProvider).deleteInvite(
+              idEvent: currentEvent!.idEvent,
+              idUser: idUser,
+            );
+      } else {
+        await eventRepo.inviteEvent(
+          idEvent: currentEvent!.idEvent,
+          idUser: idUser,
+          isPending: true,
+        );
+      }
+      ref.read(usersInEventProvider.notifier).toggleUser(idUser);
       ref.read(userInvitedToSelectedEventProvider.notifier).updateUsers();
     }
   }
@@ -69,6 +100,7 @@ class EventInviteView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
     final users = ref.watch(usersProvider);
+    final usersInEvent = ref.watch(usersInEventProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFF1A1F25),
@@ -97,12 +129,11 @@ class EventInviteView extends ConsumerWidget {
                         final user = userList[index];
                         return _buildInviteItem(
                           name: user.userName,
-                          isInvited: false,
+                          isInvited: usersInEvent.contains(user.idUser),
                           onPressed: () {
                             ref
                                 .read(inviteUserButtonProvider.notifier)
                                 .inviteUser(user.idUser);
-                            print("${user.idUser} invited ");
                           },
                         );
                       },

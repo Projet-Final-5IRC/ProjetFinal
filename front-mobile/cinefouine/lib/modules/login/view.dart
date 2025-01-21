@@ -2,7 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
 import 'package:cinefouine/core/widgets/cinefouineInputField.dart';
 import 'package:cinefouine/data/repositories/auth_repository.dart';
+import 'package:cinefouine/data/repositories/user_preference_repository.dart';
+import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:cinefouine/modules/login/model/login_status.dart';
+import 'package:cinefouine/modules/profil/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinefouine/router/app_router.dart';
@@ -153,6 +156,12 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 final isLoged =
                     await ref.read(_loginButtonProvider.notifier).login();
                 if (isLoged) {
+                  final preferences = ref.watch(preferencesProvider);
+                  ref.read(userActionStatProvider.notifier).postUserAction(
+                        action: "login",
+                        idUser: preferences.idUserPreferences.load()!,
+                        value: 1,
+                      );
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Sign In Successful!")),
                   );

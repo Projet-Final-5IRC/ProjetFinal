@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cinefouine/data/entities/userAction/user_action.dart';
+import 'package:cinefouine/data/repositories/user_preference_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
+import 'package:cinefouine/modules/profil/view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app_router.dart';
@@ -20,6 +23,12 @@ class AuthGuard extends AutoRouteGuard {
     // true to resume/continue navigation or false to abort navigation
     if (ref.read(preferencesProvider).idUserPreferences.load() != null) {
       // if user is authenticated we continue
+      final preferences = ref.watch(preferencesProvider);
+      ref.read(userActionStatProvider.notifier).postUserAction(
+            action: "login",
+            idUser: preferences.idUserPreferences.load()!,
+            value: 1,
+          );
       resolver.next();
     } else {
       // we redirect the user to our login page
