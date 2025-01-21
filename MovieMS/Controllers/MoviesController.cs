@@ -53,4 +53,57 @@ public class MoviesController : ControllerBase
 
         return Ok(results);
     }
+    
+    
+    // EP pour actors
+    [HttpGet("{movieId}/actors")]
+    public async Task<IActionResult> GetMovieActors(int movieId)
+    {
+        if (movieId <= 0)
+        {
+            return BadRequest("L'ID du film est requis.");
+        }
+
+        try
+        {
+            var actors = await _tmdbService.GetMovieActorsAsync(movieId);
+            return Ok(actors);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Erreur : {ex.Message}");
+        }
+    }
+    
+    [HttpGet("{movieId}")]
+    public async Task<IActionResult> GetFullMovieDetails(int movieId)
+    {
+        if (movieId <= 0)
+        {
+            return BadRequest("L'ID du film est requis.");
+        }
+
+        try
+        {
+            // Exécuter les deux requêtes en parallèle
+            var movieDetailsTask = _tmdbService.GetMovieDetailsAsync(movieId);
+            var movieActorsTask = _tmdbService.GetMovieActorsAsync(movieId);
+
+            await Task.WhenAll(movieDetailsTask, movieActorsTask);
+
+            // Combiner les résultats
+            var fullDetails = new MovieFullDetails
+            {
+                Details = movieDetailsTask.Result,
+                Actors = movieActorsTask.Result
+            };
+
+            return Ok(fullDetails);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Erreur : {ex.Message}");
+        }
+    }
+    
 }

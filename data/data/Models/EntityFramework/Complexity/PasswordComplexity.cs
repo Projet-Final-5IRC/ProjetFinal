@@ -12,9 +12,9 @@ namespace data.Models.EntityFramework.Complexity
             if (string.IsNullOrWhiteSpace(password)) return false;
 
             // Check length
-            if (password.Length < 6 || password.Length > 10)
+            if (password.Length < 8 || password.Length > 16)
             {
-                ErrorMessage = "Le mot de passe doit contenir entre 6 et 10 caractères.";
+                ErrorMessage = "Le mot de passe doit contenir entre 8 et 16 caractères.";
                 return false;
             }
 

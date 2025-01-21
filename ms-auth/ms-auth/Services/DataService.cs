@@ -22,24 +22,39 @@ namespace ms_auth.Services
 
         public async Task<T> GetByEmailAsync<T>(string endpoint, string email)
         {
-            var response = await _httpClient.GetStringAsync($"{endpoint}?email={email}");
-            return JsonConvert.DeserializeObject<T>(response);
+            var response = await _httpClient.GetStringAsync($"{endpoint}{email}");
+
+            if (response != null)
+            {
+                return JsonConvert.DeserializeObject<T>(response);
+            }
+            return JsonConvert.DeserializeObject<T>(null);
         }
 
-        public async Task<(HttpStatusCode,string)> PostUserAsync(string endpoint, UserDTO data)
+        public async Task<APIResponseDTO> PostUserAsync(string endpoint, UserDTO data)
         {
             var content = new StringContent(JsonConvert.SerializeObject(data), System.Text.Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(endpoint, content);
 
-
             var responseContent = await response.Content.ReadAsStringAsync();
-            //var userResponse = await _httpClient.GetAsync(response.Headers.Location);
-            //userResponse.EnsureSuccessStatusCode();
 
-            //var responseContent = await userResponse.Content.ReadAsStringAsync();
-            //var user = JsonConvert.DeserializeObject<UserDTO>(responseContent);
-
-            return (response.StatusCode,responseContent);
+            if (response.StatusCode == HttpStatusCode.Created)
+            {
+                var jsonResponse = JsonConvert.DeserializeObject<UserDTO>(responseContent);
+                return new APIResponseDTO
+                {
+                    StatusCode = response.StatusCode,
+                    Data = jsonResponse
+                };
+            }
+            else
+            {
+                return new APIResponseDTO
+                {
+                    StatusCode = response.StatusCode,
+                    ErrorMessage = responseContent
+                };
+            }
         }
     }
 }

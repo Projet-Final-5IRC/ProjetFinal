@@ -10,7 +10,7 @@
         public string? eventDescription { get; set; }
         public int? idGenre { get; set; }
         public string? genreName { get; set; }
-        public int idUser { get; set; }
+        public int IdUser { get; set; }
         public string? ownerName { get; set; }
         public List<int>? eventInvitationId { get; set; }
     }

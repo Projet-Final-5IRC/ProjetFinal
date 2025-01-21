@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using data.Models.DTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ms_evt.Models.DTO;
 using ms_evt.Services;
@@ -38,6 +39,20 @@ namespace ms_evt.Controllers
             try
             {
                 var data = await _dataService.GetByIdAsync<EventDTO>("api/Event", id);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(404, $"Event not found : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetInvitedUserByEvent")]
+        public async Task<ActionResult<List<UserDTO>>> GetInvitedUserByEvent(int id)
+        {
+            try
+            {
+                var data = await _dataService.GetAllUserByEvent("api/Event/invite", id);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -102,12 +117,54 @@ namespace ms_evt.Controllers
             }
         }
 
+        [HttpDelete("DeleteInviteByUsername")]
+        public async Task<IActionResult> DeleteInviteByUsername(int id,int idUser)
+        {
+            try
+            {
+                var data = await _dataService.DeleteAsyncUsername($"/api/EventInvite/event/{id}/user/{idUser}");
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur : {ex.Message}");
+            }
+        }
+
         [HttpPut("EditEvent")]
         public async Task<IActionResult> EditEvent(int id, EventDTO eventDTO)
         {
             try
             {
                 var data = await _dataService.PutEventAsync("api/Event", id, eventDTO);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur : {ex.Message}");
+            }
+        }
+
+        [HttpPut("JoinEvent")]
+        public async Task<IActionResult> JoinEvent(int idUser, int idEvent)
+        {
+            try
+            {
+                var data = await _dataService.PutStateOfEvent($"api/EventInvite/update/{idEvent}/user/{idUser}");
+                return Ok(data);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, $"Erreur : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetEventJoinedByUser")]
+        public async Task<IActionResult> GetEventJoinedByUser (int idUser)
+        {
+            try
+            {
+                var data = await _dataService.GetAllAsync<EventDTO>($"api/EventInvite/invited/{idUser}");
                 return Ok(data);
             }
             catch (Exception ex)

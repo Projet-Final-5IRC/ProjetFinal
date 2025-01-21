@@ -46,6 +46,9 @@ namespace data.Models.EntityFramework
         [JsonIgnore]
         public virtual ICollection<Events> EventOwned { get; set; } = new List<Events>();
 
+        [JsonIgnore]
+        public virtual ICollection<Preference> UserPreference { get; set; } = new List<Preference>();
+
         public void UpdateUserValues(Users updatedUser)
         {
             if (!string.IsNullOrEmpty(updatedUser.Email))

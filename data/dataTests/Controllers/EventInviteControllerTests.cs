@@ -21,10 +21,10 @@ namespace data.Controllers.Tests
     {
         private EventInviteController _controller;
         private readonly EventDBContext _context;
-        private IDataRepository<EventsInvite> dataRepository;
+        private IDataRepositoryEventInvite<EventsInvite> dataRepository;
 
         private EventInviteController _controller_Moq;
-        private Mock<IDataRepository<EventsInvite>> _mockRepo;
+        private Mock<IDataRepositoryEventInvite<EventsInvite>> _mockRepo;
 
         public EventInviteControllerTests()
         {
@@ -52,8 +52,8 @@ namespace data.Controllers.Tests
         [TestMethod]
         public async Task GetInviteByID_SuccessGetInviteByID()
         {
-            var result = await _controller.GetInviteById(1);
-            var invitInDB = _context.EventInvite.Where(c => c.idEventsInvite == 1).FirstOrDefault();
+            var result = await _controller.GetInviteById(11);
+            var invitInDB = _context.EventInvite.Where(c => c.idEventsInvite == 11).FirstOrDefault();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(invitInDB.idEventsInvite, result.Value.IdEventsInvite);
@@ -75,7 +75,7 @@ namespace data.Controllers.Tests
         [TestInitialize]
         public void Setup()
         {
-            _mockRepo = new Mock<IDataRepository<EventsInvite>>();
+            _mockRepo = new Mock<IDataRepositoryEventInvite<EventsInvite>>();
             _controller_Moq = new EventInviteController(_mockRepo.Object);
         }
 
@@ -108,11 +108,17 @@ namespace data.Controllers.Tests
             // Arrange
             var newInvite = new EventsInvite
             {
-                IdEvent = 1,
-                IdUser = 1
+                IdEvent = 64,
+                IdUser = 8
             };
 
             _mockRepo.Setup(repo => repo.AddAsync(newInvite)).ReturnsAsync(new ActionResult<EventsInvite>(newInvite));
+            _mockRepo.Setup(repo => repo.GetAllAsync())
+                .ReturnsAsync(new ActionResult<IEnumerable<EventsInvite>>(new List<EventsInvite>
+                {
+                    new EventsInvite { IdEvent = 1, IdUser = 2 },
+                    new EventsInvite { IdEvent = 3, IdUser = 4 }
+                }));
 
             // Act
             var result = await _controller_Moq.PostInvite(newInvite);
