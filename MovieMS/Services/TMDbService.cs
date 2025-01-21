@@ -74,7 +74,6 @@ public class TMDbService
 
         return providers;
     }
-    
     public async Task<MovieDetails> GetMovieDetailsAsync(int movieId)
     {
         var response = await _httpClient.GetAsync($"{_baseUrl}/movie/{movieId}?api_key={_apiKey}");
@@ -90,6 +89,7 @@ public class TMDbService
 
         var movieDetails = new MovieDetails
         {
+            Id = json.id != null ? (int)json.id : movieId,
             Title = json.title,
             Overview = json.overview,
             PosterPath = json.poster_path,
