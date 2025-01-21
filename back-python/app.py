@@ -19,7 +19,24 @@ from app import mainGender as mg
 
 app = Flask(__name__)
 
-# Routes
+# Routes en POST
+@app.route('/recoGender', methods=['POST'])
+def recoGender():
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    try:
+        # Appeler la fonction principale (à adapter selon la structure de ton code)
+        resultat = mg.mainGender(data)  # Assurez-vous que MainFunction prend les bons paramètres si nécessaire
+        print("résultat renvoyé")
+        print(resultat)
+        return jsonify({'resultat renvoyé': resultat})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 506 # En cas d'erreur, retourne un message d'erreur avec le statut 500
+    
+# Routes en GET
 @app.route('/recoUser', methods=['GET'])
 def reco_user():
 
