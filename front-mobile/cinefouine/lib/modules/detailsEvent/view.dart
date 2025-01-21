@@ -223,6 +223,17 @@ class DetailsEventView extends ConsumerWidget {
                       text2: "Deleted",
                       buttonColor: Colors.red,
                     ),
+                  SizedBox(width: 16),
+                  Cinefouineboutton(
+                    isClicked: false,
+                    onPressed: () async {
+                      if (eventSelected != null) {
+                        router.push(const ChooseMovieRoute());
+                      }
+                    },
+                    text: "Choose a film",
+                    text2: "Deleted",
+                  ),
                 ],
               ),
               const SizedBox(height: 24),
@@ -353,33 +364,27 @@ class MemberItem extends StatelessWidget {
       ],
     );
 
-    // Gestion du comportement lorsque isMyEvent est true ou false
-    return GestureDetector(
-      onTap: () {
-        router.push(ChooseMovieRoute());
-      },
-      child: isMyEvent
-          ? Dismissible(
-              key: ValueKey(user.idUser),
-              direction: DismissDirection.endToStart,
-              onDismissed: (direction) {
-                ref.read(eventRepositoryProvider).deleteInvite(
-                      idEvent: ref.read(eventSeletedProvider)?.idEvent ?? 0,
-                      idUser: user.idUser,
-                    );
-                ref
-                    .read(userInvitedToSelectedEventProvider.notifier)
-                    .updateUsers();
-              },
-              background: Container(
-                color: Colors.red,
-                alignment: Alignment.centerRight,
-                padding: const EdgeInsets.only(right: 16),
-                child: const Icon(Icons.delete, color: Colors.white),
-              ),
-              child: childContent,
-            )
-          : childContent,
-    );
+    return isMyEvent
+        ? Dismissible(
+            key: ValueKey(user.idUser),
+            direction: DismissDirection.endToStart,
+            onDismissed: (direction) {
+              ref.read(eventRepositoryProvider).deleteInvite(
+                    idEvent: ref.read(eventSeletedProvider)?.idEvent ?? 0,
+                    idUser: user.idUser,
+                  );
+              ref
+                  .read(userInvitedToSelectedEventProvider.notifier)
+                  .updateUsers();
+            },
+            background: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 16),
+              child: const Icon(Icons.delete, color: Colors.white),
+            ),
+            child: childContent,
+          )
+        : childContent;
   }
 }
