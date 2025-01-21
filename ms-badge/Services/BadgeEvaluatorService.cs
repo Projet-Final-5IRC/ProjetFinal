@@ -1,9 +1,25 @@
-﻿using ms_badge.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ms_badge.Db;
+using ms_badge.Models;
 
 namespace ms_badge.Services
 {
     public class BadgeEvaluatorService
     {
+        public async Task<UserActivity> GetUserActivity(int userId, BadgeContext _context)
+        {
+            // Simule la récupération des données d'activité de l'utilisateur depuis la base de données
+            var userActivity = await _context.UserActivities
+                .FirstOrDefaultAsync(ua => ua.UserId == userId);
+
+            if (userActivity == null)
+            {
+                throw new Exception($"User activity not found for UserId: {userId}");
+            }
+
+            return userActivity;
+        }
+
         public bool EvaluateCriteria(Badge badge, UserActivity userActivity)
         {
             return badge.Criteria switch

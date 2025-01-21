@@ -10,99 +10,100 @@ namespace ms_badge.Controllers
 {
     public class BadgeController : Controller
     {
-        [ApiController]
-        [Route("api/[controller]")]
-        public class BadgesController : ControllerBase
+        // In-memory database simulation
+        private static List<Badge> Badges = new List<Badge>();
+        private static List<UserBadge> UserBadges = new List<UserBadge>();
+        private readonly BadgeContext _context;
+        private readonly BadgeEvaluatorService _badgeEvaluatorService;
+
+        public BadgeController(BadgeContext context, BadgeEvaluatorService badgeEvaluatorService)
         {
-            // In-memory database simulation
-            private static List<Badge> Badges = new List<Badge>();
-            private static List<UserBadge> UserBadges = new List<UserBadge>();
-            private readonly BadgeContext _context;
+            _context = context;
+            _badgeEvaluatorService = badgeEvaluatorService;
+        }
 
-            public BadgesController(BadgeContext context)
+        [HttpGet]
+        [Route("list")]
+        public async Task<IActionResult> GetAllBadges([FromServices] BadgeContext context)
+        {
+            var badges = await context.Badges.ToListAsync();
+            return Ok(badges);
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public async Task<IActionResult> CreateBadge([FromBody] Badge badge, [FromServices] BadgeContext context)
+        {
+            await context.Badges.AddAsync(badge);
+            await context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetAllBadges), new { id = badge.Id }, badge);
+        }
+
+        [HttpGet]
+        [Route("{id}")] // Get a badge by ID
+        public async Task<IActionResult> GetBadgeById(int id, [FromServices] BadgeContext context)
+        {
+            var badge = await context.Badges.FindAsync(id);
+            if (badge == null)
             {
-                _context = context;
+                return NotFound();
             }
 
-            [HttpGet]
-            [Route("list")]
-            public async Task<IActionResult> GetAllBadges([FromServices] BadgeContext context)
+            return Ok(badge);
+        }
+
+        [HttpPut]
+        [Route("{id}")] // Update badge
+        public async Task<IActionResult> UpdateBadge(int id, [FromBody] Badge updatedBadge, [FromServices] BadgeContext context)
+        {
+            var badge = await context.Badges.FindAsync(id);
+            if (badge == null)
             {
-                var badges = await context.Badges.ToListAsync();
-                return Ok(badges);
+                return NotFound();
             }
 
-            [HttpPost]
-            [Route("create")]
-            public async Task<IActionResult> CreateBadge([FromBody] Badge badge, [FromServices] BadgeContext context)
+            badge.Name = updatedBadge.Name;
+            badge.Description = updatedBadge.Description;
+            badge.Criteria = updatedBadge.Criteria;
+
+            context.Badges.Update(badge);
+            await context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("{id}")] // Delete badge
+        public async Task<IActionResult> DeleteBadge(int id, [FromServices] BadgeContext context)
+        {
+            var badge = await context.Badges.FindAsync(id);
+            if (badge == null)
             {
-                await context.Badges.AddAsync(badge);
-                await context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetAllBadges), new { id = badge.Id }, badge);
+                return NotFound();
             }
 
-            [HttpGet]
-            [Route("{id}")] // Get a badge by ID
-            public async Task<IActionResult> GetBadgeById(int id, [FromServices] BadgeContext context)
+            context.Badges.Remove(badge);
+            await context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPost("evaluate-and-assign/{userId}")]
+        public async Task<IActionResult> EvaluateAndAssignBadges(int userId)
+        {
+            try
             {
-                var badge = await context.Badges.FindAsync(id);
-                if (badge == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(badge);
-            }
-
-            [HttpPut]
-            [Route("{id}")] // Update badge
-            public async Task<IActionResult> UpdateBadge(int id, [FromBody] Badge updatedBadge, [FromServices] BadgeContext context)
-            {
-                var badge = await context.Badges.FindAsync(id);
-                if (badge == null)
-                {
-                    return NotFound();
-                }
-
-                badge.Name = updatedBadge.Name;
-                badge.Description = updatedBadge.Description;
-                badge.Criteria = updatedBadge.Criteria;
-
-                context.Badges.Update(badge);
-                await context.SaveChangesAsync();
-
-                return NoContent();
-            }
-
-            [HttpDelete]
-            [Route("{id}")] // Delete badge
-            public async Task<IActionResult> DeleteBadge(int id, [FromServices] BadgeContext context)
-            {
-                var badge = await context.Badges.FindAsync(id);
-                if (badge == null)
-                {
-                    return NotFound();
-                }
-
-                context.Badges.Remove(badge);
-                await context.SaveChangesAsync();
-
-                return NoContent();
-            }
-
-            [HttpPost]
-            [Route("evaluate-and-assign")] // Evaluate and assign badges
-            public async Task<IActionResult> EvaluateAndAssignBadges(int userId, [FromServices] BadgeContext context, [FromServices] BadgeEvaluatorService evaluator)
-            {
-                var userActivity = await GetUserActivity(userId); // Assume method to fetch user activity
-                var badges = await context.Badges.ToListAsync();
+                // Fetch user activity using the BadgeEvaluatorService
+                var userActivity = await _badgeEvaluatorService.GetUserActivity(userId, _context);
+                var badges = await _context.Badges.ToListAsync();
 
                 foreach (var badge in badges)
                 {
-                    if (evaluator.EvaluateCriteria(badge, userActivity))
+                    // Evaluate the badge criteria using the service
+                    if (_badgeEvaluatorService.EvaluateCriteria(badge, userActivity))
                     {
                         // Check if the badge is already assigned
-                        var alreadyAssigned = await context.UserBadges
+                        var alreadyAssigned = await _context.UserBadges
                             .AnyAsync(ub => ub.UserId == userId && ub.BadgeId == badge.Id);
 
                         if (!alreadyAssigned)
@@ -114,27 +115,32 @@ namespace ms_badge.Controllers
                                 AssignedDate = DateTime.UtcNow
                             };
 
-                            await context.UserBadges.AddAsync(userBadge);
+                            await _context.UserBadges.AddAsync(userBadge);
                         }
                     }
                 }
 
-                await context.SaveChangesAsync();
+                // Save changes in the database
+                await _context.SaveChangesAsync();
                 return Ok("Badges evaluated and assigned successfully.");
             }
-
-
-            [HttpGet]
-            [Route("user/{userId}")] // Get all badges for a user
-            public async Task<IActionResult> GetUserBadges(int userId, [FromServices] BadgeContext context)
+            catch (Exception ex)
             {
-                var badges = await context.UserBadges
-                    .Where(ub => ub.UserId == userId)
-                    .Join(context.Badges, ub => ub.BadgeId, b => b.Id, (ub, b) => b)
-                    .ToListAsync();
-
-                return Ok(badges);
+                return BadRequest($"An error occurred: {ex.Message}");
             }
         }
+
+        [HttpGet]
+        [Route("user/{userId}")] // Get all badges for a user
+        public async Task<IActionResult> GetUserBadges(int userId, [FromServices] BadgeContext context)
+        {
+            var badges = await context.UserBadges
+                .Where(ub => ub.UserId == userId)
+                .Join(context.Badges, ub => ub.BadgeId, b => b.Id, (ub, b) => b)
+                .ToListAsync();
+
+            return Ok(badges);
+        }
+        
     }
 }

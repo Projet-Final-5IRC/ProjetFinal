@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ms_badge.Db;
+using ms_badge.Services;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BadgeContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddSingleton<BadgeEvaluatorService>(sp => new BadgeEvaluatorService());
 
 var app = builder.Build();
 
