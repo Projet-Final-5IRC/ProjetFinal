@@ -27,6 +27,22 @@ class BottomNavigationRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ChooseMovieView]
+class ChooseMovieRoute extends PageRouteInfo<void> {
+  const ChooseMovieRoute({List<PageRouteInfo>? children})
+    : super(ChooseMovieRoute.name, initialChildren: children);
+
+  static const String name = 'ChooseMovieRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ChooseMovieView();
+    },
+  );
+}
+
+/// generated route for
 /// [CreateEventView]
 class CreateEventRoute extends PageRouteInfo<void> {
   const CreateEventRoute({List<PageRouteInfo>? children})

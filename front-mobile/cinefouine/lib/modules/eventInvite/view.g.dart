@@ -21,7 +21,7 @@ final usersProvider =
 );
 
 typedef _$Users = AutoDisposeAsyncNotifier<List<UserInfo>?>;
-String _$usersInEventHash() => r'5c90e0e1b9134280f109da38eac1cf231c42d3b7';
+String _$usersInEventHash() => r'818d79abe36c799ff4b1d05e3299f9384df3443a';
 
 /// See also [UsersInEvent].
 @ProviderFor(UsersInEvent)
@@ -36,7 +36,7 @@ final usersInEventProvider =
 );
 
 typedef _$UsersInEvent = AutoDisposeNotifier<List<int>>;
-String _$inviteUserButtonHash() => r'1440972cf197de294df11425faaa997140762ac0';
+String _$inviteUserButtonHash() => r'b2c6bada1afa34b45222a2cebd30e3ee6a024790';
 
 /// See also [InviteUserButton].
 @ProviderFor(InviteUserButton)

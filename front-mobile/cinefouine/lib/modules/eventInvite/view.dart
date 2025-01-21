@@ -67,8 +67,9 @@ class InviteUserButton extends _$InviteUserButton {
             );
       } else {
         await eventRepo.inviteEvent(
-          IdEvent: currentEvent!.idEvent,
-          IdUser: idUser,
+          idEvent: currentEvent!.idEvent,
+          idUser: idUser,
+          isPending: true,
         );
       }
       ref.read(usersInEventProvider.notifier).toggleUser(idUser);

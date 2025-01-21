@@ -53,7 +53,22 @@ final myEventsProvider =
 );
 
 typedef _$MyEvents = AutoDisposeAsyncNotifier<List<EventInfo>?>;
-String _$joinEventButtonHash() => r'19493a8fe0d9368c896a0448550e59fb7dfc0656';
+String _$eventsJoinedHash() => r'b07e4643955a92d12e98f8aafbf59bb8a112efe4';
+
+/// See also [EventsJoined].
+@ProviderFor(EventsJoined)
+final eventsJoinedProvider =
+    AutoDisposeAsyncNotifierProvider<EventsJoined, List<int>?>.internal(
+  EventsJoined.new,
+  name: r'eventsJoinedProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$eventsJoinedHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$EventsJoined = AutoDisposeAsyncNotifier<List<int>?>;
+String _$joinEventButtonHash() => r'b7c003770916fb355520844c42f6160c61dbcc7c';
 
 /// See also [JoinEventButton].
 @ProviderFor(JoinEventButton)
