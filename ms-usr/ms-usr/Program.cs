@@ -2,18 +2,35 @@ using ms_usr.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddHttpClient<DataService>();
+// Retrieve connection strings
+var baseUrl = builder.Configuration.GetConnectionString("BaseURL");
+var defaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (string.IsNullOrEmpty(baseUrl) || string.IsNullOrEmpty(defaultConnection))
+{
+    throw new ArgumentNullException("Connection strings cannot be null or empty.");
+}
+
+// Register UserActivityService with the DefaultConnection string
+builder.Services.AddSingleton<UserActivityService>(sp => new UserActivityService(defaultConnection));
+
+// Add HttpClient for the BaseURL
+builder.Services.AddHttpClient("BaseApiClient", client =>
+{
+    client.BaseAddress = new Uri(baseUrl);
+});
+
+builder.Services.AddScoped<DataService>();
 builder.Services.AddSingleton<DataService>();
 
+// Add services to the container
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -21,9 +38,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
