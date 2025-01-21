@@ -20,11 +20,13 @@ namespace QuizzMS
             builder.Services.AddDbContext<QuizDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Ajouter SignalR
-            builder.Services.AddSignalR();
 
             // Ajouter les contrôleurs
             builder.Services.AddControllers();
+
+            // Ajouter SignalR
+            builder.Logging.AddConsole();
+            builder.Services.AddSignalR(options => options.EnableDetailedErrors =  true);
 
             // Ajouter CORS pour autoriser toutes les origines (à restreindre en production)
             builder.Services.AddCors(options =>
@@ -33,9 +35,10 @@ namespace QuizzMS
                     builder =>
                     {
                         builder
-                            .AllowAnyOrigin()
+                            .SetIsOriginAllowed(origin => true)
                             .AllowAnyMethod()
-                            .AllowAnyHeader();
+                            .AllowAnyHeader()
+                            .AllowCredentials();
                     });
             });
 
@@ -66,8 +69,8 @@ namespace QuizzMS
             // app.UseHttpsRedirection();
 
             // Utiliser CORS avant d'utiliser l'Authorization et le Routing
+            app.UseRouting();
             app.UseCors("AllowAll");
-
             app.UseAuthorization();
 
             // Map SignalR Hubs
