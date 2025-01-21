@@ -13,12 +13,14 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
 ### Test avec les json en local ###
-def JsonInput(pathUser, pathMovie):
-    #### Data ####
-    # User
+def JsonInput(input, pathMovie):
+    # #### Data ####
+    # # User
     entry_json = {}  
-    with open(pathUser, 'r') as json_file:
-        entry_json = json.load(json_file)
+    # with open(pathUser, 'r') as json_file:
+    #     entry_json = json.load(json_file)
+    entry_json = input
+    
     # Movies
     entry_data = {}
     with open(pathMovie, 'r') as file:
@@ -108,9 +110,8 @@ def TraitementDataFinish(predicted_values, dataframeMovieReturn, entry_json):
     
     return json_result
 
-def MainFunction():
+def MainFunction(input_json):
         
-    pathUser = "./data/User/userTest1.json"
     pathMovie = "./data/Movies/movies.json"
 
     rfc = RandomForestClassifier(
@@ -120,7 +121,7 @@ def MainFunction():
     )
     print("------------json-------------------")
     #Json issus du Prompt
-    jsonInput = JsonInput(pathUser, pathMovie)
+    jsonInput = JsonInput(input_json, pathMovie)
     entry_json = jsonInput[0]
     entry_data = jsonInput[1]
     print("---------traitementMain--------------")

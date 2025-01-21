@@ -1,4 +1,5 @@
-from app.CallApiTest import CallApiTest as cap
+from app.ressources import CallApi as cap
+# from app.CallApiTest import CallApiTest as cap
 
 import os
 from dotenv import load_dotenv
