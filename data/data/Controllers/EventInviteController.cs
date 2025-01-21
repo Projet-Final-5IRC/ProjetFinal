@@ -3,6 +3,7 @@ using data.Models.EntityFramework;
 using data.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace data.Controllers
 {
@@ -45,6 +46,21 @@ namespace data.Controllers
             }
 
             return new EventInviteDTO(invite.Value);
+        }
+
+        [HttpGet("invited/{idUser}")]
+        public async Task<ActionResult<List<EventDTO>>> GetEventWhereUserJoin(int idUser)
+        {
+            var listOfEvent = await dataRepository.GetEventJoinByUser(idUser);
+
+            List<EventDTO> listOfEventDTO = new List<EventDTO>();
+
+            foreach (Events events in listOfEvent.Value)
+            {
+                listOfEventDTO.Add(new EventDTO(events));
+            }
+
+            return listOfEventDTO;
         }
 
         // PUT: api/Invites/5
@@ -131,6 +147,13 @@ namespace data.Controllers
             await dataRepository.DeleteAsync(invite);
 
             return NoContent();
+        }
+
+        [HttpGet("update/{idEvent}/user/{idUser}")]
+        public async Task<ActionResult<EventInviteDTO>> JoinEvent(int idEvent,int idUser)
+        {
+            var inviteUpdated = await dataRepository.JoinEvent(idEvent, idUser);
+            return CreatedAtAction("GetInviteById", new { id = inviteUpdated.Value.idEventsInvite }, new EventInviteDTO(inviteUpdated.Value));
         }
     }
 }
