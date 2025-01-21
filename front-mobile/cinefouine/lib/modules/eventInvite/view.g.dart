@@ -21,6 +21,21 @@ final usersProvider =
 );
 
 typedef _$Users = AutoDisposeAsyncNotifier<List<UserInfo>?>;
+String _$usersInEventHash() => r'5c90e0e1b9134280f109da38eac1cf231c42d3b7';
+
+/// See also [UsersInEvent].
+@ProviderFor(UsersInEvent)
+final usersInEventProvider =
+    AutoDisposeNotifierProvider<UsersInEvent, List<int>>.internal(
+  UsersInEvent.new,
+  name: r'usersInEventProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$usersInEventHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$UsersInEvent = AutoDisposeNotifier<List<int>>;
 String _$inviteUserButtonHash() => r'1440972cf197de294df11425faaa997140762ac0';
 
 /// See also [InviteUserButton].

@@ -27,13 +27,16 @@ class Events extends _$Events {
   @override
   Future<List<EventInfo>?> build() async {
     final preferences = ref.read(preferencesProvider);
-    return ref.watch(eventRepositoryProvider).getAllEvents(preferences.idUserPreferences.load());
+    return ref
+        .watch(eventRepositoryProvider)
+        .getAllEvents(preferences.idUserPreferences.load());
   }
 
   Future<void> updateEvents() async {
     final preferences = ref.read(preferencesProvider);
-    state = AsyncValue.data(
-        await ref.watch(eventRepositoryProvider).getAllEvents(preferences.idUserPreferences.load()));
+    state = AsyncValue.data(await ref
+        .watch(eventRepositoryProvider)
+        .getAllEvents(preferences.idUserPreferences.load()));
     ref.read(myEventsProvider.notifier).updateMyEvents();
   }
 }
@@ -64,6 +67,23 @@ class MyEvents extends _$MyEvents {
     } else {
       state = AsyncValue.data([]);
     }
+  }
+}
+
+@Riverpod(keepAlive: false)
+class JoinEventButton extends _$JoinEventButton {
+  @override
+  Future<bool> build() async {
+    return false;
+  }
+
+  Future<void> inviteUser(int idUser, int idEvent) async {
+    final eventRepo = ref.read(eventRepositoryProvider);
+    eventRepo.inviteEvent(
+      IdEvent: idEvent,
+      IdUser: idUser,
+    );
+    ref.read(userInvitedToSelectedEventProvider.notifier).updateUsers();
   }
 }
 
@@ -274,7 +294,14 @@ class EventItem extends StatelessWidget {
               Cinefouineboutton(
                 isClicked: isJoined,
                 onPressed: () {
-                  print("join");
+                  final preferences = ref.read(preferencesProvider);
+                  if (preferences.idUserPreferences.load() != null) {
+                    ref.read(joinEventButtonProvider.notifier).inviteUser(
+                          preferences.idUserPreferences.load()!,
+                          event.idEvent,
+                        );
+                    print("join");
+                  }
                 },
                 text: "Join",
                 text2: "Joined",

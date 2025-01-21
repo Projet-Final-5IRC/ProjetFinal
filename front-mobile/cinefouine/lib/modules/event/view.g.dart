@@ -53,5 +53,21 @@ final myEventsProvider =
 );
 
 typedef _$MyEvents = AutoDisposeAsyncNotifier<List<EventInfo>?>;
+String _$joinEventButtonHash() => r'19493a8fe0d9368c896a0448550e59fb7dfc0656';
+
+/// See also [JoinEventButton].
+@ProviderFor(JoinEventButton)
+final joinEventButtonProvider =
+    AutoDisposeAsyncNotifierProvider<JoinEventButton, bool>.internal(
+  JoinEventButton.new,
+  name: r'joinEventButtonProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$joinEventButtonHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$JoinEventButton = AutoDisposeAsyncNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
