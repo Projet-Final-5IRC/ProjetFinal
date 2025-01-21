@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:cinefouine/core/widgets/cineFouineBoutton.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
 import 'package:cinefouine/data/repositories/quizz_repository.dart';
@@ -25,38 +24,24 @@ class _QuizViewState extends ConsumerState<QuizView> {
   String _selectedAnswer = "";
   StreamSubscription? _quizReadySubscription;
 
+  bool _isLoading = true; // Indicateur pour savoir si le quiz est en cours de chargement
+
   Map<String, dynamic> _quizData = {
-    "titre_du_quizz": "Quizz sur le film Inception",
-    "description_du_quizz": "Testez vos connaissances sur le film 'Inception' de Christopher Nolan. Répondez aux questions suivantes pour voir si vous êtes un véritable expert de ce chef-d'œuvre cinématographique.",
-    "liste_de_questions": [
-      {
-        "texte_de_la_question": "Qui est le réalisateur du film 'Inception' ?",
-        "liste_des_options_de_reponse": [
-          "Steven Spielberg Spielberg Spielberg ",
-          "Christopher Nolan",
-          "Quentin Tarantino",
-          "Martin Scorsese"
-        ],
-        "reponse_correcte": "Christopher Nolan"
-      },
-      {
-        "texte_de_la_question": "Quel est le nom du personnage principal joué par Leonardo DiCaprio ?",
-        "liste_des_options_de_reponse": [
-          "Dom Cobb",
-          "Arthur",
-          "Ariadne",
-          "Saito"
-        ],
-        "reponse_correcte": "Dom Cobb"
-      }
-    ]
+    "titre_du_quizz": "Chargement...",
+    "description_du_quizz": "En attente du quiz...",
+    "liste_de_questions": [],
   };
 
   @override
   void initState() {
     super.initState();
     _setupSignalRListener();
-    _loadNewQuiz("299535"); // Call _loadNewQuiz with a default filmId
+    final movieSelected = ref.read(movieSeletedProvider);
+
+    print("DEBUG lacement, filmId: ${movieSelected.value?.details?.id}");
+    int id = movieSelected.value?.details?.id ?? 0;
+    String title = movieSelected.value?.details?.title ?? "";
+    _loadNewQuiz(id, title); // Call _loadNewQuiz with a default filmId
   }
 
   void _setupSignalRListener() {
@@ -69,7 +54,9 @@ class _QuizViewState extends ConsumerState<QuizView> {
             action: SnackBarAction(
               label: 'Voir',
               onPressed: () {
-                _loadNewQuiz(quizData['filmId']!);
+                print("infos id ${quizData['filmId']}, info titre ${quizData['titreDuFilm']}"); 
+                // Recharger le quiz et mettre à jour l'état
+                _loadNewQuiz(quizData['filmId']! as int, quizData['titreDuFilm']!);
               },
             ),
           ),
@@ -78,11 +65,15 @@ class _QuizViewState extends ConsumerState<QuizView> {
     });
   }
 
-  Future<void> _loadNewQuiz(String filmId) async {
+  Future<void> _loadNewQuiz(int filmId, String title) async {
     try {
-      print("DEBUG Loading new quiz for film $filmId");
-      final newQuizzes = await ref.read(quizzRepositoryProvider).getQuizzForFilm(int.parse(filmId));
-      
+      setState(() {
+        _isLoading = true; // Commencer le chargement
+      });
+
+      print("DEBUG Loading new quiz for film $title");
+      final newQuizzes = await ref.read(quizzRepositoryProvider).getQuizzForFilm(filmId, title);
+
       if (newQuizzes == null || newQuizzes.isEmpty) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -92,12 +83,15 @@ class _QuizViewState extends ConsumerState<QuizView> {
             ),
           );
         }
+        setState(() {
+          _isLoading = false; // Fin du chargement si pas de quiz
+        });
         return;
       }
 
       // On prend le premier quiz de la liste
       final newQuiz = newQuizzes.first;
-      
+
       setState(() {
         _currentQuestionIndex = 0;
         _score = 0;
@@ -112,8 +106,9 @@ class _QuizViewState extends ConsumerState<QuizView> {
             "reponse_correcte": question.reponseCorrecte,
           }).toList(),
         };
+        _isLoading = false; // Fin du chargement
       });
-      
+
       // Notification de succès optionnelle
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -123,7 +118,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
           ),
         );
       }
-      
+
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -134,11 +129,14 @@ class _QuizViewState extends ConsumerState<QuizView> {
             action: SnackBarAction(
               label: 'Réessayer',
               textColor: Colors.white,
-              onPressed: () => _loadNewQuiz(filmId),
+              onPressed: () => _loadNewQuiz(filmId, title),
             ),
           ),
         );
       }
+      setState(() {
+        _isLoading = false; // Fin du chargement en cas d'erreur
+      });
     }
   }
 
@@ -202,10 +200,12 @@ class _QuizViewState extends ConsumerState<QuizView> {
 
   @override
   Widget build(BuildContext context) {
-    final currentQuestion = _quizData['liste_de_questions'][_currentQuestionIndex];
+    final currentQuestion = _quizData['liste_de_questions'].isNotEmpty
+        ? _quizData['liste_de_questions'][_currentQuestionIndex]
+        : null;
+
     final quizTitle = _quizData['titre_du_quizz'];
     final quizDescription = _quizData['description_du_quizz'];
-    final movieSelected = ref.watch(movieSeletedProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFF243040),
@@ -218,95 +218,92 @@ class _QuizViewState extends ConsumerState<QuizView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    quizDescription,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                if (movieSelected.value?.details?.posterPath != null)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      'https://image.tmdb.org/t/p/w500${movieSelected.value?.details?.posterPath}',
-                      width: 100,
-                      height: 150,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Center(
-              child: Text(
-                "${_currentQuestionIndex + 1}/${_quizData['liste_de_questions'].length}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              currentQuestion['texte_de_la_question'],
-              style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 24),
-            Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: currentQuestion['liste_des_options_de_reponse'].map<Widget>((option) {
-                final isSelected = option == _selectedAnswer;
-                final isCorrect = option == currentQuestion['reponse_correcte'];
-                return GestureDetector(
-                  onTap: () {
-                    if (!_isAnswered) {
-                      setState(() {
-                        _selectedAnswer = option;
-                      });
-                    }
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 2 - 24,
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: _isAnswered
-                          ? (isCorrect
-                              ? Colors.green
-                              : (isSelected ? Colors.red : const Color(0xFF34495E)))
-                          : (isSelected ? const Color(0xFF1ABC9C) : const Color(0xFF34495E)),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+            if (_isLoading)
+              Center(
+                child: CircularProgressIndicator(),
+              )
+            else ...[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
                     child: Text(
-                      option,
+                      quizDescription,
                       style: const TextStyle(color: Colors.white, fontSize: 16),
-                      textAlign: TextAlign.center,
                     ),
                   ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 24),
-            if (!_isAnswered)
-              CineFouineHugeBoutton(
-                onPressed: _selectedAnswer.isNotEmpty ? _submitAnswer : () {},
-                text: "Valider",
-                buttonColor: _selectedAnswer.isEmpty ? const Color(0xFF95A5A6) : const Color(0xFF3498DB),
+                  const SizedBox(width: 16),
+                ],
               ),
-            if (_isAnswered)
-              CineFouineHugeBoutton(
-                onPressed: _nextQuestion,
-                text: _currentQuestionIndex < _quizData['liste_de_questions'].length - 1
-                    ? "Suivant"
-                    : "Terminer",
-                buttonColor: const Color(0xFF1ABC9C),
+              const SizedBox(height: 24),
+              Center(
+                child: Text(
+                  "${_currentQuestionIndex + 1}/${_quizData['liste_de_questions'].length}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
+              const SizedBox(height: 16),
+              Text(
+                currentQuestion?['texte_de_la_question'] ?? 'Chargement...',
+                style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 24),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: currentQuestion?['liste_des_options_de_reponse']?.map<Widget>((option) {
+                  final isSelected = option == _selectedAnswer;
+                  final isCorrect = option == currentQuestion?['reponse_correcte'];
+                  return GestureDetector(
+                    onTap: () {
+                      if (!_isAnswered) {
+                        setState(() {
+                          _selectedAnswer = option;
+                        });
+                      }
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 2 - 24,
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: _isAnswered
+                            ? (isCorrect
+                                ? Colors.green
+                                : (isSelected ? Colors.red : const Color(0xFF34495E)))
+                            : (isSelected ? const Color(0xFF1ABC9C) : const Color(0xFF34495E)),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        option,
+                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                }).toList() ?? [],
+              ),
+              const SizedBox(height: 24),
+              if (!_isAnswered)
+                CineFouineHugeBoutton(
+                  onPressed: _selectedAnswer.isNotEmpty ? _submitAnswer : () {},
+                  text: "Valider",
+                  buttonColor: _selectedAnswer.isEmpty ? const Color(0xFF95A5A6) : const Color(0xFF3498DB),
+                ),
+              if (_isAnswered)
+                CineFouineHugeBoutton(
+                  onPressed: _nextQuestion,
+                  text: _currentQuestionIndex < _quizData['liste_de_questions'].length - 1
+                      ? "Suivant"
+                      : "Voir Résultats",
+                  buttonColor: Colors.green,
+                ),
+              const SizedBox(height: 32),
+            ]
           ],
         ),
       ),

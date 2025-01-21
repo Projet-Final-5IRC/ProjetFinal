@@ -59,6 +59,7 @@ class QuizSignalRService {
   }
 
   void _handleQuizReady(List<Object?>? arguments) {
+    print("DEBUG QuizReady signal received");
     if (arguments != null && arguments.length >= 2) {
       final filmId = arguments[0]?.toString() ?? '';
       final titreDuFilm = arguments[1]?.toString() ?? '';
