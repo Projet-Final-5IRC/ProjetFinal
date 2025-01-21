@@ -71,6 +71,10 @@ namespace QuizzMS
             // Utiliser CORS avant d'utiliser l'Authorization et le Routing
             app.UseRouting();
             app.UseCors("AllowAll");
+            
+            // Activer WebSockets
+            app.UseWebSockets();
+            
             app.UseAuthorization();
 
             // Map SignalR Hubs
