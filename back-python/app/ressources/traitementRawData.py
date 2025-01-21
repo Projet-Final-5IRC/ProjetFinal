@@ -49,44 +49,26 @@ filtered_data.to_json(json_file_path, orient="records", indent=4)
 # Chemin vers le fichier CSV
 >>>>>>> 90cf63a2c3f710ec15bfdb71e3f3f7b098bfbd1f
 dossier = '../../data/Rawdata/movies_metadata.csv'
-json_file_path = '../../data/Movies/movies.json'
-
-# Colonnes à garder
-columns_to_keep = [
-    'adult', 'budget', 'genres', 'id', 'original_language', 
-    'original_title', 'popularity', 'production_companies', 
-    'production_countries', 'release_date', 'revenue', 
-    'runtime', 'status', 'title', 'vote_average', 'vote_count'
+dataframe = fct.lire_fichier_csv(dossier)
+columns_to_keep3 = [
+    'adult', 'belongs_to_collection', 'budget', 'genres', 'id',
+    'original_language', 'original_title', 'popularity',
+    'production_companies', 'production_countries', 'release_date',
+    'revenue', 'runtime', 'status', 'title', 'vote_average', 'vote_count'
 ]
+print(dataframe.head())
+print("-----------------------------------")
+df = dataframe[columns_to_keep3]
+print(df)
 
-data = pd.read_csv(dossier, dtype={10: str})
+# Enregistrer le DataFrame au format JSON avec des options supplémentaires
+json_file_path = '../../data/Movies/movies.json'
+df.to_json(json_file_path, orient='records', lines=True, date_format='iso', double_precision=2, force_ascii=False)
 
-filtered_data = data[columns_to_keep]
+print(f"DataFrame enregistré dans {json_file_path}")
 
-filtered_data.to_json(json_file_path, orient="records", indent=4)
-
-# Exemple d'utilisation
-# dossier = '../../data/Rawdata/movies_metadata.csv'
-# dataframe = fct.lire_fichier_csv(dossier)
-# columns_to_keep3 = [
-#     'adult','budget', 'genres', 'id',
-#     'original_language', 'original_title', 'popularity',
-#     'production_companies', 'production_countries', 'release_date',
-#     'revenue', 'runtime', 'status', 'title', 'vote_average', 'vote_count'
-# ]
-# print(dataframe.head)
-# print("-----------------------------------")
-# df = dataframe[columns_to_keep3]
-# print(df)
-
-# # Enregistrer le DataFrame au format JSON avec des options supplémentaires
-# json_file_path = '../../data/Movies/movies.json'
-# df.to_json(json_file_path, orient='records', lines=True, date_format='iso', double_precision=2, force_ascii=False)
-
-# print(f"DataFrame enregistré dans {json_file_path}")
-
-# # csv_file_path = '../../data/Movies/data.csv'
-# # df.to_csv(csv_file_path, sep=';', header=True, index=False)
+# csv_file_path = '../../data/Movies/data.csv'
+# df.to_csv(csv_file_path, sep=';', header=True, index=False)
 
 # # Afficher les DataFrames lus
 # for i, df in enumerate(dataframes):
