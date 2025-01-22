@@ -355,15 +355,20 @@ class HomeContent extends ConsumerWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: movies.length,
-                    itemBuilder: (context, index) {
-                      final movie = movies[index];
-                      print('DEBUG movie: ${movie.posterPath}');
+                  itemBuilder: (context, index) {
+                    final movie = movies[index];
+                    final router = ref.watch(appRouterProvider);
+
                       return _buildRecommendationItem(
                         imagePath: 'https://image.tmdb.org/t/p/w500${movie.posterPath}',
                         title: movie.title,
                         description: movie.overview ?? '',
                         onAddTap: () {},
                         onPlayTap: () {},
+                        onTap: () { // Action à effectuer lors du clic
+                          ref.read(movieSeletedProvider.notifier).setMovie(movie);
+                          router.push(DetailsMovieRoute());
+                        },
                       );
                     },
                   );
@@ -393,119 +398,77 @@ Widget _buildRecommendationItem({
   required String description,
   required VoidCallback onPlayTap,
   required VoidCallback onAddTap,
+  required VoidCallback onTap, // Nouveau paramètre pour l'action onTap
 }) {
-  return Container(
-    width: double.infinity,
-    height: 250, // Augmente la hauteur pour laisser de la place au texte
-    margin: EdgeInsets.symmetric(vertical: 8),
-    child: Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.network(
-            imagePath,
-            width: double.infinity,
-            height: double.infinity,
-            fit: BoxFit.cover,
+  return GestureDetector(
+    onTap: onTap, // Déclenchement de l'action lors du clic
+    child: Container(
+      width: double.infinity,
+      height: 250,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.network(
+              imagePath,
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+            ),
           ),
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withOpacity(0.5),
-                ],
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.5),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        Positioned(
-          left: 16,
-          bottom: 16,
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: onPlayTap,
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+          Positioned(
+            left: 20,
+            bottom: 20,
+            right: 20,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
                     color: Colors.white,
-                  ),
-                  child: Icon(
-                    Icons.play_arrow,
-                    color: Colors.black,
-                    size: 24,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
                   ),
                 ),
-              ),
-              SizedBox(width: 12),
-              GestureDetector(
-                onTap: onAddTap,
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2,
-                    ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: 14,
                   ),
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 24,
-                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          left: 20,
-          top: 20,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Titre
-          Text(
-            title,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
+              ],
             ),
-            softWrap: true,  // Permet le retour à la ligne si nécessaire
           ),
-
-              SizedBox(height: 4),
-              // Description
-              // Text(
-              //   description,
-              //   style: TextStyle(
-              //     color: Colors.white.withOpacity(0.8),
-              //     fontSize: 14,
-              //   ),
-              //   maxLines: 2,
-              //   overflow: TextOverflow.ellipsis,
-              // ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }
-
 }
+
+
 
 class MovieInfoBar extends StatelessWidget {
   final String imdbRating;
