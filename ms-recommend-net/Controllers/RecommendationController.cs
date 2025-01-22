@@ -27,7 +27,15 @@ namespace ms_recommend_net.Controllers
         [HttpGet("get-recommendations/{userId}")]
         public async Task<IActionResult> GetRecommendations(int userId)
         {
-            return null;
+            try
+            {
+                var recommendations = await _recommendationService.GetRecommendationsAsync(userId);
+                return Ok(recommendations);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur lors de la récupération des recommandations: {ex.Message}");
+            }
         }
 
         [HttpPost("update-preferences/{userId}")]
@@ -46,7 +54,7 @@ namespace ms_recommend_net.Controllers
         [HttpGet("preferences/{userId}")]
         public async Task<IActionResult> GetPreferences(int userId)
         {
-            var preferences = await _recommendationService.GetPreferencesAsync(userId);
+            var preferences = await _recommendationService.GetGenresAsync(userId);
 
             if (!preferences.Any())
             {
