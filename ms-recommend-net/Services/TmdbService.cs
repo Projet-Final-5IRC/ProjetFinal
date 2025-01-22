@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace ms_recommend_net.Services
 {
-    public class TmdbService
+    public class TmdbService : ITmdbService
     {
         private readonly HttpClient _httpClient;
         private readonly string _tmdbApiKey;
@@ -27,10 +27,7 @@ namespace ms_recommend_net.Services
                 throw new ArgumentException("Le titre du film ne peut pas être vide.", nameof(movieTitle));
             }
 
-            var encodedTitle = Uri.EscapeDataString(movieTitle.Trim());
             var tmdbSearchUrl = $"{_baseUrl}/search/movie?api_key={_tmdbApiKey}&query={Uri.EscapeDataString(movieTitle)}";
-            Console.WriteLine($"Generated URL: {tmdbSearchUrl}");
-
             var searchResponse = await _httpClient.GetAsync(tmdbSearchUrl);
 
             if (!searchResponse.IsSuccessStatusCode)
@@ -38,22 +35,14 @@ namespace ms_recommend_net.Services
                 throw new Exception("Erreur lors de la recherche du film dans l'API TMDB.");
             }
 
-            // Lire le JSON en tant que chaîne brute
             var jsonString = await searchResponse.Content.ReadAsStringAsync();
-
-            // Deserialize the JSON into TmdbSearchResponse
-
             var searchResult = JsonSerializer.Deserialize<TmdbSearchResponse>(jsonString);
-
-            // Extract the first movie's ID
-            var movieId = searchResult?.Results?.FirstOrDefault()?.Id;
-            return movieId;
+            return searchResult?.Results?.FirstOrDefault()?.Id;
         }
-
 
         public async Task<string> GetMovieDetailsAsync(int movieId)
         {
-            var tmdbDetailsUrl = $"https://api.themoviedb.org/3/movie/{movieId}?api_key={_tmdbApiKey}";
+            var tmdbDetailsUrl = $"{_baseUrl}/movie/{movieId}?api_key={_tmdbApiKey}";
             var detailsResponse = await _httpClient.GetAsync(tmdbDetailsUrl);
 
             if (!detailsResponse.IsSuccessStatusCode)
@@ -61,8 +50,7 @@ namespace ms_recommend_net.Services
                 throw new Exception("Erreur lors de la récupération des détails du film.");
             }
 
-            var movieDetails = await detailsResponse.Content.ReadAsStringAsync();
-            return movieDetails;
+            return await detailsResponse.Content.ReadAsStringAsync();
         }
 
         public class TmdbSearchResponse
