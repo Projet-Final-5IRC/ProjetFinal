@@ -337,6 +337,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
       color: Colors.grey[800],
       child: const Center(
         child: Icon(
+          
           Icons.movie_outlined,
           color: Colors.white54,
           size: 48,

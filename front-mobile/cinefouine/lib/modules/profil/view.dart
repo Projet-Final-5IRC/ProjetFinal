@@ -100,27 +100,22 @@ class ProfilView extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "${preferences.firstNamePreferences.load() ?? ""} ${preferences.lastNamePreferences.load() ?? ""}",
-                style: TextStyle(
-                  fontSize: 36.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 16),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,  // Centrer horizontalement                
                 children: [
-                  Stack(
+                   Stack(
+                    clipBehavior: Clip.none,  // Permet à l'icône de sortir de la Stack
                     children: [
-                      ClipOval(
-                        child: SizedBox(
-                          width: 126.0,
-                          height: 126.0,
-                          child: Image.asset(
-                            'assets/images/default_avatar.jpg',
-                            fit: BoxFit.cover,
+                      Center(  // Centrer l'image dans le Stack
+                        child: ClipOval(
+                          child: SizedBox(
+                            width: 126.0,
+                            height: 126.0,
+                            child: Image.asset(
+                              'assets/images/default_avatar.jpg',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
@@ -148,60 +143,55 @@ class ProfilView extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Followers: 0",
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "Followed: 0",
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
+              const SizedBox(height: 32),
+ Text(
+  "Mes infos",
+  style: TextStyle(
+    fontSize: 24.0,  // Augmenter la taille
+    fontWeight: FontWeight.w700,  // Poids de police plus prononcé
+    color: Colors.white,
+    letterSpacing: 1.2,  // Espacement des lettres pour un effet plus élégant
+  ),
+),
+
               const SizedBox(height: 16),
-              Text(
-                "Mail: ${preferences.emailPreferences.load() ?? ""}",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
+              ContactInfoRow(
+                icon: Icons.person,
+                label: "Nom",
+                value: preferences.lastNamePreferences.load() ?? "Non disponible",
               ),
-              const SizedBox(height: 8),
-              Text(
-                "Password: ***",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
+              ContactInfoRow(
+                icon: Icons.person_outline,
+                label: "Prénom",
+                value: preferences.firstNamePreferences.load() ?? "Non disponible",
+              ),
+              ContactInfoRow(
+                icon: Icons.email,
+                label: "Email",
+                value: preferences.emailPreferences.load() ?? "Non disponible",
               ),
               const SizedBox(height: 16),
+
               CineFouineHugeBoutton(
                 onPressed: () {
                   router.replaceAll([const GenresSelectionRoute()]);
                 },
-                text: "choose favorite genre",
+                text: "Choisissez vos genres favoris",
               ),
               const SizedBox(height: 16),
               Text(
                 "Mes badges",
                 style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,  // Augmenter la taille
+                  fontWeight: FontWeight.w700,  // Poids de police plus prononcé
                   color: Colors.white,
+                  letterSpacing: 1.2,  // Espacement des lettres pour un effet plus élégant
                 ),
               ),
+
+              const SizedBox(height: 16),
               userActionAsync.when(
                 data: (userAction) {
                   if (userAction == null) {
@@ -211,39 +201,46 @@ class ProfilView extends ConsumerWidget {
                     );
                   }
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Nombre de connexions : ${userAction.loginCount}",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      Text(
-                        "Score au quiz : ${userAction.quizScore}",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      Text(
-                        "Films regardés ce mois-ci : ${userAction.moviesWatchedInMonth}",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      Text(
-                        "Événements assistés : ${userAction.eventsAttended}",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      Text(
-                        "Jours actifs : ${userAction.daysActive}",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      Text(
-                        "Critiques écrites : ${userAction.reviewsWritten}",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      Text(
-                        "Genres uniques regardés : ${userAction.uniqueGenresWatched}",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ],
-                  );
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    BadgeRow(
+                      icon: Icons.login,
+                      label: "Nombre de connexions",
+                      value: "${userAction.loginCount}",
+                    ),
+                    BadgeRow(
+                      icon: Icons.quiz,
+                      label: "Score au quiz",
+                      value: "${userAction.quizScore}",
+                    ),
+                    BadgeRow(
+                      icon: Icons.movie,
+                      label: "Films regardés ce mois-ci",
+                      value: "${userAction.moviesWatchedInMonth}",
+                    ),
+                    BadgeRow(
+                      icon: Icons.event,
+                      label: "Événements assistés",
+                      value: "${userAction.eventsAttended}",
+                    ),
+                    BadgeRow(
+                      icon: Icons.calendar_today,
+                      label: "Jours actifs",
+                      value: "${userAction.daysActive}",
+                    ),
+                    BadgeRow(
+                      icon: Icons.rate_review,
+                      label: "Critiques écrites",
+                      value: "${userAction.reviewsWritten}",
+                    ),
+                    BadgeRow(
+                      icon: Icons.category,
+                      label: "Genres uniques regardés",
+                      value: "${userAction.uniqueGenresWatched}",
+                    ),
+                  ],
+                );
                 },
                 loading: () => Center(
                   child: CircularProgressIndicator(),
@@ -336,10 +333,128 @@ class ProfilView extends ConsumerWidget {
                   router.replaceAll([const LoginRoute()]);
                 },
                 text: "Logout",
+                buttonColor: Colors.red,
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+
+class BadgeRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const BadgeRow({
+    Key? key,
+    required this.icon,
+    required this.label,
+    required this.value,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0), // Augmenter l'espacement
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10.0), // Augmenter le padding pour donner plus d'espace autour de l'icône
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.3), // Couleur de fond plus douce
+              borderRadius: BorderRadius.circular(12.0), // Arrondir davantage les coins
+            ),
+            child: Icon(
+              icon,
+              color: AppColors.primary,
+              size: 26.0, // Agrandir l'icône
+            ),
+          ),
+          const SizedBox(width: 20.0), // Augmenter l'espacement entre l'icône et le texte
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18.0, // Augmenter la taille du texte pour une meilleure lisibilité
+                fontWeight: FontWeight.w600, // Poids de texte plus équilibré
+              ),
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,  // Rendre la valeur plus marquée
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class ContactInfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const ContactInfoRow({
+    Key? key,
+    required this.icon,
+    required this.label,
+    required this.value,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0), // Espacement accru
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12.0), // Augmenter le padding
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.3), // Fond doux
+              borderRadius: BorderRadius.circular(12.0), // Coins arrondis
+            ),
+            child: Icon(
+              icon,
+              color: AppColors.primary,
+              size: 28.0, // Agrandir l'icône pour plus de visibilité
+            ),
+          ),
+          const SizedBox(width: 20.0), // Espacement
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18.0, // Taille de texte augmentée
+                fontWeight: FontWeight.w600, // Poids de texte pour plus de clarté
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              value,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18.0, // Augmenter la taille du texte
+                fontWeight: FontWeight.bold, // Mettre en valeur
+                overflow: TextOverflow.ellipsis,
+              ),
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ],
       ),
     );
   }
