@@ -11,10 +11,10 @@ namespace ms_recommend_net.Services
     public class RecommendationService : IRecommendationService
     {
         private readonly AppDbContext _context;
-        private readonly TmdbService _tmdbService;
+        private readonly ITmdbService _tmdbService;
         private readonly string _pythonApiUrl;
 
-        public RecommendationService(AppDbContext context, TmdbService tmdbService, IConfiguration configuration)
+        public RecommendationService(AppDbContext context, ITmdbService tmdbService, IConfiguration configuration)
         {
             _context = context;
             _tmdbService = tmdbService;

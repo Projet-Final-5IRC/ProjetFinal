@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ms-recommend-net", "ms-recommend-net.csproj", "{807340FF-630A-477C-83A8-B54E8AF91CBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ms-reco-tests", "..\ms-reco-tests\ms-reco-tests.csproj", "{FCABE845-5D01-43C2-85BD-62A7B41113FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{807340FF-630A-477C-83A8-B54E8AF91CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{807340FF-630A-477C-83A8-B54E8AF91CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{807340FF-630A-477C-83A8-B54E8AF91CBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCABE845-5D01-43C2-85BD-62A7B41113FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCABE845-5D01-43C2-85BD-62A7B41113FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCABE845-5D01-43C2-85BD-62A7B41113FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCABE845-5D01-43C2-85BD-62A7B41113FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
