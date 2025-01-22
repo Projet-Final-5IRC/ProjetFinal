@@ -75,6 +75,17 @@ class UserPreferenceRepository {
     );
   }
 
+  Future<void> unlikeAmovie({
+    required int idTmdbMovie,
+    required int idUser,
+  }) async {
+    print("unlike movie $idTmdbMovie iduser$idUser");
+    return _userPreferenceService.unlikeMovie(
+      idTmdbMovie: idTmdbMovie,
+      idUser: idUser,
+    );
+  }
+
   Future<List<MovieInfoDetail>> getMovieLiked(int userId) async {
     final movieLiked = await _userPreferenceService.getMovieLiked(userId);
     List<MovieInfoDetail> movieDetailLiked = [];

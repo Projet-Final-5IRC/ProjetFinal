@@ -120,8 +120,20 @@ class UserPreferenceService {
     final endpoint = '/UserMovie/GetAllLikedMovieByUser?userId=$userId';
     final apiResult = await dioClient.get<List<MovieLiked>?>(
       endpoint,
-      deserializer: (json) => MovieLikedListExtension.movieLikedFromJson(jsonEncode(json)),
+      deserializer: (json) =>
+          MovieLikedListExtension.movieLikedFromJson(jsonEncode(json)),
     );
     return apiResult;
+  }
+
+  Future<void> unlikeMovie({
+    required int idTmdbMovie,
+    required int idUser,
+  }) async {
+    final endpoint =
+        '/UserMovie/RemoveLikedMovie?IdUser=$idUser&IdMovieTmdb=$idTmdbMovie';
+    return await dioClient.delete(
+      endpoint,
+    );
   }
 }
