@@ -92,7 +92,7 @@ namespace ms_recommend_net.Services
                     {
                         Id = details.GetProperty("id").GetInt32(),
                         Title = details.TryGetProperty("title", out var title) ? title.GetString() : null, // Extract Title
-                        PosterPath = details.TryGetProperty("poster_path", out var posterPath) ? posterPath.GetString() : null,
+                        poster_path = details.TryGetProperty("poster_path", out var posterPath) ? posterPath.GetString() : null,
                         Runtime = details.TryGetProperty("runtime", out var runtime) ? runtime.GetInt32() : 0,
                         Overview = details.TryGetProperty("overview", out var overview) ? overview.GetString() : null,
                         ReleaseDate = details.TryGetProperty("release_date", out var releaseDate) ? releaseDate.GetString() : null,
