@@ -31,7 +31,11 @@ class EventRepository {
   }
 
   Future<List<EventInfo>?> getEventsJoined(int idUser) async {
-    return await _appApiClient.getEventsJoined(idUser);
+    try {
+      return await _appApiClient.getEventsJoined(idUser);
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<List<EventInfo>?> getMyEvents(int idUser) async {
