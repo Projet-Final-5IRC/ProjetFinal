@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
 
 namespace QuizzMS.Hubs
 {
@@ -17,7 +16,7 @@ namespace QuizzMS.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        // Méthode pour envoyer un quiz prêt (peut être utilisée pour tester)
+        // Méthode pour envoyer un quiz prêt (tst)
         public async Task SendQuizReady(string filmId, string titreDuFilm)
         {
             Console.WriteLine($"Envoi du quiz prêt pour le film ID: {filmId}, Titre: {titreDuFilm}");

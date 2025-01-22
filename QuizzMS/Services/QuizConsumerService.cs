@@ -1,14 +1,7 @@
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
 using QuizzMS.Models.EntityFramework;
-using System.Threading.Tasks;
-using System.Threading;
-using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using QuizzMS.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -101,9 +94,9 @@ namespace QuizzMS.Services
                                     $"Génère un quizz sur le film {titreDuFilm} avec les éléments suivants :\n" +
                                     "1. Titre du quizz\n" +
                                     "2. Description du quizz\n" +
-                                    "3. Liste de questions avec les éléments suivants pour chaque question :\n" +
+                                    "3. Liste de 5 questions avec les éléments suivants pour chaque question :\n" +
                                     "- Texte de la question\n" +
-                                    "- Liste des options de réponse\n" +
+                                    "- Liste des 4 options de réponse\n" +
                                     "- Réponse correcte\n" +
                                     "Formate la sortie en JSON sans blocs de code."
                             }
@@ -120,7 +113,7 @@ namespace QuizzMS.Services
 
                         var messageContent = parsedResponse.Choices[0].Message.Content;
 
-                        // Suppression des blocs de code Markdown si présents
+                        // Suppression des blocs de code Markdown
                         if (messageContent.StartsWith("```json\n") && messageContent.EndsWith("\n```"))
                         {
                             messageContent = messageContent.Substring("```json\n".Length);
@@ -179,7 +172,7 @@ namespace QuizzMS.Services
                             quiz.ListeDeQuestions.Add(question);
                         }
 
-                        // Simuler une génération de 15 secondes si nécessaire
+                        // simu génération de 15 secondes
                         // await Task.Delay(15000);
 
                         return quiz;
@@ -205,13 +198,6 @@ namespace QuizzMS.Services
             _connection.Close();
             base.Dispose();
         }
-    }
-
-    // Classe pour la notification de quiz prêt (SignalR n'a plus besoin de cette classe)
-    public class QuizReadyMessage
-    {
-        public string FilmId { get; set; }
-        public string TitreDuFilm { get; set; }
     }
 
     // Classes pour la désérialisation de la réponse de l'API Mistral
