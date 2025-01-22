@@ -17,6 +17,10 @@ back-python/app/ressources/__pycache__/
 /back-python/data/Plus/
 /back-python/data/DataMovies/
 /back-python/data/Rawdata/
+<<<<<<< HEAD
 
 data/obj/
 data/bin/
+=======
+/RecommendationControllerTests/obj
+>>>>>>> Test
