@@ -1,9 +1,14 @@
 from app.ressources import CallApi as cap
 
-def mainFouine(): 
+def MainFouineGenre(): 
     
-    result = cap.CallMovieFouine()
+    result = cap.CallMovieFouineGender()
 
     return result
 
 
+def mainFouine():
+    
+    result = cap.CallMovieFouine()
+    
+    return result

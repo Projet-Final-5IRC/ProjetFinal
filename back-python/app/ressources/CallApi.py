@@ -7,6 +7,28 @@ import random
 
 #### Fonction dla fouine ###
 def CallMovieFouine():
+    load_dotenv()
+    api_key = os.getenv("API_KEY")
+    # Liste des genre
+    chemin_genres = 'data/Movies/gender.json'
+    with open(chemin_genres, 'r') as fichier:
+        genres_data = json.load(fichier)
+        
+    random_genre = int(random.choice(genres_data['Genre'])['id'])
+    # requête
+    url = f"https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&sort_by=original_title.asc&with_genres={random_genre}&api_key={api_key}"
+    headers = {"accept": "application/json"} 
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    results_data = data['results']
+    
+    original_titles = [result['original_title'] for result in results_data if result.get('original_title')]
+    random_titles = random.sample(original_titles, min(1, len(original_titles)))
+    
+    return random_titles
+
+def CallMovieFouineGender():
     # Liste des genre
     chemin_genres = 'data/Movies/gender.json'
     with open(chemin_genres, 'r') as fichier:

@@ -51,6 +51,16 @@ def reco_fouine():
     
     return result
 
+@app.route('/recoFouineGenre', methods=['GET'])
+def reco_fouine_genre():
+    
+    random_genre = mf.MainFouineGenre()
+    result = {
+    "resultat renvoyé": [random_genre]
+    }
+    
+    return result
+
 
 # Routes de test
 @app.route('/recoUser', methods=['GET'])
