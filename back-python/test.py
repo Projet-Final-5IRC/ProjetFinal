@@ -1,4 +1,4 @@
-from app.ressources import CallApi as ca
+from app import mainFouine as mf
 
 # import os
 # from dotenv import load_dotenv
@@ -36,7 +36,7 @@ from app.ressources import CallApi as ca
     
 #     return entry_data
 
-result = ca.CallMovieFouine()
+result = mf.mainFouine()
 
 print("La requête : \n") 
 print(result)
