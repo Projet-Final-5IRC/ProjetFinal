@@ -12,13 +12,15 @@ namespace ms_recommend_net.Services
     {
         private readonly AppDbContext _context;
         private readonly ITmdbService _tmdbService;
-        private readonly string _pythonApiUrl;
+        private readonly string _pyApiGenreUrl;
+        private readonly string _pyApiFouineUrl;
 
         public RecommendationService(AppDbContext context, ITmdbService tmdbService, IConfiguration configuration)
         {
             _context = context;
             _tmdbService = tmdbService;
-            _pythonApiUrl = configuration.GetValue<string>("PyApi:GenreUrl");
+            _pyApiGenreUrl = configuration.GetValue<string>("PyApi:GenreUrl"); 
+            _pyApiFouineUrl = configuration.GetValue<string>("PyApi:FouineUrl");
         }
         public async Task<List<ParsedMovieDetails>> GetRecommendationsAsync(int userId)
         {
@@ -40,7 +42,7 @@ namespace ms_recommend_net.Services
             try
             {
                 // Call external Python API
-                var httpResponse = await httpClient.PostAsync(_pythonApiUrl, new StringContent(jsonPayload, Encoding.UTF8, "application/json"));
+                var httpResponse = await httpClient.PostAsync(_pyApiGenreUrl, new StringContent(jsonPayload, Encoding.UTF8, "application/json"));
 
                 if (!httpResponse.IsSuccessStatusCode)
                 {
@@ -137,27 +139,82 @@ namespace ms_recommend_net.Services
             };
         }
 
-        // Update user preferences
-        public async Task<bool> UpdatePreferencesAsync(int userId, List<Preference> preferences)
+        public async Task<List<ParsedMovieDetails>> ProcessMovieTitleAsync()
         {
-            // Check if user exists
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null)
-                return false;
-
-            // Remove existing preferences
-            var existingPreferences = _context.Preferences.Where(p => p.UserId == userId);
-            _context.Preferences.RemoveRange(existingPreferences);
-
-            // Add new preferences
-            foreach (var preference in preferences)
+            try
             {
-                preference.UserId = userId; // Ensure the UserId is set
-            }
-            await _context.Preferences.AddRangeAsync(preferences);
-            await _context.SaveChangesAsync();
+                // Récupérer l'URL appropriée depuis appsettings
+                var apiUrl = _pyApiFouineUrl;
 
-            return true;
+                using var httpClient = new HttpClient();
+                var httpResponse = await httpClient.GetAsync(apiUrl);
+
+                if (!httpResponse.IsSuccessStatusCode)
+                {
+                    throw new Exception($"Erreur lors de l'appel à l'API externe. Statut HTTP : {httpResponse.StatusCode}");
+                }
+
+                var apiResponseContent = await httpResponse.Content.ReadAsStringAsync();
+
+                // Désérialiser le JSON reçu de l'API
+                var apiResponseJson = JsonSerializer.Deserialize<JsonElement>(apiResponseContent);
+
+                // Extraire le tableau de titres depuis le JSON
+                if (!apiResponseJson.TryGetProperty("resultat renvoyé", out var resultsArray))
+                {
+                    throw new Exception("Le JSON fourni par l'API n'est pas valide ou ne contient pas le champ attendu.");
+                }
+
+                // Extraire les titres sous forme de liste
+                var movieTitles = resultsArray.EnumerateArray()
+                                              .SelectMany(arr => arr.EnumerateArray())
+                                              .Select(title => title.GetString())
+                                              .Where(title => !string.IsNullOrEmpty(title))
+                                              .ToList();
+
+                if (movieTitles.Count == 0)
+                {
+                    throw new Exception("Aucun titre de film trouvé dans le JSON.");
+                }
+
+                // Récupérer les détails des films
+                var parsedMovieDetails = new List<ParsedMovieDetails>();
+
+                foreach (var title in movieTitles)
+                {
+                    var movieId = await _tmdbService.GetMovieIdAsync(title);
+                    if (movieId.HasValue)
+                    {
+                        var detailsJson = await _tmdbService.GetMovieDetailsAsync(movieId.Value);
+
+                        // Désérialiser les détails
+                        var details = JsonSerializer.Deserialize<JsonElement>(detailsJson);
+
+                        var movieDetails = new ParsedMovieDetails
+                        {
+                            Id = details.GetProperty("id").GetInt32(),
+                            Title = details.TryGetProperty("title", out var titleProp) ? titleProp.GetString() : null,
+                            poster_path = details.TryGetProperty("poster_path", out var posterPath) ? posterPath.GetString() : null,
+                            Runtime = details.TryGetProperty("runtime", out var runtime) ? runtime.GetInt32() : 0,
+                            Overview = details.TryGetProperty("overview", out var overview) ? overview.GetString() : null,
+                            ReleaseDate = details.TryGetProperty("release_date", out var releaseDate) ? releaseDate.GetString() : null,
+                            Genres = details.TryGetProperty("genres", out var genres)
+                                ? genres.EnumerateArray().Select(genre => genre.GetProperty("name").GetString()).ToList()
+                                : new List<string>(),
+                            Actors = new List<string>() // Ajoutez la logique pour récupérer les acteurs si nécessaire
+                        };
+
+                        parsedMovieDetails.Add(movieDetails);
+                    }
+                }
+
+                return parsedMovieDetails;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Une erreur s'est produite lors du traitement des titres de films : {ex.Message}", ex);
+            }
         }
+
     }
 }
