@@ -128,7 +128,7 @@ namespace ms_usr.Controllers
             try
             {
                 var data = await _dataService.DeleteLikedMovie($"api/LikedMovie?IdUser={IdUser}&IdMovieTmdb={IdMovieTmdb}");
-                if (data.StatusCode == HttpStatusCode.NoContent)
+                if (data.StatusCode == HttpStatusCode.OK)
                 {
                     return Ok(data.Data);
                 }
