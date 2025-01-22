@@ -4,7 +4,6 @@ import 'package:cinefouine/data/entities/movie/movie_info.dart';
 import 'package:cinefouine/data/entities/movie/movie_info_detail.dart';
 import 'package:cinefouine/data/entities/platforme/platforme.dart';
 import 'package:cinefouine/data/repositories/movie_repository.dart';
-import 'package:cinefouine/data/repositories/user_preference_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:cinefouine/modules/profil/view.dart';
 import 'package:cinefouine/router/app_router.dart';
@@ -30,19 +29,30 @@ class MovieSeleted extends _$MovieSeleted {
     final repoMovie = ref.read(movieRepositoryProvider);
     if (value != null) {
       state = AsyncValue.data(await repoMovie.getMovieDetails(value.id));
+      await ref
+          .read(platformeForMovieProvider.notifier)
+          .updatePlaforme(value.id);
     } else {
       state = AsyncValue.data(null);
     }
     return true;
   }
+}
 
-  Future<List<Platforme>?> getPlatforme(int? movieId) async {
+@Riverpod(keepAlive: false)
+class PlatformeForMovie extends _$PlatformeForMovie {
+  @override
+  List<Platforme>? build() {
+    return null;
+  }
+
+  Future<void> updatePlaforme(int movieId) async {
+    print("platforme en update pour $movieId");
     AsyncValue.loading();
     final repoMovie = ref.read(movieRepositoryProvider);
-    if (movieId != null) {
-      return await repoMovie.getPlatformeMovie(movieId);
-    }
-    return null;
+    final platformes = await repoMovie.getPlatformeMovie(movieId);
+    state = platformes;
+    print("platforme updated ${state.toString()}");
   }
 }
 
@@ -54,6 +64,7 @@ class DetailsMovieView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final movieSelected = ref.watch(movieSeletedProvider);
     final router = ref.watch(appRouterProvider);
+    final platforme = ref.watch(platformeForMovieProvider);
 
     return Scaffold(
       appBar: MainAppBar(
@@ -75,7 +86,13 @@ class DetailsMovieView extends ConsumerWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildMovieHeader(data, context, ref),
+                _buildMovieHeader(
+                  data,
+                  context,
+                  ref,
+                  platforme,
+                  router,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   data.details?.overview ?? "Aucune description disponible.",
@@ -122,6 +139,8 @@ class DetailsMovieView extends ConsumerWidget {
     MovieInfoDetail movie,
     BuildContext context,
     WidgetRef ref,
+    List<Platforme>? platforme,
+    AppRouter router,
   ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,21 +178,28 @@ class DetailsMovieView extends ConsumerWidget {
                 children: [
                   Cinefouineboutton(
                     onPressed: () async {
-                      final platforme = await ref
-                          .read(movieSeletedProvider.notifier)
-                          .getPlatforme(75780);
-                      print(platforme.toString());
+                      if (platforme == null || platforme.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text(
+                                'Aucune plateforme disponible pour ce film.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      } else {
+                        router.push(PlatformeRoute());
+                      }
                     },
                     text: "Regarder",
                   ),
                   const SizedBox(width: 8),
                   Container(
-                    width: 40, // Taille du cercle
+                    width: 40,
                     height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppColors.primary, // Contour bleu
+                        color: AppColors.primary,
                         width: 2,
                       ),
                     ),
@@ -287,14 +313,46 @@ class DetailsMovieView extends ConsumerWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          actor?.profilePath != null
-                              ? "https://image.tmdb.org/t/p/w500${actor?.profilePath}"
-                              : "https://via.placeholder.com/80", // Image par défaut si `profilePath` est null
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                        ),
+                        child: movie.details?.posterPath != null
+                            ? Image.network(
+                                actor?.profilePath != null
+                                    ? "https://image.tmdb.org/t/p/w500${actor?.profilePath}"
+                                    : "https://via.placeholder.com/80", // Image par défaut si `profilePath` est null
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.cover,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null)
+                                    return child; // Retourne l'image une fois chargée
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  (loadingProgress
+                                                          .expectedTotalBytes ??
+                                                      1)
+                                              : null,
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  // Affiche une image de fallback en cas d'erreur
+                                  return Image.network(
+                                    "https://via.placeholder.com/80",
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                              )
+                            : const SizedBox(
+                                width: 100,
+                                height: 150,
+                              ),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -393,8 +451,8 @@ class DetailsMovieView extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CircleAvatar(
-          backgroundImage: NetworkImage(avatarUrl),
-        ),
+            //backgroundImage: NetworkImage(avatarUrl),
+            ),
         const SizedBox(width: 8),
         Expanded(
           child: Container(
