@@ -20,7 +20,7 @@ namespace ms_recommend_net.Services
             _tmdbService = tmdbService;
             _pythonApiUrl = configuration.GetValue<string>("PyApi:GenreUrl");
         }
-        public async Task<List<string>> GetRecommendationsAsync(int userId)
+        public async Task<List<ParsedMovieDetails>> GetRecommendationsAsync(int userId)
         {
             // Récupérer les préférences de l'utilisateur
             var preferences = await GetGenresAsync(userId);
@@ -30,14 +30,16 @@ namespace ms_recommend_net.Services
                 throw new Exception("Aucune préférence trouvée pour cet utilisateur.");
             }
 
+            // Serialize preferences to JSON
             var jsonPayload = JsonSerializer.Serialize(preferences);
 
-            Console.WriteLine($"Payload sent: {preferences}");
-            // Appeler l'API externe
+            Console.WriteLine($"Payload sent: {jsonPayload}");
+
             using var httpClient = new HttpClient();
 
             try
             {
+                // Call external Python API
                 var httpResponse = await httpClient.PostAsync(_pythonApiUrl, new StringContent(jsonPayload, Encoding.UTF8, "application/json"));
 
                 if (!httpResponse.IsSuccessStatusCode)
@@ -53,6 +55,7 @@ namespace ms_recommend_net.Services
                         $"Contenu de la réponse : {errorContent}");
                 }
 
+                // Parse Python API response
                 var responseContent = await httpResponse.Content.ReadAsStringAsync();
                 var recommendationsResponse = JsonSerializer.Deserialize<ApiPyResponse>(responseContent);
 
@@ -63,7 +66,7 @@ namespace ms_recommend_net.Services
 
                 var recommendedTitles = recommendationsResponse.ResultatRenvoye;
 
-                // Récupérer les identifiants TMDb pour chaque titre
+                // Retrieve TMDb movie IDs
                 var movieIds = new List<int>();
                 foreach (var title in recommendedTitles)
                 {
@@ -74,15 +77,36 @@ namespace ms_recommend_net.Services
                     }
                 }
 
-                // Récupérer les détails des films
-                var movieDetails = new List<string>();
+                // Retrieve and parse movie details
+                var parsedMovieDetails = new List<ParsedMovieDetails>();
+
                 foreach (var movieId in movieIds)
                 {
-                    var details = await _tmdbService.GetMovieDetailsAsync(movieId);
-                    movieDetails.Add(details);
+                    var detailsJson = await _tmdbService.GetMovieDetailsAsync(movieId);
+
+                    // Deserialize JSON response into a JsonElement
+                    var details = JsonSerializer.Deserialize<JsonElement>(detailsJson);
+
+                    // Extract the required fields
+                    var movieDetails = new ParsedMovieDetails
+                    {
+                        Id = details.GetProperty("id").GetInt32(),
+                        Title = details.TryGetProperty("title", out var title) ? title.GetString() : null, // Extract Title
+                        PosterPath = details.TryGetProperty("poster_path", out var posterPath) ? posterPath.GetString() : null,
+                        Runtime = details.TryGetProperty("runtime", out var runtime) ? runtime.GetInt32() : 0,
+                        Overview = details.TryGetProperty("overview", out var overview) ? overview.GetString() : null,
+                        ReleaseDate = details.TryGetProperty("release_date", out var releaseDate) ? releaseDate.GetString() : null,
+                        Genres = details.TryGetProperty("genres", out var genres)
+                            ? genres.EnumerateArray().Select(genre => genre.GetProperty("name").GetString()).ToList()
+                            : new List<string>(),
+                        Actors = new List<string>() // Fetch actors if needed from another API or logic
+                    };
+
+
+                    parsedMovieDetails.Add(movieDetails);
                 }
 
-                return movieDetails;
+                return parsedMovieDetails;
             }
             catch (HttpRequestException ex)
             {

@@ -9,7 +9,7 @@ namespace ms_recommend_net.Interfaces
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>A collection of recommended films.</returns>
-        Task<List<string>> GetRecommendationsAsync(int userId);
+        Task<List<ParsedMovieDetails>> GetRecommendationsAsync(int userId);
 
         /// <summary>
         /// Retrieves user preferences grouped by type (e.g., Genre, Actor).
