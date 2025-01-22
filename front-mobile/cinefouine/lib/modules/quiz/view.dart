@@ -26,6 +26,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
   StreamSubscription? _quizReadySubscription;
 
   bool _isLoading = true; // Indicateur pour savoir si le quiz est en cours de chargement
+  String? _posterUrl; // URL du poster du film
 
   Map<String, dynamic> _quizData = {
     "titre_du_quizz": "Chargement du quiz en cours",
@@ -41,6 +42,7 @@ class _QuizViewState extends ConsumerState<QuizView> {
 
     int id = movieSelected.value?.details?.id ?? 0;
     String title = movieSelected.value?.details?.title ?? "";
+    _posterUrl = movieSelected.value?.details?.posterPath; // URL du poster
     _loadNewQuiz(id, title); // Call _loadNewQuiz with a default filmId
   }
 
@@ -230,6 +232,20 @@ class _QuizViewState extends ConsumerState<QuizView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                      child: _posterUrl != null
+                          ? Image.network(
+                              'https://image.tmdb.org/t/p/w500$_posterUrl',
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+                            )
+                          : _buildPlaceholder(),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
                     child: Text(
                       quizDescription,
                       style: const TextStyle(color: Colors.white, fontSize: 16),
@@ -315,3 +331,16 @@ class _QuizViewState extends ConsumerState<QuizView> {
     );
   }
 }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      color: Colors.grey[800],
+      child: const Center(
+        child: Icon(
+          Icons.movie_outlined,
+          color: Colors.white54,
+          size: 48,
+        ),
+      ),
+    );
+  }
