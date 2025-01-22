@@ -6,6 +6,25 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$getRecommendationsHash() =>
+    r'ba75b603f3b1ecc41b7d643d4427fa9ce2026247';
+
+/// See also [getRecommendations].
+@ProviderFor(getRecommendations)
+final getRecommendationsProvider =
+    AutoDisposeFutureProvider<List<MovieInfo>?>.internal(
+  getRecommendations,
+  name: r'getRecommendationsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getRecommendationsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetRecommendationsRef = AutoDisposeFutureProviderRef<List<MovieInfo>?>;
 String _$listMovieSearchedHash() => r'13df8a0df759d9d7038abc1e1d0fbfbdaa18f784';
 
 /// See also [ListMovieSearched].

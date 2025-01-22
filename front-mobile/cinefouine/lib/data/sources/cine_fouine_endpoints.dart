@@ -1,7 +1,7 @@
 class CineFouineEndpoints {
   CineFouineEndpoints._();
 
-  static const String getRecommendation = '/Recommendation/GetRecommendationByUserId';
+  static const String getRecommendation = '/Recommendation/get-recommendations';
   static const String getAllEvent = '/Event/GetAllEvents';
   static const String createEvent = '/Event/AddEvent';
   static const String register = '/Auth/register';  

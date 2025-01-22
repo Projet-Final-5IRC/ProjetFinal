@@ -10,7 +10,7 @@ part 'recommendation_service.g.dart';
 @Riverpod(keepAlive: true)
 RecommendationService recommendationService(RecommendationServiceRef ref) {
   final dioClient = ref.watch(dioClientProvider(
-    url: "https://ms-recommendation-2vhjbhfyf4e6p8fa.francecentral-01.azurewebsites.net/api",
+    url: "https://ms-recommend-hnbyg0e2gmbbatet.francecentral-01.azurewebsites.net/api",
   ));
   return RecommendationService(dioClient: dioClient);
 }
@@ -22,13 +22,14 @@ class RecommendationService {
   Future<List<MovieInfo>?> getRecommendations(int userId) async {
     try {
       final response = await dioClient.get<List<MovieInfo>>(
-        CineFouineEndpoints.getRecommendation,
+        '${CineFouineEndpoints.getRecommendation}/$userId',
         queryParameters: {'userId': userId},
         deserializer: (json) => MovieListExtension.movieFromJson(jsonEncode(json)),
       );
+      // print("DEBUG Recommendations: $response");
       return response;
     } catch (e) {
-      print('Error getting recommendations: $e');
+      print('DEBUG Error getting recommendations: $e');
       return null;
     }
   }

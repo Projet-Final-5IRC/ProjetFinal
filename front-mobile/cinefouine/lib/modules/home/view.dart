@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/mainAppBar.dart';
 import 'package:cinefouine/data/entities/movie/movie_info.dart';
 import 'package:cinefouine/data/repositories/movie_repository.dart';
+import 'package:cinefouine/data/repositories/recommendation_repository.dart';
+import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:cinefouine/modules/detailsMovie/view.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:cinefouine/theme/app_colors.dart';
@@ -25,6 +27,14 @@ class ListMovieSearched extends _$ListMovieSearched {
     state = AsyncValue.data(results);
     return results;
   }
+}
+
+@Riverpod(keepAlive: false)
+Future<List<MovieInfo>?> getRecommendations(
+  Ref ref, 
+) async {
+  final preferences = ref.read(preferencesProvider);
+  return ref.watch(recommendationRepositoryProvider).getRecommendations(preferences.idUserPreferences.load()!);
 }
 
 
@@ -188,6 +198,8 @@ class MovieCard extends ConsumerWidget {
     );
   }
 
+
+}
   Widget _buildPlaceholder() {
     return Container(
       color: Colors.grey[800],
@@ -200,13 +212,14 @@ class MovieCard extends ConsumerWidget {
       ),
     );
   }
-}
-
-class HomeContent extends StatelessWidget {
+class HomeContent extends ConsumerWidget {
   const HomeContent({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final preferences = ref.read(preferencesProvider);
+    final recommendationsAsyncValue = ref.watch(getRecommendationsProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -324,22 +337,48 @@ class HomeContent extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 12),
-              _buildRecommendationItem(
-                imagePath: "assets/images/movie-image.png",
-                onAddTap: () {},
-                onPlayTap: () {},
-              ),
-              SizedBox(height: 12),
-              _buildRecommendationItem(
-                imagePath: "assets/images/movie-image.png",
-                onAddTap: () {},
-                onPlayTap: () {},
-              ),
-              SizedBox(height: 12),
-              _buildRecommendationItem(
-                imagePath: "assets/images/movie-image.png",
-                onAddTap: () {},
-                onPlayTap: () {},
+              
+                // Utilisation de la méthode getRecommendations
+                recommendationsAsyncValue.when(
+                data: (movies) {
+                  // print("DEBUG Recommendations: $movies");
+                  if (movies == null || movies.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "Aucune recommandation",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                  }
+                  
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: movies.length,
+                    itemBuilder: (context, index) {
+                      final movie = movies[index];
+                      print('DEBUG movie: ${movie.posterPath}');
+                      return _buildRecommendationItem(
+                        imagePath: 'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                        title: movie.title,
+                        description: movie.overview ?? '',
+                        onAddTap: () {},
+                        onPlayTap: () {},
+                      );
+                    },
+                  );
+                },
+                error: (error, stackTrace) {
+                  return Center(
+                    child: Text(
+                      'Erreur: $error',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
+                loading: () {
+                  return const Center(child: CircularProgressIndicator());
+                },
               ),
             ],
           ),
@@ -348,89 +387,124 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildRecommendationItem({
-    required String imagePath,
-    required VoidCallback onPlayTap,
-    required VoidCallback onAddTap,
-  }) {
-    return Container(
-      width: double.infinity,
-      height: 220,
-      margin: EdgeInsets.symmetric(vertical: 8),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              imagePath,
-              width: double.infinity,
-              height: double.infinity,
-              fit: BoxFit.cover,
-            ),
+Widget _buildRecommendationItem({
+  required String imagePath,
+  required String title,
+  required String description,
+  required VoidCallback onPlayTap,
+  required VoidCallback onAddTap,
+}) {
+  return Container(
+    width: double.infinity,
+    height: 250, // Augmente la hauteur pour laisser de la place au texte
+    margin: EdgeInsets.symmetric(vertical: 8),
+    child: Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.network(
+            imagePath,
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.5),
-                  ],
-                ),
+        ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.5),
+                ],
               ),
             ),
           ),
-          Positioned(
-            left: 16,
-            bottom: 16,
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: onPlayTap,
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: Icon(
-                      Icons.play_arrow,
-                      color: Colors.black,
-                      size: 24,
-                    ),
+        ),
+        Positioned(
+          left: 16,
+          bottom: 16,
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: onPlayTap,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Icon(
+                    Icons.play_arrow,
+                    color: Colors.black,
+                    size: 24,
                   ),
                 ),
-                SizedBox(width: 12),
-                GestureDetector(
-                  onTap: onAddTap,
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.add,
+              ),
+              SizedBox(width: 12),
+              GestureDetector(
+                onTap: onAddTap,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
                       color: Colors.white,
-                      size: 24,
+                      width: 2,
                     ),
                   ),
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+        Positioned(
+          left: 20,
+          top: 20,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Titre
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+            softWrap: true,  // Permet le retour à la ligne si nécessaire
+          ),
+
+              SizedBox(height: 4),
+              // Description
+              // Text(
+              //   description,
+              //   style: TextStyle(
+              //     color: Colors.white.withOpacity(0.8),
+              //     fontSize: 14,
+              //   ),
+              //   maxLines: 2,
+              //   overflow: TextOverflow.ellipsis,
+              // ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 }
 
 class MovieInfoBar extends StatelessWidget {
