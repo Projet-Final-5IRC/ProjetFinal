@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
+import 'package:cinefouine/data/entities/movie/movie_info_detail.dart';
 import 'package:cinefouine/data/entities/userAction/user_action.dart';
 import 'package:cinefouine/data/repositories/user_preference_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
@@ -56,6 +57,29 @@ class UserActionStat extends _$UserActionStat {
   }
 }
 
+@Riverpod(keepAlive: false)
+class UserMovieLiked extends _$UserMovieLiked {
+  @override
+  Future<List<MovieInfoDetail>> build() async {
+    state = AsyncLoading();
+    final Preferences preferences = ref.read(preferencesProvider);
+    final prefRepo = ref.read(userPreferenceRepositoryProvider);
+    final movieLiked =
+        await prefRepo.getMovieLiked(preferences.idUserPreferences.load()!);
+    state = AsyncData(movieLiked);
+    return movieLiked;
+  }
+
+  Future<void> updateMovieLiked() async {
+    state = AsyncLoading();
+    final Preferences preferences = ref.read(preferencesProvider);
+    final prefRepo = ref.read(userPreferenceRepositoryProvider);
+    final movieLiked =
+        await prefRepo.getMovieLiked(preferences.idUserPreferences.load()!);
+    state = AsyncData(movieLiked);
+  }
+}
+
 @RoutePage()
 class ProfilView extends ConsumerWidget {
   const ProfilView({super.key});
@@ -65,6 +89,7 @@ class ProfilView extends ConsumerWidget {
     final Preferences preferences = ref.watch(preferencesProvider);
     final router = ref.watch(appRouterProvider);
     final userActionAsync = ref.watch(userActionStatProvider);
+    final userMovieLikedAsync = ref.watch(userMovieLikedProvider);
 
     return Scaffold(
       backgroundColor: AppColors.secondary,
@@ -229,7 +254,7 @@ class ProfilView extends ConsumerWidget {
               ),
               SizedBox(height: 16),
               Text(
-                "Mes films",
+                "Mes films likés",
                 style: TextStyle(
                   fontSize: 36.0,
                   fontWeight: FontWeight.bold,
@@ -237,26 +262,58 @@ class ProfilView extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                "Film regardé: 42",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
+              userMovieLikedAsync.when(
+                data: (movies) {
+                  if (movies.isEmpty) {
+                    return Text(
+                      "Aucun film liké.",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    );
+                  }
+
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: movies.map((movie) {
+                        // Vérification de l'URL de l'image
+                        final posterUrl = movie.details?.posterPath != null
+                            ? 'https://image.tmdb.org/t/p/w500${movie.details?.posterPath}' // URL d'une image en ligne
+                            : 'assets/images/default_poster.jpg'; // Image par défaut locale
+
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.network(
+                                  posterUrl,
+                                  width: 120.0, // Largeur fixe des posters
+                                  height: 180.0, // Hauteur fixe des posters
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                movie.details?.title ?? "Titre non disponible",
+                                style: TextStyle(color: Colors.white, fontSize: 14),
+                                overflow: TextOverflow.ellipsis, // Empêche que le texte déborde
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+                loading: () => Center(
+                  child: CircularProgressIndicator(),
+                ),
+                error: (err, stack) => Text(
+                  "Erreur lors du chargement des films likés : $err",
+                  style: TextStyle(color: Colors.red),
                 ),
               ),
-              Text(
-                "Heures regardé: 6969 heures",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildSection("Favoris",
-                  ["Harry Potter", "Stars wars", "Le seigneur des anneaux"]),
-              const SizedBox(height: 16),
-              _buildSection("Ma liste",
-                  ["Le hobbit", "Les tuchs", "Pirates des caraibes"]),
               SizedBox(height: 24),
               CineFouineHugeBoutton(
                 onPressed: () {
@@ -274,50 +331,6 @@ class ProfilView extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildSection(
-    String title,
-    List<String> items,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            Icon(Icons.chevron_right, color: Colors.white),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: items
-              .map((item) => Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 8.0),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ))
-              .toList(),
-        ),
-      ],
     );
   }
 }

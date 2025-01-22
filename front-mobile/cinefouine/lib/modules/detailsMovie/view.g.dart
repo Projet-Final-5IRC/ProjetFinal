@@ -6,7 +6,7 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$movieSeletedHash() => r'e28e2110dbfdaa429dec7e75bbdc392ea1f85583';
+String _$movieSeletedHash() => r'460689e0c6bddf10dc31a00c407923362db9f017';
 
 /// See also [MovieSeleted].
 @ProviderFor(MovieSeleted)
@@ -21,5 +21,21 @@ final movieSeletedProvider =
 );
 
 typedef _$MovieSeleted = AsyncNotifier<MovieInfoDetail?>;
+String _$platformeForMovieHash() => r'ead47640770eb77afaadeb4498387a2f517b7c89';
+
+/// See also [PlatformeForMovie].
+@ProviderFor(PlatformeForMovie)
+final platformeForMovieProvider =
+    AutoDisposeNotifierProvider<PlatformeForMovie, List<Platforme>?>.internal(
+  PlatformeForMovie.new,
+  name: r'platformeForMovieProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$platformeForMovieHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$PlatformeForMovie = AutoDisposeNotifier<List<Platforme>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

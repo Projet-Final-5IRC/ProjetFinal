@@ -16,6 +16,7 @@ import 'package:cinefouine/modules/detailsEvent/view.dart';
 import 'package:cinefouine/modules/detailsMovie/view.dart';
 import 'package:cinefouine/modules/genresSelection/view.dart';
 import 'package:cinefouine/modules/quiz/view.dart';
+import 'package:cinefouine/modules/platforme/view.dart';
 
 part 'app_router.g.dart';
 part 'app_router.gr.dart';
@@ -37,6 +38,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: RegisterRoute.page),
         AutoRoute(page: GenresSelectionRoute.page),
         AutoRoute(page: DetailsMovieRoute.page),
+        AutoRoute(page: PlatformeRoute.page),
         AutoRoute(page: QuizRoute.page),
         AutoRoute(
           page: BottomNavigationRoute.page,

@@ -20,5 +20,4 @@ class UserService {
     Future<List<UserInfo>?> getUsers() async {
       return null;
     }
-
 }

@@ -187,6 +187,22 @@ class LoginRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [PlatformeView]
+class PlatformeRoute extends PageRouteInfo<void> {
+  const PlatformeRoute({List<PageRouteInfo>? children})
+    : super(PlatformeRoute.name, initialChildren: children);
+
+  static const String name = 'PlatformeRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const PlatformeView();
+    },
+  );
+}
+
+/// generated route for
 /// [ProfilView]
 class ProfilRoute extends PageRouteInfo<void> {
   const ProfilRoute({List<PageRouteInfo>? children})

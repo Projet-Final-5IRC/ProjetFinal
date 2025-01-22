@@ -22,5 +22,21 @@ final userActionStatProvider =
 );
 
 typedef _$UserActionStat = AutoDisposeAsyncNotifier<UserAction?>;
+String _$userMovieLikedHash() => r'd0e3ef9f36deb909e5c116023abcd07c7f102e45';
+
+/// See also [UserMovieLiked].
+@ProviderFor(UserMovieLiked)
+final userMovieLikedProvider = AutoDisposeAsyncNotifierProvider<UserMovieLiked,
+    List<MovieInfoDetail>>.internal(
+  UserMovieLiked.new,
+  name: r'userMovieLikedProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$userMovieLikedHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$UserMovieLiked = AutoDisposeAsyncNotifier<List<MovieInfoDetail>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
