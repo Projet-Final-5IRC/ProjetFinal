@@ -29,6 +29,7 @@ class MovieSeleted extends _$MovieSeleted {
     final repoMovie = ref.read(movieRepositoryProvider);
 
     if (movie is MovieInfo) {
+ 
       state = AsyncValue.data(await repoMovie.getMovieDetails(movie.id));
       await ref
           .read(platformeForMovieProvider.notifier)
@@ -45,6 +46,15 @@ class MovieSeleted extends _$MovieSeleted {
   Future<void> likeTheMovie() async {
     final preference = ref.read(preferencesProvider);
     await ref.read(userPreferenceRepositoryProvider).likeAmovie(
+          idTmdbMovie: state.value?.details?.id ?? 0,
+          idUser: preference.idUserPreferences.load()!,
+        );
+    await ref.read(userMovieLikedProvider.notifier).updateMovieLiked();
+  }
+
+  Future<void> unlikeTheMovie() async {
+    final preference = ref.read(preferencesProvider);
+    await ref.read(userPreferenceRepositoryProvider).unlikeAmovie(
           idTmdbMovie: state.value?.details?.id ?? 0,
           idUser: preference.idUserPreferences.load()!,
         );
@@ -76,6 +86,7 @@ class DetailsMovieView extends ConsumerWidget {
     final movieSelected = ref.watch(movieSeletedProvider);
     final router = ref.watch(appRouterProvider);
     final platforme = ref.watch(platformeForMovieProvider);
+    final isLiked = ref.watch(userMovieLikedProvider);
 
     return Scaffold(
       appBar: MainAppBar(
@@ -103,6 +114,7 @@ class DetailsMovieView extends ConsumerWidget {
                   ref,
                   platforme,
                   router,
+                  isLiked.value?.contains(data) ?? false,
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -152,6 +164,7 @@ class DetailsMovieView extends ConsumerWidget {
     WidgetRef ref,
     List<Platforme>? platforme,
     AppRouter router,
+    bool isLiked,
   ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,9 +228,22 @@ class DetailsMovieView extends ConsumerWidget {
                       ),
                     ),
                     child: IconButton(
-                      icon: const Icon(Icons.thumb_up, color: AppColors.white),
+                      icon: Icon(
+                        isLiked ? Icons.thumb_up : Icons.thumb_up_off_alt,
+                        color: isLiked ? AppColors.primary : AppColors.white,
+                      ),
                       onPressed: () {
-                        ref.read(movieSeletedProvider.notifier).likeTheMovie();
+                        if (isLiked) {
+                          print("unlike");
+                          ref
+                              .read(movieSeletedProvider.notifier)
+                              .unlikeTheMovie();
+                        } else {
+                          print("like");
+                          ref
+                              .read(movieSeletedProvider.notifier)
+                              .likeTheMovie();
+                        }
                       },
                       iconSize: 20,
                     ),
