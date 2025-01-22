@@ -31,9 +31,20 @@ namespace data.Models.DataManager
 
             try
             {
-                await eventDBContext.SeenMovies.AddAsync(entity);
-                await eventDBContext.SaveChangesAsync();
-                return entity;
+                var verif = eventDBContext.SeenMovies.FirstOrDefault(e => e.IdTmdbMovie == entity.IdTmdbMovie && e.IdUser == entity.IdUser);
+                if (verif == null)
+                {
+                    await eventDBContext.SeenMovies.AddAsync(entity);
+                    await eventDBContext.SaveChangesAsync();
+                    return entity;
+                }
+                else
+                {
+                    return new ObjectResult($"Seen movie is already present in DB")
+                    {
+                        StatusCode = StatusCodes.Status500InternalServerError
+                    };
+                }
             }
             catch (Exception ex)
             {

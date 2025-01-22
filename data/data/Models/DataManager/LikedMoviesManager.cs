@@ -31,13 +31,24 @@ namespace data.Models.DataManager
 
             try
             {
-                await eventDBContext.LikedMovies.AddAsync(entity);
-                await eventDBContext.SaveChangesAsync();
-                return entity;
+                var verif = eventDBContext.LikedMovies.FirstOrDefault(e => e.IdTmdbMovie == entity.IdTmdbMovie && e.IdUser == entity.IdUser);
+                if (verif == null)
+                {
+                    await eventDBContext.LikedMovies.AddAsync(entity);
+                    await eventDBContext.SaveChangesAsync();
+                    return entity;
+                }
+                else
+                {
+                    return new ObjectResult($"Liked Movie already present in db !")
+                    {
+                        StatusCode = StatusCodes.Status500InternalServerError
+                    };
+                }
             }
             catch (Exception ex)
             {
-                return new ObjectResult($"An error occurred while adding the preference: {ex.Message}")
+                return new ObjectResult($"An error occurred while adding the Liked Movie: {ex.Message}")
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
