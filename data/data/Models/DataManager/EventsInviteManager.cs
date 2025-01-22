@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace data.Models.DataManager
 {
-    public class EventsInviteManager : IDataRepository<EventsInvite>
+    public class EventsInviteManager : IDataRepositoryEventInvite<EventsInvite>
     {
         readonly EventDBContext? eventDBContext;
 
@@ -35,6 +35,18 @@ namespace data.Models.DataManager
                                             .FirstOrDefaultAsync(e => e.idEventsInvite == id);
 
             return eventInviteEntity != null ? eventInviteEntity : new NotFoundResult();
+        }
+
+        public async Task<ActionResult<Users>> GetByUserIdAsync(int idUser)
+        {
+            if (eventDBContext == null)
+            {
+                throw new ArgumentNullException(nameof(eventDBContext));
+            }
+
+            var userEntity = await eventDBContext.User.FirstOrDefaultAsync(e => e.IdUser == idUser);
+
+            return userEntity != null ? userEntity : new NotFoundResult();
         }
 
         public async Task<ActionResult<EventsInvite>> AddAsync(EventsInvite newInvite)
@@ -116,6 +128,66 @@ namespace data.Models.DataManager
                 return new ObjectResult($"An error occurred while deleting the invite: {ex.Message}")
                 {
                     StatusCode = StatusCodes.Status500InternalServerError // Retourne un 500 Internal Server Error en cas d'exception
+                };
+            }
+        }
+
+        public async Task<ActionResult<EventsInvite>> JoinEvent(int idEvent,int idUser)
+        {
+            if (eventDBContext == null)
+            {
+                throw new ArgumentNullException(nameof (eventDBContext));
+            }
+
+            var invit = await eventDBContext.EventInvite.FirstOrDefaultAsync(e => e.IdEvent == idEvent && e.IdUser == idUser);
+
+            if (invit == null) 
+            {
+                return new BadRequestResult();
+            }
+
+            try
+            {
+                invit.IsPending = false;
+                eventDBContext.EventInvite.Update(invit);
+                await eventDBContext.SaveChangesAsync();
+                return invit;
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult($"An error occurred while updating the invite: {ex.Message}")
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
+        }
+
+        public async Task<ActionResult<List<Events>>> GetEventJoinByUser(int idUser)
+        {
+            if (eventDBContext == null)
+            {
+                throw new ArgumentNullException(nameof (eventDBContext));
+            }
+
+            try
+            {
+                var joinedEvents = await eventDBContext.EventInvite
+                    .Where(ei => ei.IdUser == idUser && !ei.IsPending)
+                    .Select(ei => ei.EventReference)
+                    .ToListAsync();
+
+                if (joinedEvents == null || !joinedEvents.Any())
+                {
+                    return new NotFoundResult();
+                }
+
+                return joinedEvents;
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult($"An error occurred while retrieving the events: {ex.Message}")
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }

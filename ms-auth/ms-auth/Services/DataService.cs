@@ -40,7 +40,7 @@ namespace ms_auth.Services
 
             if (response.StatusCode == HttpStatusCode.Created)
             {
-                var jsonResponse = JsonConvert.DeserializeObject<UserEndDTO>(responseContent);
+                var jsonResponse = JsonConvert.DeserializeObject<UserDTO>(responseContent);
                 return new APIResponseDTO
                 {
                     StatusCode = response.StatusCode,

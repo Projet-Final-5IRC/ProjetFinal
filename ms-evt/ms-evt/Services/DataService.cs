@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using data.Models.DTO;
+using Microsoft.AspNetCore.Mvc;
 using ms_evt.Models.DTO;
 using Newtonsoft.Json;
 using System;
@@ -16,21 +17,27 @@ namespace ms_evt.Services
         {
             _httpClient = httpClient;
 
-            var apiBaseUrl = configuration.GetValue<string>("ConnectionStrings:BaseUrl");
+            var apiBaseUrl = configuration.GetValue<string>("ConnectionStrings:BaseURL");
 
             _httpClient.BaseAddress = new Uri(apiBaseUrl);
         }
 
-        public async Task<List<T>> GetAllAsync<T>(string endpoint)
+        public async Task<List<EventDTO>> GetAllAsync<T>(string endpoint)
         {
             var response = await _httpClient.GetStringAsync(endpoint);
-            return JsonConvert.DeserializeObject<List<T>>(response);
+            return JsonConvert.DeserializeObject<List<EventDTO>>(response);
         }
 
         public async Task<T> GetByIdAsync<T>(string endpoint,int id)
         {
             var response = await _httpClient.GetStringAsync($"{endpoint}/{id}");
             return JsonConvert.DeserializeObject<T>(response);
+        }
+
+        public async Task<List<UserDTO>> GetAllUserByEvent(string endpoint,int id)
+        {
+            var response = await _httpClient.GetStringAsync($"{endpoint}/{id}");
+            return JsonConvert.DeserializeObject<List<UserDTO>>(response);
         }
 
         public async Task<HttpStatusCode> PostEventAsync(string endpoint, EventDTO data)
@@ -55,10 +62,22 @@ namespace ms_evt.Services
             return response.StatusCode;
         }
 
+        public async Task<HttpStatusCode> DeleteAsyncUsername(string endpoint)
+        {
+            var response = await _httpClient.DeleteAsync(endpoint);
+            return response.StatusCode;
+        }
+
         public async Task<HttpStatusCode> PutEventAsync(string endpoint, int id,EventDTO eventDTO)
         {
             var content = new StringContent(JsonConvert.SerializeObject(eventDTO), System.Text.Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync($"{endpoint}/{id}",content);
+            return response.StatusCode;
+        }
+
+        public async Task<HttpStatusCode> PutStateOfEvent(string endpoint)
+        {
+            var response = await _httpClient.GetAsync(endpoint);
             return response.StatusCode;
         }
     }

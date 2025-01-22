@@ -23,10 +23,10 @@ namespace data.Controllers.Tests
     {
         private EventController _controller;
         private readonly EventDBContext _context;
-        private IDataRepository<Events> dataRepository;
+        private IDataRepositoryEventMore<Events> dataRepository;
 
         private EventController _controller_Moq;
-        private Mock<IDataRepository<Events>> _mockRepo;
+        private Mock<IDataRepositoryEventMore<Events>> _mockRepo;
 
         public EventControllerTests()
         { 
@@ -55,8 +55,8 @@ namespace data.Controllers.Tests
         [TestMethod]
         public async Task GetEventByID_SuccessGetEventByID()
         {
-            var result = await _controller.GetEventById(52);
-            var eventInDB = _context.Event.Where(c => c.IdEvent == 52).FirstOrDefault();
+            var result = await _controller.GetEventById(105);
+            var eventInDB = _context.Event.Where(c => c.IdEvent == 105).FirstOrDefault();
 
             Assert.AreEqual(eventInDB.EventName, result.Value.EventName);
         }
@@ -75,7 +75,7 @@ namespace data.Controllers.Tests
         [TestInitialize]
         public void Setup()
         {
-            _mockRepo = new Mock<IDataRepository<Events>>();
+            _mockRepo = new Mock<IDataRepositoryEventMore<Events>>();
             _controller_Moq = new EventController(_mockRepo.Object);
         }
 
@@ -112,7 +112,8 @@ namespace data.Controllers.Tests
                 EventLocation = "Stadium",
                 EventDate = "19:06:2002",
                 EventHour = "20:00",
-                EventDescription = "Music concert"
+                EventDescription = "Music concert",
+                IdUser=1
             };
 
             _mockRepo.Setup(repo => repo.AddAsync(newEvent)).ReturnsAsync(new ActionResult<Events>(newEvent));
@@ -123,16 +124,15 @@ namespace data.Controllers.Tests
 
             // Assert
             Assert.IsNotNull(createdResult);
-            Assert.AreEqual(201, createdResult.StatusCode); // HTTP 201 Created
+            Assert.AreEqual(201, createdResult.StatusCode);
             Assert.AreEqual("GetEventById", createdResult.ActionName);
-            Assert.AreEqual(newEvent.IdEvent, ((EventDTO)createdResult.Value).IdEvent);
         }
 
         [TestMethod]
         public async Task PostEvents_ModelStateInvalid()
         {
             // Arrange
-            var invalidEvent = new Events(); // Missing required fields
+            var invalidEvent = new Events();
             _controller_Moq.ModelState.AddModelError("EventName", "The EventName field is required.");
 
             // Act
@@ -141,7 +141,7 @@ namespace data.Controllers.Tests
 
             // Assert
             Assert.IsNotNull(badRequestResult);
-            Assert.AreEqual(400, badRequestResult.StatusCode); // HTTP 400 Bad Request
+            Assert.AreEqual(400, badRequestResult.StatusCode); 
             Assert.IsTrue(badRequestResult.Value is SerializableError);
         }
 

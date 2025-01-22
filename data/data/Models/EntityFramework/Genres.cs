@@ -23,6 +23,9 @@ namespace data.Models.EntityFramework
         [JsonIgnore]
         public virtual ICollection<Events> EventsGenre { get; set; } = new List<Events>();
 
+        [JsonIgnore]
+        public virtual ICollection<Preference> GenrePreference { get; set; } = new List<Preference>();
+
         public void UpdateGenreValues(Genres updatedGenre)
         {
             if (updatedGenre.IdTMDBGenre != 0)
