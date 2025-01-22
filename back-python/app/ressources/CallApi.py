@@ -4,6 +4,20 @@ from dotenv import load_dotenv
 import json
 import random
 
+
+#### Fonction dla fouine ###
+def CallMovieFouine():
+    # Liste des genre
+    chemin_genres = 'data/Movies/gender.json'
+    with open(chemin_genres, 'r') as fichier:
+        genres_data = json.load(fichier)
+    # 1 genre au hasard
+    # requête sur l'api
+    # traitement du résultat et retour 
+    random_genre = random.choice(genres_data['Genre'])['name']
+    
+    return random_genre
+
 ### Trouver les ids par genre après ca marchera
 def CallFounIdPerGender(input_json):
     def clean_genre_name(name):

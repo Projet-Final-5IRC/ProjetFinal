@@ -2,8 +2,8 @@ from flask import Flask, request, jsonify
 import config  # Assurez-vous que config est importé correctement
 from app import main
 from app import mainGender as mg
+from app import mainFouine as mf
 
-## Ptn de merge de merde
 
 app = Flask(__name__)
 
@@ -41,6 +41,18 @@ def recoUser():
         return jsonify({'error': str(e)}), 506 # En cas d'erreur, retourne un message d'erreur avec le statut 500
        
 # Routes en GET
+@app.route('/recoFouineDay', methods=['GET'])
+def reco_fouine():
+    
+    random_genre = mf.mainFouine()
+    result = {
+    "resultat renvoyé": [random_genre]
+    }
+    
+    return result
+
+
+# Routes de test
 @app.route('/recoUser', methods=['GET'])
 def reco_user():
 
