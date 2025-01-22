@@ -11,6 +11,8 @@ builder.Services.AddScoped<IDataRepository<Genres>, GenresManager>();
 builder.Services.AddScoped<IDataRepositoryWithEmail<Users>, UsersManager>();
 builder.Services.AddScoped<IDataRepositoryEventInvite<EventsInvite>, EventsInviteManager>();
 builder.Services.AddScoped<IDataRepositoryWithPreference<Preference>, PreferenceManager>();
+builder.Services.AddScoped<IDataRepositoryWithMovies<LikedMovies>, LikedMoviesManager>();
+builder.Services.AddScoped<IDataRepositoryWithMovies<SeenMovies>, SeenMoviesManager>();
 
 builder.Services.AddControllers();
 

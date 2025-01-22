@@ -1,9 +1,11 @@
 ﻿using data.Models.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ms_evt.Models.Data;
 using ms_evt.Models.DTO;
 using ms_evt.Services;
 using Newtonsoft.Json;
+using System.Net;
 using System.Text.Json.Nodes;
 
 namespace ms_evt.Controllers
@@ -13,10 +15,12 @@ namespace ms_evt.Controllers
     public class EventController : ControllerBase
     {
         private readonly DataService _dataService;
+        private readonly IMailService _mailService;
 
-        public EventController(DataService dataService)
+        public EventController(DataService dataService, IMailService mailService)
         {
             _dataService = dataService;
+            _mailService = mailService;
         }
 
         [HttpGet("GetAllEvents")]
@@ -81,7 +85,20 @@ namespace ms_evt.Controllers
             try
             {
                 var data = await _dataService.PostInviteAsync("api/EventInvite", inviteDTO);
-                return Ok(data);
+                //Compte de démo pour le mail donc le mail maxime.brossard5@gmail.com est renseigné en dur.
+                if (data != HttpStatusCode.Conflict)
+                {
+                    var user = await _dataService.GetByIdAsync<UserDTO>("api/User", inviteDTO.IdUser);
+                    var events = await _dataService.GetByIdAsync<EventDTO>("api/Event", inviteDTO.IdEvent);
+                    var eventOwner = await _dataService.GetByIdAsync<UserDTO>("api/User", events.IdUser);
+                    MailData mail = new MailData("maxime.brossard5@gmail.com", $"{user.UserName}", $"{eventOwner.UserName} has invited {user.UserName} to {events.eventName} !", $"{user.UserName} is invited to {events.eventName} who takes place the {events.eventDate} {events.eventHour} at {events.eventLocation}");
+                    _mailService.SendMail(mail);
+                    return Ok(data);
+                }else
+                {
+                    return Conflict("Invitation already exist");
+                }
+                
             }
             catch (Exception ex)
             {

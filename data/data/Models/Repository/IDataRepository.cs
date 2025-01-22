@@ -39,4 +39,10 @@ namespace data.Models.Repository
         Task<ActionResult<List<PreferenceDTO>>> UpdateUserPreferenceAsync(int IdUser, List<PreferenceDTO> listPreferences);
         Task<ActionResult> DeleteUserPreferenceAsync(int IdUser);
     }
+
+    public interface IDataRepositoryWithMovies<TEntity> : IDataRepository<TEntity>
+    {
+        Task<List<TEntity>> GetMoviesByUserId(int IdUser);
+        Task<ActionResult> DeleteMoviesByUserAndMovieId(int IdUser, int movieTmdbId);
+    }
 }

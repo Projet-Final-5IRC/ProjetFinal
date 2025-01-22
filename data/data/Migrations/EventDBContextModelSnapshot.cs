@@ -132,6 +132,32 @@ namespace data.Migrations
                     b.ToTable("t_e_genres_utl", "public");
                 });
 
+            modelBuilder.Entity("data.Models.EntityFramework.LikedMovies", b =>
+                {
+                    b.Property<int>("IdLikedMovies")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("lik_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdLikedMovies"));
+
+                    b.Property<int>("IdTmdbMovie")
+                        .HasColumnType("integer")
+                        .HasColumnName("lik_idtmdb");
+
+                    b.Property<int>("IdUser")
+                        .HasColumnType("integer")
+                        .HasColumnName("usr_id");
+
+                    b.HasKey("IdLikedMovies");
+
+                    b.HasIndex("IdLikedMovies");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("t_e_liked_movies_utl", "public");
+                });
+
             modelBuilder.Entity("data.Models.EntityFramework.Preference", b =>
                 {
                     b.Property<int>("IdPreference")
@@ -158,6 +184,32 @@ namespace data.Migrations
                     b.HasIndex("IdUser");
 
                     b.ToTable("t_e_preference_utl", "public");
+                });
+
+            modelBuilder.Entity("data.Models.EntityFramework.SeenMovies", b =>
+                {
+                    b.Property<int>("IdSeenMovies")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("sem_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdSeenMovies"));
+
+                    b.Property<int>("IdTmdbMovie")
+                        .HasColumnType("integer")
+                        .HasColumnName("sem_idtmdb");
+
+                    b.Property<int>("IdUser")
+                        .HasColumnType("integer")
+                        .HasColumnName("usr_id");
+
+                    b.HasKey("IdSeenMovies");
+
+                    b.HasIndex("IdSeenMovies");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("t_e_seen_movies_utl", "public");
                 });
 
             modelBuilder.Entity("data.Models.EntityFramework.Users", b =>
@@ -247,6 +299,18 @@ namespace data.Migrations
                     b.Navigation("UserReference");
                 });
 
+            modelBuilder.Entity("data.Models.EntityFramework.LikedMovies", b =>
+                {
+                    b.HasOne("data.Models.EntityFramework.Users", "UserReference")
+                        .WithMany("UserLikedMovies")
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_liked_movie");
+
+                    b.Navigation("UserReference");
+                });
+
             modelBuilder.Entity("data.Models.EntityFramework.Preference", b =>
                 {
                     b.HasOne("data.Models.EntityFramework.Genres", "GenreReference")
@@ -264,6 +328,18 @@ namespace data.Migrations
                         .HasConstraintName("fk_user_preference");
 
                     b.Navigation("GenreReference");
+
+                    b.Navigation("UserReference");
+                });
+
+            modelBuilder.Entity("data.Models.EntityFramework.SeenMovies", b =>
+                {
+                    b.HasOne("data.Models.EntityFramework.Users", "UserReference")
+                        .WithMany("UserSeenMovies")
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_seen_movie");
 
                     b.Navigation("UserReference");
                 });
@@ -286,7 +362,11 @@ namespace data.Migrations
 
                     b.Navigation("UserInvitation");
 
+                    b.Navigation("UserLikedMovies");
+
                     b.Navigation("UserPreference");
+
+                    b.Navigation("UserSeenMovies");
                 });
 #pragma warning restore 612, 618
         }

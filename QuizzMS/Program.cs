@@ -16,7 +16,7 @@ namespace QuizzMS
 
             // Ajouter les services au conteneur.
 
-            // Configuration de la base de données PostgreSQL
+            // Config de la base de données PostgreSQL
             builder.Services.AddDbContext<QuizDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -42,7 +42,7 @@ namespace QuizzMS
                     });
             });
 
-            // Configuration de Swagger (optionnel)
+            // Configuration de Swagger 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -51,7 +51,7 @@ namespace QuizzMS
 
             var app = builder.Build();
 
-            // Migration automatique (optionnel)
+            // Migration automatique 
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<QuizDbContext>();
@@ -65,12 +65,13 @@ namespace QuizzMS
                 app.UseSwaggerUI();
             }
 
-            // Désactiver la redirection HTTPS si nécessaire
-            // app.UseHttpsRedirection();
-
-            // Utiliser CORS avant d'utiliser l'Authorization et le Routing
+            // CORS avant d'utiliser l'Authorization et le Routing
             app.UseRouting();
             app.UseCors("AllowAll");
+            
+            // Activer WebSockets
+            app.UseWebSockets();
+            
             app.UseAuthorization();
 
             // Map SignalR Hubs

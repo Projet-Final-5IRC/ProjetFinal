@@ -80,4 +80,4 @@ def reco_gender():
 # Lancement de l'application
 if __name__ == '__main__':
     ssl_context = ('cert.pem', 'key.pem')
-    app.run(debug=False, port=5000, ssl_context=ssl_context)
+    app.run(debug=False, ssl_context=ssl_context)

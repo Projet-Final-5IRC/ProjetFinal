@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using QuizzMS.Models.EntityFramework;
-using QuizzMS.Services;
-using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Microsoft.EntityFrameworkCore;
 
