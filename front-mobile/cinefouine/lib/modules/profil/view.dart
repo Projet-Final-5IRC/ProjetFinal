@@ -81,6 +81,29 @@ class UserMovieLiked extends _$UserMovieLiked {
   }
 }
 
+@Riverpod(keepAlive: false)
+class UserMovieSeen extends _$UserMovieSeen {
+  @override
+  Future<List<MovieInfoDetail>> build() async {
+    state = AsyncLoading();
+    final Preferences preferences = ref.read(preferencesProvider);
+    final prefRepo = ref.read(userPreferenceRepositoryProvider);
+    final movieSeen =
+        await prefRepo.getSeenMovies(preferences.idUserPreferences.load()!);
+    state = AsyncData(movieSeen);
+    return movieSeen;
+  }
+
+  Future<void> updateMovieSeen() async {
+    state = AsyncLoading();
+    final Preferences preferences = ref.read(preferencesProvider);
+    final prefRepo = ref.read(userPreferenceRepositoryProvider);
+    final movieSeen =
+        await prefRepo.getSeenMovies(preferences.idUserPreferences.load()!);
+    state = AsyncData(movieSeen);
+  }
+}
+
 @RoutePage()
 class ProfilView extends ConsumerWidget {
   const ProfilView({super.key});
@@ -91,6 +114,7 @@ class ProfilView extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final userActionAsync = ref.watch(userActionStatProvider);
     final userMovieLikedAsync = ref.watch(userMovieLikedProvider);
+    final userMovieSeenAsync = ref.watch(userMovieSeenProvider);
 
     return Scaffold(
       backgroundColor: AppColors.secondary,
@@ -254,75 +278,28 @@ class ProfilView extends ConsumerWidget {
                 ),
               ),
               SizedBox(height: 16),
-              Text(
-                "Mes films likés",
-                style: TextStyle(
-                  fontSize: 36.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              userMovieLikedAsync.when(
-                data: (movies) {
-                  if (movies.isEmpty) {
-                    return Text(
-                      "Aucun film liké.",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    );
-                  }
-
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: movies.map((movie) {
-                        final posterUrl = movie.details?.posterPath != null
-                            ? 'https://image.tmdb.org/t/p/w500${movie.details?.posterPath}' // URL d'une image en ligne
-                            : 'assets/images/default_poster.jpg'; // Image par défaut locale
-
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              ref
-                                  .read(movieSeletedProvider.notifier)
-                                  .setMovie(movie);
-                              router.push(const DetailsMovieRoute());
-                            },
-                            child: Column(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.network(
-                                    posterUrl,
-                                    width: 120.0, // Largeur fixe des posters
-                                    height: 180.0, // Hauteur fixe des posters
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  movie.details?.title ??
-                                      "Titre non disponible",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 14),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  );
+              const SizedBox(height: 16),
+              // Boutons et informations utilisateur...
+              // Section pour les films likés
+              MovieSection(
+                title: "Mes films likés",
+                moviesAsync: userMovieLikedAsync,
+                ref: ref,
+                onMovieTap: (movie) {
+                  ref.read(movieSeletedProvider.notifier).setMovie(movie);
+                  router.push(const DetailsMovieRoute());
                 },
-                loading: () => Center(
-                  child: CircularProgressIndicator(),
-                ),
-                error: (err, stack) => Text(
-                  "Erreur lors du chargement des films likés : $err",
-                  style: TextStyle(color: Colors.red),
-                ),
+              ),
+              const SizedBox(height: 24),
+              // Section pour les films vus
+              MovieSection(
+                title: "Mes films vus",
+                moviesAsync: userMovieSeenAsync,
+                ref: ref,
+                onMovieTap: (movie) {
+                  ref.read(movieSeletedProvider.notifier).setMovie(movie);
+                  router.push(const DetailsMovieRoute());
+                },
               ),
               SizedBox(height: 24),
               CineFouineHugeBoutton(
@@ -341,6 +318,91 @@ class ProfilView extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class MovieSection extends StatelessWidget {
+  final String title;
+  final AsyncValue<List<MovieInfoDetail>> moviesAsync;
+  final WidgetRef ref;
+  final Function(MovieInfoDetail) onMovieTap;
+
+  const MovieSection({
+    required this.title,
+    required this.moviesAsync,
+    required this.ref,
+    required this.onMovieTap,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 36.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 8),
+        moviesAsync.when(
+          data: (movies) {
+            if (movies.isEmpty) {
+              return Text(
+                "Aucun film trouvé.",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              );
+            }
+
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: movies.map((movie) {
+                  final posterUrl = movie.details?.posterPath != null
+                      ? 'https://image.tmdb.org/t/p/w500${movie.details?.posterPath}'
+                      : 'assets/images/default_poster.jpg';
+
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: GestureDetector(
+                      onTap: () => onMovieTap(movie),
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              posterUrl,
+                              width: 120.0,
+                              height: 180.0,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            movie.details?.title ?? "Titre non disponible",
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            );
+          },
+          loading: () => Center(child: CircularProgressIndicator()),
+          error: (err, stack) => Text(
+            "Erreur lors du chargement des films : $err",
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ],
     );
   }
 }

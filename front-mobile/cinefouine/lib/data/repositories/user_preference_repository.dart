@@ -1,4 +1,5 @@
 import 'package:cinefouine/data/entities/movie/movie_info_detail.dart';
+import 'package:cinefouine/data/entities/movieSeen/movie_seen.dart';
 import 'package:cinefouine/data/entities/userAction/user_action.dart';
 import 'package:cinefouine/data/entities/user_preferences/user_preferences_info.dart';
 import 'package:cinefouine/data/repositories/movie_repository.dart';
@@ -91,6 +92,30 @@ class UserPreferenceRepository {
     List<MovieInfoDetail> movieDetailLiked = [];
 
     for (var movie in movieLiked ?? []) {
+      final moviedetail =
+          await _movieRepository.getMovieDetails(movie.idTmdbMovie);
+      if (moviedetail != null) {
+        movieDetailLiked.add(moviedetail);
+      }
+    }
+    return movieDetailLiked;
+  }
+
+  Future<void> addSeenAMovie({
+    required int idTmdbMovie,
+    required int idUser,
+  }) async {
+    return _userPreferenceService.addSeenAMovie(
+      idTmdbMovie: idTmdbMovie,
+      idUser: idUser,
+    );
+  }
+
+  Future<List<MovieInfoDetail>> getSeenMovies(int userId) async {
+    final movieSeen = await _userPreferenceService.getSeenMovies(userId);
+    List<MovieInfoDetail> movieDetailLiked = [];
+
+    for (var movie in movieSeen ?? []) {
       final moviedetail =
           await _movieRepository.getMovieDetails(movie.idTmdbMovie);
       if (moviedetail != null) {

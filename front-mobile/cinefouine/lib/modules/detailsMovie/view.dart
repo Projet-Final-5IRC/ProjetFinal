@@ -29,7 +29,6 @@ class MovieSeleted extends _$MovieSeleted {
     final repoMovie = ref.read(movieRepositoryProvider);
 
     if (movie is MovieInfo) {
- 
       state = AsyncValue.data(await repoMovie.getMovieDetails(movie.id));
       await ref
           .read(platformeForMovieProvider.notifier)
@@ -306,6 +305,17 @@ class DetailsMovieView extends ConsumerWidget {
                                             0,
                                     value: 1,
                                   );
+                              await ref
+                                  .read(userPreferenceRepositoryProvider)
+                                  .addSeenAMovie(
+                                    idTmdbMovie: movie.details?.id ?? 0,
+                                    idUser:
+                                        preference.idUserPreferences.load() ??
+                                            0,
+                                  );
+                              await ref
+                                  .read(userMovieSeenProvider.notifier)
+                                  .updateMovieSeen();
                             },
                             child: const Text(
                               "Oui",

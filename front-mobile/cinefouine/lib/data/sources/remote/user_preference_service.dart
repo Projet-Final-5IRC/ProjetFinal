@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cinefouine/data/entities/movieLiked/movie_liked.dart';
+import 'package:cinefouine/data/entities/movieSeen/movie_seen.dart';
 import 'package:cinefouine/data/entities/userAction/user_action.dart';
 import 'package:cinefouine/data/entities/user_preferences/user_preferences_info.dart';
 import 'package:cinefouine/data/sources/dio_client.dart';
@@ -135,5 +136,31 @@ class UserPreferenceService {
     return await dioClient.delete(
       endpoint,
     );
+  }
+
+  Future<void> addSeenAMovie({
+    required int idTmdbMovie,
+    required int idUser,
+  }) async {
+    final endpoint = '/UserMovie/AddSeenMovie';
+    final addSeenAMovieData = {
+      "idTmdbMovie": idTmdbMovie,
+      "idUser": idUser,
+    };
+    final apiResult = await dioClient.post(
+      endpoint,
+      data: addSeenAMovieData,
+    );
+    return apiResult;
+  }
+
+  Future<List<MovieSeen>?> getSeenMovies(int userId) async {
+    final endpoint = '/UserMovie/GetAllSeenMovieByUser?userId=$userId';
+    final apiResult = await dioClient.get<List<MovieSeen>?>(
+      endpoint,
+      deserializer: (json) =>
+          MovieSeenListExtension.movieSeenFromJson(jsonEncode(json)),
+    );
+    return apiResult;
   }
 }
