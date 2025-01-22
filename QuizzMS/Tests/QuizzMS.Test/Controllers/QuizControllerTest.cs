@@ -1,11 +1,11 @@
 // QuizzMS.Tests/Controllers/QuizControllerTests.cs
 using Xunit;
 using Moq;
-using Microsoft.Extensions.Configuration;
 using QuizzMS.Controllers;
 using QuizzMS.Models.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace QuizzMS.Tests.Controllers
 {

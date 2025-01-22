@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -20,7 +21,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\QuizzMS.csproj" />
+        <Using Include="Xunit"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="..\..\QuizzMS\obj\**\*.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\QuizzMS.csproj" />
     </ItemGroup>
 
 </Project>
