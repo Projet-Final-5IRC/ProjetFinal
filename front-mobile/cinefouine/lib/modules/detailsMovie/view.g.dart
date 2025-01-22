@@ -6,7 +6,7 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$movieSeletedHash() => r'c45299448f15bea45ea0dd0f94a1a4246e6b9f99';
+String _$movieSeletedHash() => r'460689e0c6bddf10dc31a00c407923362db9f017';
 
 /// See also [MovieSeleted].
 @ProviderFor(MovieSeleted)
@@ -21,7 +21,7 @@ final movieSeletedProvider =
 );
 
 typedef _$MovieSeleted = AsyncNotifier<MovieInfoDetail?>;
-String _$platformeForMovieHash() => r'1356fca13504d50be701d0f9447e98d49eddb8bb';
+String _$platformeForMovieHash() => r'ead47640770eb77afaadeb4498387a2f517b7c89';
 
 /// See also [PlatformeForMovie].
 @ProviderFor(PlatformeForMovie)

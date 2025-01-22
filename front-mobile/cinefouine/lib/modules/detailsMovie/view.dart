@@ -4,6 +4,7 @@ import 'package:cinefouine/data/entities/movie/movie_info.dart';
 import 'package:cinefouine/data/entities/movie/movie_info_detail.dart';
 import 'package:cinefouine/data/entities/platforme/platforme.dart';
 import 'package:cinefouine/data/repositories/movie_repository.dart';
+import 'package:cinefouine/data/repositories/user_preference_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:cinefouine/modules/profil/view.dart';
 import 'package:cinefouine/router/app_router.dart';
@@ -37,6 +38,15 @@ class MovieSeleted extends _$MovieSeleted {
     }
     return true;
   }
+
+  Future<void> likeTheMovie() async {
+    final preference = ref.read(preferencesProvider);
+    await ref.read(userPreferenceRepositoryProvider).likeAmovie(
+          idTmdbMovie: state.value?.details?.id ?? 0,
+          idUser: preference.idUserPreferences.load()!,
+        );
+    await ref.read(userMovieLikedProvider.notifier).updateMovieLiked();
+  }
 }
 
 @Riverpod(keepAlive: false)
@@ -47,12 +57,10 @@ class PlatformeForMovie extends _$PlatformeForMovie {
   }
 
   Future<void> updatePlaforme(int movieId) async {
-    print("platforme en update pour $movieId");
     AsyncValue.loading();
     final repoMovie = ref.read(movieRepositoryProvider);
     final platformes = await repoMovie.getPlatformeMovie(movieId);
     state = platformes;
-    print("platforme updated ${state.toString()}");
   }
 }
 
@@ -205,8 +213,10 @@ class DetailsMovieView extends ConsumerWidget {
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.thumb_up, color: AppColors.white),
-                      onPressed: () {},
-                      iconSize: 20, // Taille du pouce
+                      onPressed: () {
+                        ref.read(movieSeletedProvider.notifier).likeTheMovie();
+                      },
+                      iconSize: 20,
                     ),
                   ),
                   const SizedBox(width: 8),

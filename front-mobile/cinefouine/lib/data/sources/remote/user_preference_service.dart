@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
-import 'package:cinefouine/data/entities/genre/genre_info.dart';
+import 'package:cinefouine/data/entities/movieLiked/movie_liked.dart';
 import 'package:cinefouine/data/entities/userAction/user_action.dart';
 import 'package:cinefouine/data/entities/user_preferences/user_preferences_info.dart';
 import 'package:cinefouine/data/sources/dio_client.dart';
@@ -97,6 +96,31 @@ class UserPreferenceService {
     final apiResult = await dioClient.get<UserAction>(
       endpoint,
       deserializer: (json) => UserAction.fromJson(json as Map<String, dynamic>),
+    );
+    return apiResult;
+  }
+
+  Future<void> likeAmovie({
+    required int idTmdbMovie,
+    required int idUser,
+  }) async {
+    final endpoint = '/UserMovie/AddLikedMovie';
+    final likeAmovieData = {
+      "idTmdbMovie": idTmdbMovie,
+      "idUser": idUser,
+    };
+    final apiResult = await dioClient.post(
+      endpoint,
+      data: likeAmovieData,
+    );
+    return apiResult;
+  }
+
+  Future<List<MovieLiked>?> getMovieLiked(int userId) async {
+    final endpoint = '/UserMovie/GetAllLikedMovieByUser?userId=$userId';
+    final apiResult = await dioClient.get<List<MovieLiked>?>(
+      endpoint,
+      deserializer: (json) => MovieLikedListExtension.movieLikedFromJson(jsonEncode(json)),
     );
     return apiResult;
   }
