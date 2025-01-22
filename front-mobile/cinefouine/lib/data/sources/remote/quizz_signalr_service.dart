@@ -99,6 +99,7 @@ Future<Quizz?> getQuizzForFilm(int filmId, String titreDuFilm) async {
       },
       deserializer: (json) => Quizz.fromJson(json as Map<String, dynamic>), // Conversion explicite
     );
+    print('DEBUG Quiz fetched: $response');
     return response;
   } catch (e) {
     print("DEBUG Error fetching quiz for film $filmId: $e");

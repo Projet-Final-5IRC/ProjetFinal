@@ -4,6 +4,7 @@ import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
 import 'package:cinefouine/data/repositories/quizz_repository.dart';
 import 'package:cinefouine/data/sources/remote/quizz_signalr_service.dart';
 import 'package:cinefouine/modules/detailsMovie/view.dart';
+import 'package:cinefouine/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
@@ -27,8 +28,8 @@ class _QuizViewState extends ConsumerState<QuizView> {
   bool _isLoading = true; // Indicateur pour savoir si le quiz est en cours de chargement
 
   Map<String, dynamic> _quizData = {
-    "titre_du_quizz": "Chargement...",
-    "description_du_quizz": "En attente du quiz...",
+    "titre_du_quizz": "Chargement du quiz en cours",
+    "description_du_quizz": "",
     "liste_de_questions": [],
   };
 
@@ -38,7 +39,6 @@ class _QuizViewState extends ConsumerState<QuizView> {
     _setupSignalRListener();
     final movieSelected = ref.read(movieSeletedProvider);
 
-    print("DEBUG lacement, filmId: ${movieSelected.value?.details?.id}");
     int id = movieSelected.value?.details?.id ?? 0;
     String title = movieSelected.value?.details?.title ?? "";
     _loadNewQuiz(id, title); // Call _loadNewQuiz with a default filmId
@@ -48,19 +48,22 @@ class _QuizViewState extends ConsumerState<QuizView> {
     final signalRService = ref.read(quizSignalRServiceProvider);
     _quizReadySubscription = signalRService.quizReadyStream.listen((quizData) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Nouveau quiz disponible pour: ${quizData['titreDuFilm']}'),
-            action: SnackBarAction(
-              label: 'Voir',
-              onPressed: () {
-                print("infos id ${quizData['filmId']}, info titre ${quizData['titreDuFilm']}"); 
-                // Recharger le quiz et mettre à jour l'état
-                _loadNewQuiz(quizData['filmId']! as int, quizData['titreDuFilm']!);
-              },
-            ),
-          ),
-        );
+         final filmId = int.parse(quizData['filmId']!);
+          print("DEBUG infos id $filmId, info titre ${quizData['titreDuFilm']}"); 
+        _loadNewQuiz(filmId, quizData['titreDuFilm']!);
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text('Nouveau quiz disponible pour: ${quizData['titreDuFilm']}'),
+        //     action: SnackBarAction(
+        //       label: 'Voir',
+        //       onPressed: () {
+        //             final filmId = int.parse(quizData['filmId']!);
+        //             print("DEBUG infos id $filmId, info titre ${quizData['titreDuFilm']}"); 
+        //              _loadNewQuiz(filmId, quizData['titreDuFilm']!);
+        //       },
+        //     ),
+        //   ),
+        // );
       }
     });
   }
@@ -236,19 +239,21 @@ class _QuizViewState extends ConsumerState<QuizView> {
                 ],
               ),
               const SizedBox(height: 24),
-              Center(
-                child: Text(
-                  "${_currentQuestionIndex + 1}/${_quizData['liste_de_questions'].length}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+              if (_quizData['liste_de_questions'].isNotEmpty)
+                Center(
+                  child: Text(
+                    "${_currentQuestionIndex + 1}/${_quizData['liste_de_questions'].length}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
+
               const SizedBox(height: 16),
               Text(
-                currentQuestion?['texte_de_la_question'] ?? 'Chargement...',
+                currentQuestion?['texte_de_la_question'] ?? 'Création du quizz en cours...',
                 style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
