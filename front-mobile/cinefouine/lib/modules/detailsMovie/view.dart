@@ -21,21 +21,24 @@ part 'view.g.dart';
 class MovieSeleted extends _$MovieSeleted {
   @override
   FutureOr<MovieInfoDetail?> build() async {
-    AsyncValue.loading();
-    return null;
+    return MovieInfoDetail(details: null, actors: []);
   }
 
-  Future<bool> setMovie(MovieInfo? value) async {
+  Future<bool> setMovie(dynamic movie) async {
     AsyncValue.loading();
     final repoMovie = ref.read(movieRepositoryProvider);
-    if (value != null) {
-      state = AsyncValue.data(await repoMovie.getMovieDetails(value.id));
+
+    if (movie is MovieInfo) {
+      state = AsyncValue.data(await repoMovie.getMovieDetails(movie.id));
       await ref
           .read(platformeForMovieProvider.notifier)
-          .updatePlaforme(value.id);
+          .updatePlaforme(movie.id);
+    } else if (movie is MovieInfoDetail) {
+      state = AsyncValue.data(movie);
     } else {
       state = AsyncValue.data(null);
     }
+
     return true;
   }
 

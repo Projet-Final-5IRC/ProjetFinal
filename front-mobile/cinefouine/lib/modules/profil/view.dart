@@ -4,6 +4,7 @@ import 'package:cinefouine/data/entities/movie/movie_info_detail.dart';
 import 'package:cinefouine/data/entities/userAction/user_action.dart';
 import 'package:cinefouine/data/repositories/user_preference_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
+import 'package:cinefouine/modules/detailsMovie/view.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -275,31 +276,40 @@ class ProfilView extends ConsumerWidget {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: movies.map((movie) {
-                        // Vérification de l'URL de l'image
                         final posterUrl = movie.details?.posterPath != null
                             ? 'https://image.tmdb.org/t/p/w500${movie.details?.posterPath}' // URL d'une image en ligne
                             : 'assets/images/default_poster.jpg'; // Image par défaut locale
 
                         return Padding(
                           padding: const EdgeInsets.only(right: 16.0),
-                          child: Column(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  posterUrl,
-                                  width: 120.0, // Largeur fixe des posters
-                                  height: 180.0, // Hauteur fixe des posters
-                                  fit: BoxFit.cover,
+                          child: GestureDetector(
+                            onTap: () {
+                              ref
+                                  .read(movieSeletedProvider.notifier)
+                                  .setMovie(movie);
+                              router.push(const DetailsMovieRoute());
+                            },
+                            child: Column(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.network(
+                                    posterUrl,
+                                    width: 120.0, // Largeur fixe des posters
+                                    height: 180.0, // Hauteur fixe des posters
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                movie.details?.title ?? "Titre non disponible",
-                                style: TextStyle(color: Colors.white, fontSize: 14),
-                                overflow: TextOverflow.ellipsis, // Empêche que le texte déborde
-                              ),
-                            ],
+                                SizedBox(height: 8),
+                                Text(
+                                  movie.details?.title ??
+                                      "Titre non disponible",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       }).toList(),

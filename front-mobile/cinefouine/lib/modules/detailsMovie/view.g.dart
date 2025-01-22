@@ -6,7 +6,7 @@ part of 'view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$movieSeletedHash() => r'460689e0c6bddf10dc31a00c407923362db9f017';
+String _$movieSeletedHash() => r'455b7fbda9b673b30454a281f89cc04424c6faff';
 
 /// See also [MovieSeleted].
 @ProviderFor(MovieSeleted)

@@ -22,7 +22,7 @@ final userActionStatProvider =
 );
 
 typedef _$UserActionStat = AutoDisposeAsyncNotifier<UserAction?>;
-String _$userMovieLikedHash() => r'd0e3ef9f36deb909e5c116023abcd07c7f102e45';
+String _$userMovieLikedHash() => r'164948fd9954f79f7ff70ede98ee5fa7760b4641';
 
 /// See also [UserMovieLiked].
 @ProviderFor(UserMovieLiked)
