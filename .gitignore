@@ -13,7 +13,7 @@
 back-python/venv/
 back-python/__pycache__/
 back-python/app/__pycache__/
+back-python/app/ressources/__pycache__/
 /back-python/data/Plus/
 /back-python/data/DataMovies/
 /back-python/data/Rawdata/
-/RecommendationControllerTests/obj

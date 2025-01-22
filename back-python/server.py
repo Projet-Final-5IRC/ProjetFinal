@@ -5,7 +5,6 @@ from app import mainGender as mg
 
 ## Ptn de merge de merde
 
-
 app = Flask(__name__)
 
 # Routes en POST
@@ -69,4 +68,4 @@ def reco_gender():
 # Lancement de l'application
 if __name__ == '__main__':
     ssl_context = ('cert.pem', 'key.pem')
-    app.run(debug=True, port=5001, ssl_context=ssl_context)
+    app.run(debug=False, ssl_context=ssl_context)
