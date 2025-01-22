@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/mainAppBar.dart';
+import 'package:cinefouine/data/entities/movie/fouine_of_the_day.dart';
 import 'package:cinefouine/data/entities/movie/movie_info.dart';
+import 'package:cinefouine/data/entities/movie/movie_info_detail.dart';
 import 'package:cinefouine/data/repositories/movie_repository.dart';
 import 'package:cinefouine/data/repositories/recommendation_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
@@ -30,13 +32,22 @@ class ListMovieSearched extends _$ListMovieSearched {
 }
 
 @Riverpod(keepAlive: false)
-Future<List<MovieInfo>?> getRecommendations(
-  Ref ref, 
-) async {
-  final preferences = ref.read(preferencesProvider);
-  return ref.watch(recommendationRepositoryProvider).getRecommendations(preferences.idUserPreferences.load()!);
+class FouineOfTHeDay extends _$FouineOfTHeDay {
+  @override
+  FutureOr<FouineOfTheDay?> build() async {
+    return ref.read(recommendationRepositoryProvider).getFouineOfTheDay();
+  }
 }
 
+@Riverpod(keepAlive: false)
+Future<List<MovieInfo>?> getRecommendations(
+  Ref ref,
+) async {
+  final preferences = ref.read(preferencesProvider);
+  return ref
+      .watch(recommendationRepositoryProvider)
+      .getRecommendations(preferences.idUserPreferences.load()!);
+}
 
 @RoutePage()
 class HomeView extends ConsumerWidget {
@@ -115,7 +126,7 @@ class MovieCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-          final router = ref.watch(appRouterProvider);
+    final router = ref.watch(appRouterProvider);
     return InkWell(
       onTap: () {
         ref.read(movieSeletedProvider.notifier).setMovie(movie);
@@ -133,18 +144,20 @@ class MovieCard extends ConsumerWidget {
             // Poster
             Expanded(
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(12)),
                 child: movie.posterPath != null
                     ? Image.network(
                         'https://image.tmdb.org/t/p/w500${movie.posterPath}',
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+                        errorBuilder: (context, error, stackTrace) =>
+                            _buildPlaceholder(),
                       )
                     : _buildPlaceholder(),
               ),
             ),
-            
+
             // Movie Info
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -197,97 +210,117 @@ class MovieCard extends ConsumerWidget {
       ),
     );
   }
-
-
 }
-  Widget _buildPlaceholder() {
-    return Container(
-      color: Colors.grey[800],
-      child: const Center(
-        child: Icon(
-          Icons.movie_outlined,
-          color: Colors.white54,
-          size: 48,
-        ),
+
+Widget _buildPlaceholder() {
+  return Container(
+    color: Colors.grey[800],
+    child: const Center(
+      child: Icon(
+        Icons.movie_outlined,
+        color: Colors.white54,
+        size: 48,
       ),
-    );
-  }
+    ),
+  );
+}
+
 class HomeContent extends ConsumerWidget {
   const HomeContent({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final preferences = ref.read(preferencesProvider);
     final recommendationsAsyncValue = ref.watch(getRecommendationsProvider);
+    final fouineOfTheDay = ref.watch(fouineOfTHeDayProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Stack(
-          children: [
-            Image.asset(
-              "assets/images/movie_image.png",
-              width: double.infinity,
-              height: 250,
-              fit: BoxFit.cover,
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 150,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      AppColors.secondary,
+        fouineOfTheDay.when(
+          data: (data) {
+            return Stack(
+              children: [
+                Image.network(
+                  data?.posterPath != null
+                      ? 'https://image.tmdb.org/t/p/w500${data?.posterPath}'
+                      : '',
+                  width: double.infinity,
+                  height: 250,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: double.infinity,
+                      height: 250,
+                      color: Colors.grey,
+                      child: Icon(Icons.broken_image, color: Colors.white),
+                    );
+                  },
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: 150,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          AppColors.secondary,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 20,
+                  left: 16,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Fouine of the day',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        data?.title ?? "",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        data?.overview ?? "",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ),
-            Positioned(
-              bottom: 20,
-              left: 16,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Fouine of the day',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'Purge - Election Year',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+              ],
+            );
+          },
+          error: (error, stackTrace) {
+            return Text(error.toString());
+          },
+          loading: () {
+            return CircularProgressIndicator();
+          },
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 14,
-                ),
-              ),
-              SizedBox(height: 20),
               MovieInfoBar(
                 duration: "130",
                 imdbRating: "imb",
@@ -337,9 +370,9 @@ class HomeContent extends ConsumerWidget {
                 ),
               ),
               SizedBox(height: 12),
-              
-                // Utilisation de la méthode getRecommendations
-                recommendationsAsyncValue.when(
+
+              // Utilisation de la méthode getRecommendations
+              recommendationsAsyncValue.when(
                 data: (movies) {
                   // print("DEBUG Recommendations: $movies");
                   if (movies == null || movies.isEmpty) {
@@ -350,23 +383,27 @@ class HomeContent extends ConsumerWidget {
                       ),
                     );
                   }
-                  
+
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: movies.length,
-                  itemBuilder: (context, index) {
-                    final movie = movies[index];
-                    final router = ref.watch(appRouterProvider);
+                    itemBuilder: (context, index) {
+                      final movie = movies[index];
+                      final router = ref.watch(appRouterProvider);
 
                       return _buildRecommendationItem(
-                        imagePath: 'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                        imagePath:
+                            'https://image.tmdb.org/t/p/w500${movie.posterPath}',
                         title: movie.title,
                         description: movie.overview ?? '',
                         onAddTap: () {},
                         onPlayTap: () {},
-                        onTap: () { // Action à effectuer lors du clic
-                          ref.read(movieSeletedProvider.notifier).setMovie(movie);
+                        onTap: () {
+                          // Action à effectuer lors du clic
+                          ref
+                              .read(movieSeletedProvider.notifier)
+                              .setMovie(movie);
                           router.push(DetailsMovieRoute());
                         },
                       );
@@ -392,83 +429,82 @@ class HomeContent extends ConsumerWidget {
     );
   }
 
-Widget _buildRecommendationItem({
-  required String imagePath,
-  required String title,
-  required String description,
-  required VoidCallback onPlayTap,
-  required VoidCallback onAddTap,
-  required VoidCallback onTap, // Nouveau paramètre pour l'action onTap
-}) {
-  return GestureDetector(
-    onTap: onTap, // Déclenchement de l'action lors du clic
-    child: Container(
-      width: double.infinity,
-      height: 250,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              imagePath,
-              width: double.infinity,
-              height: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+  Widget _buildRecommendationItem({
+    required String imagePath,
+    required String title,
+    required String description,
+    required VoidCallback onPlayTap,
+    required VoidCallback onAddTap,
+    required VoidCallback onTap, // Nouveau paramètre pour l'action onTap
+  }) {
+    return GestureDetector(
+      onTap: onTap, // Déclenchement de l'action lors du clic
+      child: Container(
+        width: double.infinity,
+        height: 250,
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                imagePath,
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    _buildPlaceholder(),
+              ),
             ),
-          ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.5),
-                  ],
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.5),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            left: 20,
-            bottom: 20,
-            right: 20,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
+            Positioned(
+              left: 20,
+              bottom: 20,
+              right: 20,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 14,
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.8),
+                      fontSize: 14,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
-}
-
-
 
 class MovieInfoBar extends StatelessWidget {
   final String imdbRating;

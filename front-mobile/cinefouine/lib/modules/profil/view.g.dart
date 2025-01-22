@@ -38,7 +38,7 @@ final userMovieLikedProvider = AutoDisposeAsyncNotifierProvider<UserMovieLiked,
 );
 
 typedef _$UserMovieLiked = AutoDisposeAsyncNotifier<List<MovieInfoDetail>>;
-String _$userMovieSeenHash() => r'202fcc3266a5c279557e38e29b191ebdf4b24231';
+String _$userMovieSeenHash() => r'8b7efb1988cc62ec634dc3913c216bffab0082d8';
 
 /// See also [UserMovieSeen].
 @ProviderFor(UserMovieSeen)

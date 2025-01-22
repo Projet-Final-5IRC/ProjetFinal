@@ -41,5 +41,21 @@ final listMovieSearchedProvider = AutoDisposeAsyncNotifierProvider<
 );
 
 typedef _$ListMovieSearched = AutoDisposeAsyncNotifier<List<MovieInfo>?>;
+String _$fouineOfTHeDayHash() => r'f27124a54a6213877eb5db3bda1c9a349219b67b';
+
+/// See also [FouineOfTHeDay].
+@ProviderFor(FouineOfTHeDay)
+final fouineOfTHeDayProvider =
+    AutoDisposeAsyncNotifierProvider<FouineOfTHeDay, FouineOfTheDay?>.internal(
+  FouineOfTHeDay.new,
+  name: r'fouineOfTHeDayProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fouineOfTHeDayHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$FouineOfTHeDay = AutoDisposeAsyncNotifier<FouineOfTheDay?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
