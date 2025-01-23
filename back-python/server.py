@@ -3,9 +3,12 @@ import config  # Assurez-vous que config est importé correctement
 from app import main
 from app import mainGender as mg
 from app import mainFouine as mf
+from datetime import datetime, timedelta
 
 
 app = Flask(__name__)
+last_access = None
+last_movie = None
 
 # Routes en POST
 @app.route('/recoGender', methods=['POST'])
@@ -43,13 +46,25 @@ def recoUser():
 # Routes en GET
 @app.route('/recoFouineDay', methods=['GET'])
 def reco_fouine():
+    global last_access
+    global last_movie
+    current_time = datetime.now()
+
+    # Vérifier si l'endpoint a été utilisé dans les dernières 24 heures
+    if last_access and current_time - last_access < timedelta(hours=24):
+        result = {
+        "resultat renvoyé": [last_movie]
+        }
+        return result
     
-    random_genre = mf.mainFouine()
-    result = {
-    "resultat renvoyé": [random_genre]
-    }
-    
-    return result
+    else : 
+        random_genre = mf.mainFouine()
+        result = {
+        "resultat renvoyé": [random_genre]
+        }
+        last_movie = random_genre
+        last_access = current_time
+        return result
 
 @app.route('/recoFouineGenre', methods=['GET'])
 def reco_fouine_genre():
