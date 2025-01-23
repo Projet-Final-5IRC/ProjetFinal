@@ -49,11 +49,7 @@ class AppDioExceptions implements Exception {
         message = 'Unknown error occurred';
         type = AppDioExceptionType.unknown;
         break;
-      default:
-        message = 'Something went wrong';
-        type = AppDioExceptionType.unknown;
-        break;
-    }
+      }
   }
 
   late String message;

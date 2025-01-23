@@ -1,7 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/cineFouineBoutton.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
-import 'package:cinefouine/data/entities/repositories/event_repository.dart';
+import 'package:cinefouine/data/entities/event/event_info.dart';
+import 'package:cinefouine/data/repositories/event_repository.dart';
+import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
+import 'package:cinefouine/modules/detailsEvent/view.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,14 +22,111 @@ class _TabBarIndexNotifier extends _$TabBarIndexNotifier {
   }
 }
 
+@Riverpod(keepAlive: false)
+class Events extends _$Events {
+  @override
+  Future<List<EventInfo>?> build() async {
+    final preferences = ref.read(preferencesProvider);
+    return ref
+        .watch(eventRepositoryProvider)
+        .getAllEvents(preferences.idUserPreferences.load());
+  }
+
+  Future<void> updateEvents() async {
+    final preferences = ref.read(preferencesProvider);
+    state = AsyncValue.data(await ref
+        .watch(eventRepositoryProvider)
+        .getAllEvents(preferences.idUserPreferences.load()));
+    ref.read(myEventsProvider.notifier).updateMyEvents();
+  }
+}
+
+@Riverpod(keepAlive: false)
+class MyEvents extends _$MyEvents {
+  @override
+  Future<List<EventInfo>?> build() async {
+    final preferences = ref.read(preferencesProvider);
+    if (preferences.idUserPreferences.load() != null) {
+      return ref
+          .watch(eventRepositoryProvider)
+          .getMyEvents(preferences.idUserPreferences.load()!);
+    } else {
+      return [];
+    }
+  }
+
+  Future<void> updateMyEvents() async {
+    state = AsyncLoading();
+    final preferences = ref.read(preferencesProvider);
+    if (preferences.idUserPreferences.load() != null) {
+      state = AsyncValue.data(
+        await ref
+            .read(eventRepositoryProvider)
+            .getMyEvents(preferences.idUserPreferences.load()!),
+      );
+    } else {
+      state = AsyncValue.data([]);
+    }
+  }
+}
+
+@Riverpod(keepAlive: false)
+class EventsJoined extends _$EventsJoined {
+  @override
+  Future<List<int>?> build() async {
+    final preferences = ref.read(preferencesProvider);
+    if (preferences.idUserPreferences.load() != null) {
+      final events = await ref
+          .watch(eventRepositoryProvider)
+          .getEventsJoined(preferences.idUserPreferences.load()!);
+      return events?.map((event) => event.idEvent).toList();
+    } else {
+      return [];
+    }
+  }
+
+  void toggleEvent(int eventId) async {
+    final currentEvents = state.value ?? [];
+
+    if (currentEvents.contains(eventId)) {
+      state = AsyncValue.data(
+        currentEvents.where((id) => id != eventId).toList(),
+      );
+    } else {
+      state = AsyncValue.data([...currentEvents, eventId]);
+    }
+  }
+}
+
+@Riverpod(keepAlive: false)
+class JoinEventButton extends _$JoinEventButton {
+  @override
+  Future<bool> build() async {
+    return false;
+  }
+
+  Future<void> joinEvent(int idUser, int idEvent) async {
+    final eventRepo = ref.read(eventRepositoryProvider);
+    eventRepo.inviteEvent(
+      idEvent: idEvent,
+      idUser: idUser,
+      isPending: false,
+    );
+    ref.read(userInvitedToSelectedEventProvider.notifier).updateUsers();
+  }
+}
+
 @RoutePage()
 class EventView extends ConsumerWidget {
   const EventView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var index = ref.watch(_tabBarIndexNotifierProvider);
-    var router = ref.watch(appRouterProvider);
+    final index = ref.watch(_tabBarIndexNotifierProvider);
+    final router = ref.watch(appRouterProvider);
+    final events = ref.watch(eventsProvider);
+    final myEvents = ref.watch(myEventsProvider);
+
     return Scaffold(
       backgroundColor: const Color(0xFF1A1F25),
       body: SafeArea(
@@ -58,8 +158,7 @@ class EventView extends ConsumerWidget {
               const SizedBox(height: 8),
               CineFouineHugeBoutton(
                 onPressed: () async {
-                  await ref.read(eventRepositoryProvider).getAllEvents();
-                  //router.push(const CreateEventRoute());
+                  router.push(const CreateEventRoute());
                 },
                 text: "Create",
               ),
@@ -82,46 +181,55 @@ class EventView extends ConsumerWidget {
                 ],
               ),
               Expanded(
-                child: ListView(
-                  children: [
-                    _buildEventItem(
-                      'Horror',
-                      'On se fait peur venez nombreux !',
-                      'assets/images/default_avatar.jpg',
-                      true,
-                    ),
-                    _buildEventItem(
-                      'Romance',
-                      '',
-                      'assets/images/default_avatar.jpg',
-                      false,
-                    ),
-                    _buildEventItem(
-                      'Comedy',
-                      '',
-                      'assets/images/default_avatar.jpg',
-                      false,
-                    ),
-                    _buildEventItem(
-                      'Comedy',
-                      'On rigole on rigole mais on voit ...',
-                      'assets/images/default_avatar.jpg',
-                      false,
-                    ),
-                    _buildEventItem(
-                      'Hard Core',
-                      '',
-                      'assets/images/default_avatar.jpg',
-                      false,
-                    ),
-                    _buildEventItem(
-                      'Any',
-                      '',
-                      'assets/images/default_avatar.jpg',
-                      false,
-                    ),
-                  ],
-                ),
+                child: index == 0
+                    ? events.when(
+                        data: (data) {
+                          if (data == null || data.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                "No events available",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          } else {
+                            return _buildEventList(data, ref, false);
+                          }
+                        },
+                        error: (error, stackTrace) {
+                          return Center(
+                            child: Text(
+                              'Erreur: $error',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                      )
+                    : myEvents.when(
+                        data: (data) {
+                          if (data == null || data.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                "You don't have any events yet",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          } else {
+                            return _buildEventList(data, ref, true);
+                          }
+                        },
+                        error: (error, stackTrace) {
+                          return Center(
+                            child: Text(
+                              'Erreur: $error',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                      ),
               ),
             ],
           ),
@@ -129,53 +237,116 @@ class EventView extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _buildEventItem(
-    String title,
-    String description,
-    String avatarPath,
-    bool isJoined,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: AssetImage(avatarPath),
-            radius: 20,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-                if (description.isNotEmpty)
+Widget _buildEventList(List<EventInfo> events, WidgetRef ref, bool isMyEvent) {
+  final eventsJoined = ref.watch(eventsJoinedProvider);
+
+  return RefreshIndicator(
+    onRefresh: () async {
+      if (isMyEvent) {
+        await ref.read(myEventsProvider.notifier).updateMyEvents();
+      } else {
+        await ref.read(eventsProvider.notifier).updateEvents();
+      }
+    },
+    child: ListView.builder(
+      itemCount: events.length,
+      itemBuilder: (context, index) {
+        final event = events[index];
+        return EventItem(
+          event: event,
+          avatarPath: "assets/images/default_avatar.jpg",
+          isJoined: eventsJoined.value?.contains(event.idEvent),
+          isMyEvent: isMyEvent,
+          ref: ref,
+        );
+      },
+    ),
+  );
+}
+
+class EventItem extends StatelessWidget {
+  final EventInfo event;
+  final String avatarPath;
+  final bool? isJoined;
+  final bool isMyEvent;
+  final WidgetRef ref;
+
+  const EventItem({
+    super.key,
+    required this.avatarPath,
+    required this.isJoined,
+    required this.ref,
+    required this.event,
+    required this.isMyEvent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var router = ref.watch(appRouterProvider);
+
+    return InkWell(
+      onTap: () {
+        ref.read(eventSeletedProvider.notifier).setEvent(event);
+        router.push(const DetailsEventRoute());
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: AssetImage(avatarPath),
+              radius: 20,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    description,
+                    event.eventName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    event.eventDescription ?? "",
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
                     ),
                   ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Cinefouineboutton(
-            isClicked: isJoined,
-            onPressed: () {
-              print("click");
-            },
-            text: "Join",
-            text2: "Joined",
-          ),
-        ],
+            if (!isMyEvent)
+              Cinefouineboutton(
+                isClicked: isJoined ?? false,
+                onPressed: () {
+                  final preferences = ref.read(preferencesProvider);
+
+                  if (preferences.idUserPreferences.load() != null) {
+                    if (isJoined ?? false) {
+                      ref.read(eventRepositoryProvider).deleteInvite(
+                            idEvent: event.idEvent,
+                            idUser: preferences.idUserPreferences.load()!,
+                          );
+                    } else {
+                      ref.read(joinEventButtonProvider.notifier).joinEvent(
+                            preferences.idUserPreferences.load()!,
+                            event.idEvent,
+                          );
+                    }
+                    ref.read(eventsJoinedProvider.notifier).toggleEvent(event.idEvent);
+                  }
+                },
+                text: "Join",
+                text2: "Joined",
+              ),
+          ],
+        ),
       ),
     );
   }

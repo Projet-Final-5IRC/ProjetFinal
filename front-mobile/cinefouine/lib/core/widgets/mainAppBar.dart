@@ -28,6 +28,7 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final Color backgroundColor;
   final TextStyle? titleTextStyle;
   final PreferredSizeWidget? bottom;
+  final ValueChanged<String>? onSearchTextChanged;
 
   const MainAppBar({
     super.key,
@@ -43,29 +44,33 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
     this.backgroundColor = AppColors.secondary2,
     this.titleTextStyle,
     this.bottom,
+    this.onSearchTextChanged,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isSearchModeActif = ref.watch(isSearchModeActifProvider);
+
     return AppBar(
-      title: isSearchModeActif
-          ? TextField(
+      title: Column(
+        children: [
+          if (isSearchModeActif)
+            TextField(
               cursorColor: Colors.white,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: "Recherche ...",
                 labelStyle: const TextStyle(color: Colors.grey),
               ),
+              onChanged: onSearchTextChanged,
             )
-          : Text(
+          else
+            Text(
               title,
-              style: titleTextStyle ??
-                  const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+              style: TextStyle(color: Colors.white),
             ),
+        ],
+      ),
       actions: [
         ...?actions,
         if (showSearchButton)
@@ -90,29 +95,29 @@ class MainAppBar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
-Widget? _buildLeading(BuildContext context) {
-  if (isBackNavigationAvailable) {
-    return IconButton(
-      icon: const Icon(
-        Icons.arrow_back_ios_outlined,
-        color: Colors.white,
-      ),
-      onPressed: onBackButtonPressed,
-    );
-  } else if (showBurgerMenu) {
-    return IconButton(
-      icon: const Icon(
-        Icons.menu,
-        color: Colors.white,
-      ),
-      onPressed: () => Scaffold.of(context).openDrawer(),
+  Widget? _buildLeading(BuildContext context) {
+    if (isBackNavigationAvailable) {
+      return IconButton(
+        icon: const Icon(
+          Icons.arrow_back_ios_outlined,
+          color: Colors.white,
+        ),
+        onPressed: onBackButtonPressed,
+      );
+    } else if (showBurgerMenu) {
+      return IconButton(
+        icon: const Icon(
+          Icons.menu,
+          color: Colors.white,
+        ),
+        onPressed: () => Scaffold.of(context).openDrawer(),
+      );
+    }
+    return SizedBox(
+      width: 24.0,
+      height: 24.0,
     );
   }
-  return SizedBox(
-    width: 24.0,
-    height: 24.0,
-  );
-}
 
   Widget _buildAvatar() {
     return GestureDetector(

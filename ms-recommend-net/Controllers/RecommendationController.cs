@@ -4,6 +4,7 @@ using ms_recommend_net.Db;
 using ms_recommend_net.Interfaces;
 using ms_recommend_net.Models;
 using ms_recommend_net.Services;
+using System.Text.Json;
 
 namespace ms_recommend_net.Controllers
 {
@@ -35,5 +36,19 @@ namespace ms_recommend_net.Controllers
                 return StatusCode(500, $"Erreur lors de la récupération des recommandations: {ex.Message}");
             }
         }
+        [HttpGet("fouine-of-the-day")]
+        public async Task<IActionResult> ProcessMovieTitle()
+        {
+            try
+            {
+                var result = await _recommendationService.ProcessMovieTitleAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
     }
 }
