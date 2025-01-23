@@ -1,5 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/mainAppBar.dart';
+import 'package:cinefouine/data/repositories/user_preference_repository.dart';
+import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
+import 'package:cinefouine/modules/home/view.dart';
+import 'package:cinefouine/modules/profil/view.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +48,11 @@ class BottomNavigationView extends ConsumerWidget {
                 index == 1, //on montre le bouton recherche que dans le home
             avatarUrl: "https://i.pravatar.cc/150?img=3",
             onAvatarPressed: () => print("profil"),
+            onSearchTextChanged: (value) async {
+              await ref
+                  .read(listMovieSearchedProvider.notifier)
+                  .searchMovie(value);
+            },
           ),
           drawer: index == 1
               ? Drawer(

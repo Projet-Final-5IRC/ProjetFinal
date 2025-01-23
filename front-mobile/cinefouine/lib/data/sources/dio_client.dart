@@ -40,16 +40,9 @@ class DioClient {
     _client.options.baseUrl = baseUrl;
     //_client.interceptors.clear(); if need to clear dio instance interceptors
     // Désactive la vérification des certificats SSL
-    (_client.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
-        (client) {
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-    };
-    _client.interceptors
-        .add(LogInterceptor(requestBody: true, responseBody: true));
 
     if (_interceptors != null) {
-      _client.interceptors.addAll(_interceptors!);
+      _client.interceptors.addAll(_interceptors);
     }
   }
 
@@ -71,6 +64,7 @@ class DioClient {
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
+      print(response.data);
       if ((response.statusCode == 200 || response.statusCode == 201) &&
           deserializer != null) {
         final Object json = response.data as Object;
@@ -95,6 +89,7 @@ class DioClient {
     T Function(Object)? deserializer,
   }) async {
     try {
+      print("Test post !!");
       final response = await _client.post(
         url,
         data: data,
@@ -112,6 +107,8 @@ class DioClient {
         return null;
       }
     } on DioException catch (e) {
+      print(e.response?.data);
+      print(e.type);
       final errorMessage = AppDioExceptions.fromDioError(e);
       throw errorMessage;
     }
@@ -201,6 +198,7 @@ class DioClient {
         options: options,
         cancelToken: cancelToken,
       );
+      print("DEBUG DioClient: delete response: $response");
       if ((response.statusCode == 200 || response.statusCode == 201) &&
           deserializer != null) {
         final Object json = response.data as Object;
