@@ -12,10 +12,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 
-builder.Services.AddSingleton(new ActiveMqService(
-    builder.Configuration.GetValue<string>("ActiveMq:BrokerUri"),
-    builder.Configuration.GetValue<string>("ActiveMq:QueueName")
-));
+builder.Services.AddHttpClient<ITmdbService, TmdbService>();
+builder.Services.Configure<TmdbService>(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

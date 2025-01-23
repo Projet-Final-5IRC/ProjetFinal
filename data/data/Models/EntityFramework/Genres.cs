@@ -13,14 +13,24 @@ namespace data.Models.EntityFramework
         public int IdGenre { get; set; }
 
         [Required]
+        [Column("gen_tmid")]
+        public int IdTMDBGenre { get; set; }
+
+        [Required]
         [Column("gen_name")]
         public string GenreName { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Events> EventsGenre { get; set; } = new List<Events>();
 
+        [JsonIgnore]
+        public virtual ICollection<Preference> GenrePreference { get; set; } = new List<Preference>();
+
         public void UpdateGenreValues(Genres updatedGenre)
         {
+            if (updatedGenre.IdTMDBGenre != 0)
+                this.IdTMDBGenre = updatedGenre.IdTMDBGenre;
+
             if (!string.IsNullOrEmpty(updatedGenre.GenreName))
                 this.GenreName = updatedGenre.GenreName;
 

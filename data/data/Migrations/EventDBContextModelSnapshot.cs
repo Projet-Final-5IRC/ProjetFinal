@@ -123,9 +123,93 @@ namespace data.Migrations
                         .HasColumnType("text")
                         .HasColumnName("gen_name");
 
+                    b.Property<int>("IdTMDBGenre")
+                        .HasColumnType("integer")
+                        .HasColumnName("gen_tmid");
+
                     b.HasKey("IdGenre");
 
                     b.ToTable("t_e_genres_utl", "public");
+                });
+
+            modelBuilder.Entity("data.Models.EntityFramework.LikedMovies", b =>
+                {
+                    b.Property<int>("IdLikedMovies")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("lik_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdLikedMovies"));
+
+                    b.Property<int>("IdTmdbMovie")
+                        .HasColumnType("integer")
+                        .HasColumnName("lik_idtmdb");
+
+                    b.Property<int>("IdUser")
+                        .HasColumnType("integer")
+                        .HasColumnName("usr_id");
+
+                    b.HasKey("IdLikedMovies");
+
+                    b.HasIndex("IdLikedMovies");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("t_e_liked_movies_utl", "public");
+                });
+
+            modelBuilder.Entity("data.Models.EntityFramework.Preference", b =>
+                {
+                    b.Property<int>("IdPreference")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("prf_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdPreference"));
+
+                    b.Property<int>("IdGenre")
+                        .HasColumnType("integer")
+                        .HasColumnName("gen_id");
+
+                    b.Property<int>("IdUser")
+                        .HasColumnType("integer")
+                        .HasColumnName("usr_id");
+
+                    b.HasKey("IdPreference");
+
+                    b.HasIndex("IdGenre");
+
+                    b.HasIndex("IdPreference");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("t_e_preference_utl", "public");
+                });
+
+            modelBuilder.Entity("data.Models.EntityFramework.SeenMovies", b =>
+                {
+                    b.Property<int>("IdSeenMovies")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("sem_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdSeenMovies"));
+
+                    b.Property<int>("IdTmdbMovie")
+                        .HasColumnType("integer")
+                        .HasColumnName("sem_idtmdb");
+
+                    b.Property<int>("IdUser")
+                        .HasColumnType("integer")
+                        .HasColumnName("usr_id");
+
+                    b.HasKey("IdSeenMovies");
+
+                    b.HasIndex("IdSeenMovies");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("t_e_seen_movies_utl", "public");
                 });
 
             modelBuilder.Entity("data.Models.EntityFramework.Users", b =>
@@ -179,13 +263,13 @@ namespace data.Migrations
                     b.HasOne("data.Models.EntityFramework.Genres", "GenreEvent")
                         .WithMany("EventsGenre")
                         .HasForeignKey("IdGenre")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_genre_events");
 
                     b.HasOne("data.Models.EntityFramework.Users", "UserOwner")
                         .WithMany("EventOwned")
                         .HasForeignKey("IdUser")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_owner_events");
 
@@ -199,18 +283,63 @@ namespace data.Migrations
                     b.HasOne("data.Models.EntityFramework.Events", "EventReference")
                         .WithMany("EventInvitation")
                         .HasForeignKey("IdEvent")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_event_invitation");
 
                     b.HasOne("data.Models.EntityFramework.Users", "UserReference")
                         .WithMany("UserInvitation")
                         .HasForeignKey("IdUser")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_users_invitation");
 
                     b.Navigation("EventReference");
+
+                    b.Navigation("UserReference");
+                });
+
+            modelBuilder.Entity("data.Models.EntityFramework.LikedMovies", b =>
+                {
+                    b.HasOne("data.Models.EntityFramework.Users", "UserReference")
+                        .WithMany("UserLikedMovies")
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_liked_movie");
+
+                    b.Navigation("UserReference");
+                });
+
+            modelBuilder.Entity("data.Models.EntityFramework.Preference", b =>
+                {
+                    b.HasOne("data.Models.EntityFramework.Genres", "GenreReference")
+                        .WithMany("GenrePreference")
+                        .HasForeignKey("IdGenre")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_genre_preference");
+
+                    b.HasOne("data.Models.EntityFramework.Users", "UserReference")
+                        .WithMany("UserPreference")
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_user_preference");
+
+                    b.Navigation("GenreReference");
+
+                    b.Navigation("UserReference");
+                });
+
+            modelBuilder.Entity("data.Models.EntityFramework.SeenMovies", b =>
+                {
+                    b.HasOne("data.Models.EntityFramework.Users", "UserReference")
+                        .WithMany("UserSeenMovies")
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_seen_movie");
 
                     b.Navigation("UserReference");
                 });
@@ -223,6 +352,8 @@ namespace data.Migrations
             modelBuilder.Entity("data.Models.EntityFramework.Genres", b =>
                 {
                     b.Navigation("EventsGenre");
+
+                    b.Navigation("GenrePreference");
                 });
 
             modelBuilder.Entity("data.Models.EntityFramework.Users", b =>
@@ -230,6 +361,12 @@ namespace data.Migrations
                     b.Navigation("EventOwned");
 
                     b.Navigation("UserInvitation");
+
+                    b.Navigation("UserLikedMovies");
+
+                    b.Navigation("UserPreference");
+
+                    b.Navigation("UserSeenMovies");
                 });
 #pragma warning restore 612, 618
         }

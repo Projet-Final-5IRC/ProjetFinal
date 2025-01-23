@@ -1,0 +1,8 @@
+.vs
+.idea
+obj/
+bin/
+TemplateEngineHost/
+ms-usr/obj/
+ms-usr/bin/
+ms-usr/.vs/

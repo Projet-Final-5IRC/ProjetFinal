@@ -1,7 +1,53 @@
 import function as fct
 import pandas as pd
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+# Chemin vers le fichier CSV
+dossier = '../../data/Rawdata/movies_metadata.csv'
+json_file_path = '../../data/Movies/movies.json'
+
+# Colonnes à garder
+columns_to_keep = [
+    'adult', 'budget', 'genres', 'id', 'original_language', 
+    'original_title', 'popularity', 'production_companies', 
+    'production_countries', 'release_date', 'revenue', 
+    'runtime', 'status', 'title', 'vote_average', 'vote_count'
+]
+
+data = pd.read_csv(dossier, dtype={10: str})
+
+filtered_data = data[columns_to_keep]
+
+filtered_data.to_json(json_file_path, orient="records", indent=4)
+
+||||||| 488ff29
+# Chemin vers le fichier CSV
+dossier = '../../data/Rawdata/movies_metadata.csv'
+json_file_path = '../../data/Movies/movies.json'
+
+# Colonnes à supprimer
+columns_to_keep = [
+    'adult', 'budget', 'genres', 'id', 'original_language', 
+    'original_title', 'popularity', 'production_companies', 
+    'production_countries', 'release_date', 'revenue', 
+    'runtime', 'status', 'title', 'vote_average', 'vote_count'
+]
+
+data = pd.read_csv(dossier, dtype={10: str})
+
+filtered_data = data[columns_to_keep]
+
+filtered_data.to_json(json_file_path, orient="records", indent=4)
+
+=======
+>>>>>>> main
 # Exemple d'utilisation
+||||||| merged common ancestors
+# Exemple d'utilisation
+=======
+# Chemin vers le fichier CSV
+>>>>>>> 90cf63a2c3f710ec15bfdb71e3f3f7b098bfbd1f
 dossier = '../../data/Rawdata/movies_metadata.csv'
 dataframe = fct.lire_fichier_csv(dossier)
 columns_to_keep3 = [

@@ -4,6 +4,7 @@ using ms_recommend_net.Db;
 using ms_recommend_net.Interfaces;
 using ms_recommend_net.Models;
 using ms_recommend_net.Services;
+using System.Text.Json;
 
 namespace ms_recommend_net.Controllers
 {
@@ -13,56 +14,41 @@ namespace ms_recommend_net.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IRecommendationService _recommendationService;
-        private readonly ActiveMqService _activeMqService;
+        private readonly ITmdbService _tmdbService;
 
-        public RecommendationController(AppDbContext context, IRecommendationService recommendationService, ActiveMqService activeMqService)
+        public RecommendationController(AppDbContext context, IRecommendationService recommendationService, ITmdbService tmdbService)
         {
             _context = context;
             _recommendationService = recommendationService;
-            _activeMqService = activeMqService;
+            _tmdbService = tmdbService;
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("get-recommendations/{userId}")]
         public async Task<IActionResult> GetRecommendations(int userId)
         {
-            var recommendations = await _recommendationService.GetRecommendationsAsync(userId);
-
-            if (!recommendations.Any())
+            try
             {
-                return NotFound("Aucune recommandation disponible.");
+                var recommendations = await _recommendationService.GetRecommendationsAsync(userId);
+                return Ok(recommendations);
             }
-
-            return Ok(recommendations);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur lors de la récupération des recommandations: {ex.Message}");
+            }
         }
-
-        [HttpPost("update-preferences/{userId}")]
-        public async Task<IActionResult> UpdatePreferences(int userId, [FromBody] List<Preference> preferences)
+        [HttpGet("fouine-of-the-day")]
+        public async Task<IActionResult> ProcessMovieTitle()
         {
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null)
+            try
             {
-                return NotFound("Utilisateur non trouvé.");
+                var result = await _recommendationService.ProcessMovieTitleAsync();
+                return Ok(result);
             }
-
-            // Update preferences
-            _context.Preferences.RemoveRange(_context.Preferences.Where(p => p.UserId == userId));
-            await _context.Preferences.AddRangeAsync(preferences);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
-        [HttpGet("preferences/{userId}")]
-        public async Task<IActionResult> GetPreferences(int userId)
-        {
-            var preferences = await _context.Preferences.Where(p => p.UserId == userId).ToListAsync();
-
-            if (!preferences.Any())
-            {
-                return NotFound("Aucune préférence trouvée pour cet utilisateur.");
-            }
-
-            return Ok(preferences);
-        }
     }
 }

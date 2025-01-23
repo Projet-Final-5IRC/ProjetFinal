@@ -49,6 +49,18 @@ namespace data.Models.DataManager
             return userEntity != null ? userEntity : new NotFoundResult();
         }
 
+        public async Task<ActionResult<Users>> GetByUsernameAsync(string username)
+        {
+            if (eventDBContext == null)
+            {
+                throw new ArgumentNullException(nameof(eventDBContext));
+            }
+
+            var userEntity = await eventDBContext.User.FirstOrDefaultAsync(e => e.UserName == username);
+
+            return userEntity != null ? userEntity : new NotFoundResult();
+        }
+
         public async Task<ActionResult<Users>> AddAsync(Users newUser)
         {
             if (eventDBContext == null)

@@ -46,6 +46,15 @@ namespace data.Models.EntityFramework
         [JsonIgnore]
         public virtual ICollection<Events> EventOwned { get; set; } = new List<Events>();
 
+        [JsonIgnore]
+        public virtual ICollection<Preference> UserPreference { get; set; } = new List<Preference>();
+
+        [JsonIgnore]
+        public virtual ICollection<LikedMovies> UserLikedMovies { get; set; } = new List<LikedMovies>();
+        
+        [JsonIgnore]
+        public virtual ICollection<SeenMovies> UserSeenMovies { get; set; } = new List<SeenMovies>();
+
         public void UpdateUserValues(Users updatedUser)
         {
             if (!string.IsNullOrEmpty(updatedUser.Email))
