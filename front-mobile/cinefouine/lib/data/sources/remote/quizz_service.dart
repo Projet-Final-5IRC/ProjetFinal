@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:cinefouine/data/entities/quizz/quizz_info.dart';
-import 'package:cinefouine/data/entities/user/user_info.dart';
 import 'package:cinefouine/data/sources/dio_client.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

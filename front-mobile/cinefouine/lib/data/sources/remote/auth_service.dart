@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:cinefouine/data/entities/movie/movie_info.dart';
 import 'package:cinefouine/data/entities/user/user_info.dart';
 import 'package:cinefouine/data/sources/cine_fouine_endpoints.dart';
 import 'package:cinefouine/data/sources/dio_client.dart';

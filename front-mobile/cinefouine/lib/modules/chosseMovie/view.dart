@@ -4,11 +4,6 @@ import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:auto_route/auto_route.dart';
-import 'package:cinefouine/theme/app_colors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 @RoutePage()
 class ChooseMovieView extends ConsumerStatefulWidget {
   const ChooseMovieView({super.key});

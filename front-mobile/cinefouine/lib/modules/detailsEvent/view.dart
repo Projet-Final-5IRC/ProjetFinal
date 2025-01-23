@@ -1,16 +1,13 @@
 import 'package:cinefouine/data/entities/event/event_info.dart';
 import 'package:cinefouine/data/entities/user/user_info.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
-import 'package:cinefouine/modules/chosseMovie/view.dart';
 import 'package:cinefouine/modules/event/view.dart';
-import 'package:cinefouine/modules/eventInvite/view.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/cineFouineBoutton.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/number_symbols.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cinefouine/data/repositories/event_repository.dart';
 
@@ -316,9 +313,6 @@ class MemberItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final router = ref.watch(appRouterProvider);
-
-    // Contenu principal du widget (Row)
     final childContent = Row(
       children: [
         const CircleAvatar(

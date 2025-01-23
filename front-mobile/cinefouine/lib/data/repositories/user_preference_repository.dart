@@ -1,5 +1,4 @@
 import 'package:cinefouine/data/entities/movie/movie_info_detail.dart';
-import 'package:cinefouine/data/entities/movieSeen/movie_seen.dart';
 import 'package:cinefouine/data/entities/userAction/user_action.dart';
 import 'package:cinefouine/data/entities/user_preferences/user_preferences_info.dart';
 import 'package:cinefouine/data/repositories/movie_repository.dart';

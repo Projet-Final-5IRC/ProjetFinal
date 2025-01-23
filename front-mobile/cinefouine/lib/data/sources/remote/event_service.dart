@@ -107,7 +107,7 @@ class EventService {
   Future<void> deleteEvent(int eventId) async {
     final endpoint = '/Event/DeleteEvent?id=$eventId';
     try {
-      final response = await dioClient.delete(
+      await dioClient.delete(
         endpoint,
       );
 

@@ -288,7 +288,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
               ),
               if (registerStatus.isErrorPassword)
                 const Text(
-                  "Le mot de passe doit contenir au moins 6 caractères avec 1 lettre en majuscule, 1 chiffre et 1 caractère spécial",
+                  "Le mot de passe doit contenir au moins 8 caractères avec 1 lettre en majuscule, 1 chiffre et 1 caractère spécial",
                   style: TextStyle(color: Colors.red),
                 ),
               const SizedBox(height: 16),

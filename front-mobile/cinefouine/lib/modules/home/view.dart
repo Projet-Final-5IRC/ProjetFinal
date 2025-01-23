@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/mainAppBar.dart';
 import 'package:cinefouine/data/entities/movie/fouine_of_the_day.dart';
 import 'package:cinefouine/data/entities/movie/movie_info.dart';
-import 'package:cinefouine/data/entities/movie/movie_info_detail.dart';
 import 'package:cinefouine/data/repositories/movie_repository.dart';
 import 'package:cinefouine/data/repositories/recommendation_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';

@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/core/widgets/cineFouineHugeBoutton.dart';
 import 'package:cinefouine/core/widgets/cinefouineInputField.dart';
 import 'package:cinefouine/data/repositories/auth_repository.dart';
-import 'package:cinefouine/data/repositories/user_preference_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
 import 'package:cinefouine/modules/login/model/login_status.dart';
 import 'package:cinefouine/modules/profil/view.dart';
@@ -110,123 +109,133 @@ class _LoginViewState extends ConsumerState<LoginView> {
     );
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(
+          "Login",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+      ),
       backgroundColor: const Color(0xFF16213E), // Couleur de fond sombre
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              "Sign In",
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 32),
-            CineFouineInputField(
-              controller: _emailController,
-              onChanged: (value) {
-                ref.read(loginFormProvider.notifier).setMail(value);
-              },
-              hintText: "Email or Phone no",
-            ),
-            const SizedBox(height: 16),
-            CineFouineInputField(
-              controller: _passwordController,
-              hintText: "Password",
-              onChanged: (value) {
-                ref.read(loginFormProvider.notifier).setPassword(value);
-              },
-              isPassword: true,
-            ),
-            const SizedBox(height: 32),
-            if (loginForm.isError) //TODO improve
-              Text(
-                "Mauvais mot de passe/email",
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                "Sign In",
                 style: TextStyle(
-                  color: Colors.red,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-            CineFouineHugeBoutton(
-              isLoading: isLoading,
-              onPressed: () async {
-                final isLoged =
-                    await ref.read(_loginButtonProvider.notifier).login();
-                if (isLoged) {
-                  final preferences = ref.watch(preferencesProvider);
-                  ref.read(userActionStatProvider.notifier).postUserAction(
-                        action: "login",
-                        idUser: preferences.idUserPreferences.load()!,
-                        value: 1,
-                      );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Sign In Successful!")),
-                  );
-                  ref.read(loginFormProvider.notifier).setIsError(false);
-                  router.replaceAll([const GenresSelectionRoute()]);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Wrong login!")),
-                  );
-                  ref.read(loginFormProvider.notifier).setIsError(true);
-                }
-              },
-              text: "Sign In",
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _rememberMe,
-                      onChanged: (value) {
-                        setState(() {
-                          _rememberMe = value!;
-                        });
-                      },
-                      activeColor:
-                          const Color(0xFF0099CC), // Couleur du checkbox
-                    ),
-                    const Text(
-                      "Remember me",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-                const Text(
-                  "Need Help?",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-            const SizedBox(
-                height: 24), // Ajout d'un espace avant le texte d'inscription
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "New to cine fouine?",
-                  style: TextStyle(color: Colors.white),
-                ),
-                TextButton(
-                  onPressed: () => router.push(RegisterRoute()),
-                  child: const Text(
-                    "Sign up now",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+              const SizedBox(height: 32),
+              CineFouineInputField(
+                controller: _emailController,
+                onChanged: (value) {
+                  ref.read(loginFormProvider.notifier).setMail(value);
+                },
+                hintText: "Email or Phone no",
+              ),
+              const SizedBox(height: 16),
+              CineFouineInputField(
+                controller: _passwordController,
+                hintText: "Password",
+                onChanged: (value) {
+                  ref.read(loginFormProvider.notifier).setPassword(value);
+                },
+                isPassword: true,
+              ),
+              const SizedBox(height: 32),
+              if (loginForm.isError) //TODO improve
+                Text(
+                  "Mauvais mot de passe/email",
+                  style: TextStyle(
+                    color: Colors.red,
                   ),
                 ),
-              ],
-            ),
-            const Spacer(), // Spacer reste en bas pour équilibrer
-          ],
+              CineFouineHugeBoutton(
+                isLoading: isLoading,
+                onPressed: () async {
+                  final isLoged =
+                      await ref.read(_loginButtonProvider.notifier).login();
+                  if (isLoged) {
+                    final preferences = ref.watch(preferencesProvider);
+                    ref.read(userActionStatProvider.notifier).postUserAction(
+                          action: "login",
+                          idUser: preferences.idUserPreferences.load()!,
+                          value: 1,
+                        );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Sign In Successful!")),
+                    );
+                    ref.read(loginFormProvider.notifier).setIsError(false);
+                    router.replaceAll([const GenresSelectionRoute()]);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Wrong login!")),
+                    );
+                    ref.read(loginFormProvider.notifier).setIsError(true);
+                  }
+                },
+                text: "Sign In",
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _rememberMe,
+                        onChanged: (value) {
+                          setState(() {
+                            _rememberMe = value!;
+                          });
+                        },
+                        activeColor:
+                            const Color(0xFF0099CC), // Couleur du checkbox
+                      ),
+                      const Text(
+                        "Remember me",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  const Text(
+                    "Need Help?",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                  height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "New to cine fouine?",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  TextButton(
+                    onPressed: () => router.push(RegisterRoute()),
+                    child: const Text(
+                      "Sign up now",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

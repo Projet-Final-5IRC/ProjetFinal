@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:cinefouine/data/entities/movie/movie_info.dart';
 import 'package:cinefouine/data/entities/movie/movie_info_detail.dart';
 import 'package:cinefouine/data/entities/platforme/platforme.dart';

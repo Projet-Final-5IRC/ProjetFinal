@@ -362,18 +362,18 @@ class DetailsMovieView extends ConsumerWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: movie.details?.posterPath != null
+                        child: actor?.profilePath != null &&
+                                actor!.profilePath!.isNotEmpty
                             ? Image.network(
-                                actor?.profilePath != null
-                                    ? "https://image.tmdb.org/t/p/w500${actor?.profilePath}"
-                                    : "https://via.placeholder.com/80", // Image par défaut si `profilePath` est null
+                                "https://image.tmdb.org/t/p/w500${actor.profilePath}",
                                 width: 80,
                                 height: 80,
                                 fit: BoxFit.cover,
                                 loadingBuilder:
                                     (context, child, loadingProgress) {
-                                  if (loadingProgress == null)
-                                    return child; // Retourne l'image une fois chargée
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
                                   return Center(
                                     child: CircularProgressIndicator(
                                       value:
@@ -398,9 +398,16 @@ class DetailsMovieView extends ConsumerWidget {
                                   );
                                 },
                               )
-                            : const SizedBox(
-                                width: 100,
-                                height: 150,
+                            : Container(
+                                width: 80,
+                                height: 80,
+                                color:
+                                    Colors.grey,
+                                child: Icon(
+                                  Icons.person,
+                                  size: 40,
+                                  color: Colors.white,
+                                ),
                               ),
                       ),
                       const SizedBox(height: 8),

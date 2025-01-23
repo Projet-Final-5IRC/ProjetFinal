@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cinefouine/data/entities/user_preferences/user_preferences_info.dart';
 import 'package:cinefouine/data/repositories/user_preference_repository.dart';
 import 'package:cinefouine/data/sources/shared_preference/preferences.dart';
-import 'package:cinefouine/modules/event/view.dart';
 import 'package:cinefouine/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

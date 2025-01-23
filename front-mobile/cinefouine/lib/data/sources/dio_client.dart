@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:cinefouine/data/sources/dio_exceptions.dart';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dio_client.g.dart';

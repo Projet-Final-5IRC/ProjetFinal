@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cinefouine/data/entities/quizz/quizz_info.dart';
 import 'package:cinefouine/data/sources/dio_client.dart';
-import 'package:logging/logging.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 
 part 'quizz_signalr_service.g.dart';

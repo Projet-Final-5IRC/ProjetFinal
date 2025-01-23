@@ -126,12 +126,15 @@ class ProfilView extends ConsumerWidget {
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,  // Centrer horizontalement                
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Centrer horizontalement
                 children: [
-                   Stack(
-                    clipBehavior: Clip.none,  // Permet à l'icône de sortir de la Stack
+                  Stack(
+                    clipBehavior:
+                        Clip.none, // Permet à l'icône de sortir de la Stack
                     children: [
-                      Center(  // Centrer l'image dans le Stack
+                      Center(
+                        // Centrer l'image dans le Stack
                         child: ClipOval(
                           child: SizedBox(
                             width: 126.0,
@@ -170,26 +173,29 @@ class ProfilView extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 32),
- Text(
-  "Mes infos",
-  style: TextStyle(
-    fontSize: 24.0,  // Augmenter la taille
-    fontWeight: FontWeight.w700,  // Poids de police plus prononcé
-    color: Colors.white,
-    letterSpacing: 1.2,  // Espacement des lettres pour un effet plus élégant
-  ),
-),
+              Text(
+                "Mes infos",
+                style: TextStyle(
+                  fontSize: 24.0, // Augmenter la taille
+                  fontWeight: FontWeight.w700, // Poids de police plus prononcé
+                  color: Colors.white,
+                  letterSpacing:
+                      1.2, // Espacement des lettres pour un effet plus élégant
+                ),
+              ),
 
               const SizedBox(height: 16),
               ContactInfoRow(
                 icon: Icons.person,
                 label: "Nom",
-                value: preferences.lastNamePreferences.load() ?? "Non disponible",
+                value:
+                    preferences.lastNamePreferences.load() ?? "Non disponible",
               ),
               ContactInfoRow(
                 icon: Icons.person_outline,
                 label: "Prénom",
-                value: preferences.firstNamePreferences.load() ?? "Non disponible",
+                value:
+                    preferences.firstNamePreferences.load() ?? "Non disponible",
               ),
               ContactInfoRow(
                 icon: Icons.email,
@@ -208,10 +214,11 @@ class ProfilView extends ConsumerWidget {
               Text(
                 "Mes badges",
                 style: TextStyle(
-                  fontSize: 24.0,  // Augmenter la taille
-                  fontWeight: FontWeight.w700,  // Poids de police plus prononcé
+                  fontSize: 24.0, // Augmenter la taille
+                  fontWeight: FontWeight.w700, // Poids de police plus prononcé
                   color: Colors.white,
-                  letterSpacing: 1.2,  // Espacement des lettres pour un effet plus élégant
+                  letterSpacing:
+                      1.2, // Espacement des lettres pour un effet plus élégant
                 ),
               ),
 
@@ -225,46 +232,46 @@ class ProfilView extends ConsumerWidget {
                     );
                   }
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    BadgeRow(
-                      icon: Icons.login,
-                      label: "Nombre de connexions",
-                      value: "${userAction.loginCount}",
-                    ),
-                    BadgeRow(
-                      icon: Icons.quiz,
-                      label: "Score au quiz",
-                      value: "${userAction.quizScore}",
-                    ),
-                    BadgeRow(
-                      icon: Icons.movie,
-                      label: "Films regardés ce mois-ci",
-                      value: "${userAction.moviesWatchedInMonth}",
-                    ),
-                    BadgeRow(
-                      icon: Icons.event,
-                      label: "Événements assistés",
-                      value: "${userAction.eventsAttended}",
-                    ),
-                    BadgeRow(
-                      icon: Icons.calendar_today,
-                      label: "Jours actifs",
-                      value: "${userAction.daysActive}",
-                    ),
-                    BadgeRow(
-                      icon: Icons.rate_review,
-                      label: "Critiques écrites",
-                      value: "${userAction.reviewsWritten}",
-                    ),
-                    BadgeRow(
-                      icon: Icons.category,
-                      label: "Genres uniques regardés",
-                      value: "${userAction.uniqueGenresWatched}",
-                    ),
-                  ],
-                );
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BadgeRow(
+                        icon: Icons.login,
+                        label: "Nombre de connexions",
+                        value: "${userAction.loginCount}",
+                      ),
+                      BadgeRow(
+                        icon: Icons.quiz,
+                        label: "Score au quiz",
+                        value: "${userAction.quizScore}",
+                      ),
+                      BadgeRow(
+                        icon: Icons.movie,
+                        label: "Films regardés ce mois-ci",
+                        value: "${userAction.moviesWatchedInMonth}",
+                      ),
+                      BadgeRow(
+                        icon: Icons.event,
+                        label: "Événements assistés",
+                        value: "${userAction.eventsAttended}",
+                      ),
+                      BadgeRow(
+                        icon: Icons.calendar_today,
+                        label: "Jours actifs",
+                        value: "${userAction.daysActive}",
+                      ),
+                      BadgeRow(
+                        icon: Icons.rate_review,
+                        label: "Critiques écrites",
+                        value: "${userAction.reviewsWritten}",
+                      ),
+                      BadgeRow(
+                        icon: Icons.category,
+                        label: "Genres uniques regardés",
+                        value: "${userAction.uniqueGenresWatched}",
+                      ),
+                    ],
+                  );
                 },
                 loading: () => Center(
                   child: CircularProgressIndicator(),
@@ -401,10 +408,9 @@ class MovieSection extends StatelessWidget {
           ),
         ),
       ],
-          );
+    );
   }
 }
-
 
 class BadgeRow extends StatelessWidget {
   final IconData icon;
@@ -421,14 +427,18 @@ class BadgeRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0), // Augmenter l'espacement
+      padding:
+          const EdgeInsets.symmetric(vertical: 12.0), // Augmenter l'espacement
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10.0), // Augmenter le padding pour donner plus d'espace autour de l'icône
+            padding: const EdgeInsets.all(
+                10.0), // Augmenter le padding pour donner plus d'espace autour de l'icône
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.3), // Couleur de fond plus douce
-              borderRadius: BorderRadius.circular(12.0), // Arrondir davantage les coins
+              color: AppColors.primary
+                  .withOpacity(0.3), // Couleur de fond plus douce
+              borderRadius:
+                  BorderRadius.circular(12.0), // Arrondir davantage les coins
             ),
             child: Icon(
               icon,
@@ -436,13 +446,15 @@ class BadgeRow extends StatelessWidget {
               size: 26.0, // Agrandir l'icône
             ),
           ),
-          const SizedBox(width: 20.0), // Augmenter l'espacement entre l'icône et le texte
+          const SizedBox(
+              width: 20.0), // Augmenter l'espacement entre l'icône et le texte
           Expanded(
             child: Text(
               label,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 18.0, // Augmenter la taille du texte pour une meilleure lisibilité
+                fontSize:
+                    18.0, // Augmenter la taille du texte pour une meilleure lisibilité
                 fontWeight: FontWeight.w600, // Poids de texte plus équilibré
               ),
             ),
@@ -452,7 +464,7 @@ class BadgeRow extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontSize: 18.0,
-              fontWeight: FontWeight.bold,  // Rendre la valeur plus marquée
+              fontWeight: FontWeight.bold, // Rendre la valeur plus marquée
             ),
           ),
         ],
@@ -460,7 +472,6 @@ class BadgeRow extends StatelessWidget {
     );
   }
 }
-
 
 class ContactInfoRow extends StatelessWidget {
   final IconData icon;
@@ -499,7 +510,8 @@ class ContactInfoRow extends StatelessWidget {
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18.0, // Taille de texte augmentée
-                fontWeight: FontWeight.w600, // Poids de texte pour plus de clarté
+                fontWeight:
+                    FontWeight.w600, // Poids de texte pour plus de clarté
               ),
             ),
           ),

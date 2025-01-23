@@ -1,6 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:cinefouine/data/entities/platforme/platforme.dart';
-import 'package:cinefouine/data/repositories/movie_repository.dart';
 import 'package:cinefouine/modules/detailsMovie/view.dart';
 import 'package:cinefouine/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +11,6 @@ class PlatformeView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final movieSelected = ref.watch(movieSeletedProvider);
     final platformes = ref.watch(platformeForMovieProvider);
 
     return Scaffold(
@@ -35,23 +32,15 @@ class PlatformeView extends ConsumerWidget {
                   color: AppColors.primary,
                   margin: const EdgeInsets.only(bottom: 16.0),
                   child: ListTile(
-                    leading: platforme.logoPath != null
-                        ? Image.network(
-                            'https://image.tmdb.org/t/p/w500${platforme.logoPath}',
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error,
-                                  color: AppColors.white);
-                            },
-                          )
-                        : const SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: Icon(Icons.image_not_supported,
-                                color: AppColors.white),
-                          ),
+                    leading: Image.network(
+                      'https://image.tmdb.org/t/p/w500${platforme.logoPath}',
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.error, color: AppColors.white);
+                      },
+                    ),
                     title: Text(
                       platforme.providerName,
                       style: const TextStyle(color: AppColors.white),
